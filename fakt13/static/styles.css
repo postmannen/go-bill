@@ -61,13 +61,15 @@ ul li { /*styling the sub menus within this block, the li items*/
     color: white;
     float: left; /*Makes all the li elements aligned to the left*/
     width: 200px;
-    height: 40px;
+    height: 35px;
     background-color: black;
     opacity: .8;
     line-height: 40px;
     text-align: center;
     font-size: 20px;
     margin-right: 2px;
+    border-radius: 5px;
+
 }
 ul li a {   /*styling the menu link within this block*/
     text-decoration: none;  /*Removed underline and things like that under the links*/
