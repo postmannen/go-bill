@@ -51,3 +51,35 @@ input[type=inputUserText] {
 }
 
 /********************MENU ITEMS**************************/
+ul { /*styling the upp menu within this block, the ul items*/
+    color: white;
+    margin: 0px; /*zero border around element*/
+    padding: 0px; /*zero border inside element*/
+    list-style: none; /*Removed the bullets infront of the list name*/
+}
+ul li { /*styling the sub menus within this block, the li items*/
+    color: white;
+    float: left; /*Makes all the li elements aligned to the left*/
+    width: 200px;
+    height: 40px;
+    background-color: black;
+    opacity: .8;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    margin-right: 2px;
+}
+ul li a {   /*styling the menu link within this block*/
+    text-decoration: none;  /*Removed underline and things like that under the links*/
+    color: white; /*if the color is not set here the links that are pressed will have a different color*/
+    display: block;
+}
+ul li a:hover {
+    background-color: green;
+}
+ul li ul li {
+    display: none;
+}
+ul li:hover ul li { /*When we hover the ul li then do something with that ul li*/
+    display: block;
+}
