@@ -1,0 +1,141 @@
+{{define "head"}}
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+{{end}} 
+
+{{define "header"}}
+    <h1>Fakt</h1>
+{{end}} 
+
+{{define "index"}}
+    <h1>Dette er en header</h1>
+    <div>Dette er en test</div>
+{{end}} 
+
+{{define "addUserCompletePage"}} 
+    {{template "head" .}}
+    {{template "header" .}} 
+    {{template "top1" .}} 
+    {{template "addUser" .}} 
+{{end}} 
+
+{{define "addUser"}}
+<form>
+    <div class="addUser">
+        <h3>Add user</h3>
+        <input type="text" name="firstName" placeholder="Fornavn" required pattern="[a-zA-ZæøåÆØÅ]+">
+        <input type="text" name="lastName" placeholder="Etternavn">
+        <input type="text" name="mail" placeholder="Mail" required pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{3,}$" title="Please enter a valid email.">
+        <input type="text" name="address" placeholder="Adresse">
+        <input type="text" name="poAddr" placeholder="Post nr og sted">
+        <input type="text" name="phone" placeholder="Telefon nr.">
+        <input type="submit" name="button1" value="Add">
+        <br>
+        <br>
+    </div>
+</form>
+{{end}} 
+
+{{define "mainCompletePage"}}
+    {{template "head" .}} 
+    {{template "head" .}} 
+    {{template "header" .}} 
+    {{template "top1" .}} 
+{{end}} 
+
+{{define "modifyUserCompletePage"}}
+    {{template "head" .}}
+    {{template "header" .}} 
+    {{template "top1" .}} 
+    {{template "modifyUserSelection" .}} 
+{{end}} 
+
+{{define "modifyUserSelection"}}
+<form>
+    <h3>Modify user</h3>
+    <div></div>
+    <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
+    <select name="users">
+            {{range .}}
+                <option value={{.Number}}>{{.FirstName}}</option>
+            {{end}}
+            </select>
+    <input type="submit" name="button5" value="Modify selected"><br><br>
+
+</form>
+{{end}} 
+
+{{define "showUserCompletePage"}} 
+    {{template "head" .}} 
+    {{template "header" .}} 
+    {{template "top1" .}} 
+    {{template "showUserMultiple" .}} 
+{{end}} 
+
+{{define "showUserMultiple"}}
+<form>
+    <h3>Show user</h3>
+    {{range .}}
+    <div>
+        <input title="The customer nr" type="text" name="nummer" placeholder={{.Number}}>
+        <input title="The name" type="text" name="navn" placeholder={{.FirstName}}>
+        <input title="The lastname" type="text" name="etternavn" placeholder={{.LastName}}>
+        <input title="The mail address" type="text" name="mail" placeholder={{.Mail}}>
+        <input title="The address" type="text" name="adresse" placeholder={{.Address}}>
+        <input title="The Post nr and place" type="text" name="post nr og sted" placeholder={{.PostNrAndPlace}}>
+        <input title="The phone number" type="text" name="telefon nummer" placeholder={{.PhoneNr}}>
+    </div>
+    {{end}}
+</form>
+{{end}} 
+
+{{define "showUserSingle"}}
+<form>
+    <div class="userinfo">
+        <!-- <input title="The customer nr" type="text" name="number" placeholder={{.Number}}> -->
+        <label for="Firstname">Firstname</label>
+        <input title="The name" type="text" name="firstName" placeholder={{.FirstName}}><br>
+        <label for="Lastname">Lastname</label>
+        <input title="The lastname" type="text" name="lastName" placeholder={{.LastName}}><br>
+        <label for="Mail">Mail</label>
+        <input title="The mail address" type="text" name="mail" placeholder={{.Mail}}><br>
+        <label for="Address">Address</label>
+        <input title="The address" type="text" name="address" placeholder={{.Address}}><br>
+        <label for="PostNrAndPlace">PostNrAndPlace</label>
+        <input title="The Post nr and place" type="text" name="poAddr" placeholder={{.PostNrAndPlace}}><br>
+        <label for="Phone">Phone</label>
+        <input title="The phone number" type="text" name="phone" placeholder={{.PhoneNr}}><br>
+        <div>
+    
+        <br>
+        <br>
+        Mark to confirm changes before you press Apply
+        <input type="checkbox" name="sure" value="ok">
+        <input type="submit" name="Modify" value="Apply">
+        
+    </div>
+</form>
+{{end}} 
+
+{{define "top1"}}
+<style>
+    form {
+        display: inline;
+    }
+</style>
+<form action="/sp" method="post">
+    <input type="submit" name="button1" value="show persons">
+</form>
+
+
+<form action="/ap" method="post">
+    <input type="submit" name="button2" value="add persons">
+</form>
+
+
+<form action="/mp" method="post">
+    <input type="submit" name="button3" value="modify persons">
+</form>
+
+{{end}}

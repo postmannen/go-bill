@@ -1,0 +1,80 @@
+h1 {
+    background-color: orange;
+}
+
+body {
+    background: url("joker.jpg") no repeat;
+    background-size: cover;
+    font-family: Arial;
+}
+
+form {
+   background-color:    grey
+}
+
+.modifyUserSelectionContainer {
+    display: inline-block;
+    width: 50%;
+}
+
+input[type="text"] {
+    color: black;
+    font-style: initial;
+    border: 1px solid crimson;
+    font: outline;
+    border-color: black;
+    size: 50%;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    padding: 5px;
+    float:left;
+    margin: 10px;
+    border-radius: 2px;
+    border: 1px orange solid;
+}
+
+a {
+    text-decoration: none;
+    color:black;
+    display: block;
+}
+
+nav {
+    color: blue;
+  }
+  
+.topMenuContainer {
+    display: inline-block;
+    width: 100%;
+    margin-top: 2px;
+    background-color: grey;
+  }  
+
+.top1Container {
+    background-color: lightsalmon;
+}
+
+.showUserSingleContainer{
+    margin: 5px;
+}
+
+.showUserSingleContainer .showUserSingleInputs {
+    display: table;
+}
+
+.showUserSingleConfirm {
+    margin-top: auto;
+}
+
+input[type=inputUserText] {
+    display: block; /*Define block gives all buttons and text below each other */
+}
+
+.addUserContainer {
+    display: inline-block;
+}
