@@ -78,8 +78,9 @@ func main() {
 	http.HandleFunc("/ap", addUsersWeb)
 	http.HandleFunc("/mp", modifyUsersWeb)
 	http.HandleFunc("/", mainPage)
-	http.HandleFunc("/styles.css", serveCSS)
-	http.HandleFunc("/joker.jpg", joker)
+	//http.HandleFunc("/styles.css", serveCSS)
+	//http.HandleFunc("/joker.jpg", joker)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe(":7000", nil)
 
 }

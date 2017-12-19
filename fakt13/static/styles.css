@@ -2,8 +2,7 @@ h1 {
     background-color: orange;
 }
 body {
-    background-color: grey;
-    background: url("/joker.jpg") no repeat;
+    background-image: url("/static/joker.jpg");
     background-size: cover;
     font-family: Arial;
 }
