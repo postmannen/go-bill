@@ -9,37 +9,49 @@
 
 {{define "addUserCompletePage"}}
 <!DOCTYPE html>
-<html> 
-    {{template "head" .}}
-    {{template "topMenu" .}} 
-    {{template "addUser" .}} 
+<html>
+    <body> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}
+        {{template "topMenu" .}} 
+        {{template "addUser" .}} 
+    </body>
 </html>
 {{end}} 
 
 {{define "showUserCompletePage"}} 
 <!DOCTYPE html>
 <html>
-    {{template "head" .}} 
-    {{template "topMenu" .}} 
-    {{template "showUserMultiple" .}} 
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}} 
+        {{template "topMenu" .}} 
+        {{template "showUserMultiple" .}} 
+    </body>
 </html>
 {{end}} 
 
 {{define "mainCompletePage"}}
 <!DOCTYPE html>
 <html>
-    {{template "head" .}}  
-    {{template "topMenu" .}}
-    {{template "index" .}}
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}  
+        {{template "topMenu" .}}
+        {{template "index" .}}
+    </body>
 </html> 
 {{end}} 
 
 {{define "modifyUserCompletePage"}}
 <!DOCTYPE html>
 <html>
-    {{template "head" .}} 
-    {{template "topMenu" .}} 
-    {{template "modifyUserSelection" .}} 
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}} 
+        {{template "topMenu" .}} 
+        {{template "modifyUserSelection" .}} 
+    </body>
 </html>
 {{end}} 
 
@@ -105,8 +117,7 @@
     {{end}}
 </table>
 </form>
-
-<form>
+<!--<form>
     <h3>Show user</h3>
     {{range .}}
         <div>
@@ -120,7 +131,7 @@
             <input title="The Org Nr" type="text" name="organisasjons nummer" placeholder={{.OrgNr}}>
         </div>
     {{end}}
-</form>
+</form>-->
 </div>
 {{end}} 
 

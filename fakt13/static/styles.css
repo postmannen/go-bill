@@ -11,7 +11,7 @@ body {
 }*/
 
 table {
-    
+    margin-top: 3cm;
 }
 table td {
     color: black;
@@ -21,6 +21,10 @@ table td {
     border-style: solid;
 }
 
+table td a {
+    text-decoration: none;
+    color: black;
+}
 input[type="text"] {
     color: black;
     font-style: initial;
@@ -35,6 +39,9 @@ input[type="text"] {
 .modifyUserSelectionContainer {
     display: inline-block;
     width: 50%;
+}
+.showUserMultiple {
+    background-color: initial;
 }
 .showUserSingleContainer{
     margin: 5px;
