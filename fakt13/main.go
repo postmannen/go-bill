@@ -79,6 +79,7 @@ func main() {
 	http.HandleFunc("/mp", modifyUsersWeb)
 	http.HandleFunc("/", mainPage)
 	http.HandleFunc("/styles.css", serveCSS)
+	http.HandleFunc("/joker.jpg", joker)
 	http.ListenAndServe(":7000", nil)
 
 }
@@ -235,7 +236,11 @@ func checkErr(err error, args ...string) {
 //serveCSS : The CSS file needs its own handler. TODO: check out http.ServeFiles
 func serveCSS(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/styles.css")
+}
 
+//serveCSS : The CSS file needs its own handler. TODO: check out http.ServeFiles
+func joker(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "joker.jpg")
 }
 
 //The default handler for the / main page

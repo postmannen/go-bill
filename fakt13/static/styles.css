@@ -1,22 +1,15 @@
 h1 {
     background-color: orange;
 }
-
 body {
-    background: url("joker.jpg") no repeat;
+    background-color: grey;
+    background: url("/joker.jpg") no repeat;
     background-size: cover;
     font-family: Arial;
 }
-
-form {
+/*form {
    background-color:    grey
-}
-
-.modifyUserSelectionContainer {
-    display: inline-block;
-    width: 50%;
-}
-
+}*/
 input[type="text"] {
     color: black;
     font-style: initial;
@@ -25,27 +18,28 @@ input[type="text"] {
     border-color: black;
     size: 50%;
 }
-
 .top1Container {
     background-color: lightsalmon;
 }
-
+.modifyUserSelectionContainer {
+    display: inline-block;
+    width: 50%;
+}
 .showUserSingleContainer{
     margin: 5px;
 }
-
 .showUserSingleContainer .showUserSingleInputs {
     display: table;
 }
-
+.showUsersMultipleContainer {
+    display: inline-block;
+}
 .showUserSingleConfirm {
     margin-top: auto;
 }
-
 input[type=inputUserText] {
     display: block; /*Define block gives all buttons and text below each other */
 }
-
 .addUserContainer {
     display: inline-block;
 }
@@ -69,7 +63,6 @@ ul li { /*styling the sub menus within this block, the li items*/
     font-size: 20px;
     margin-right: 2px;
     border-radius: 5px;
-
 }
 ul li a {   /*styling the menu link within this block*/
     text-decoration: none;  /*Removed underline and things like that under the links*/
