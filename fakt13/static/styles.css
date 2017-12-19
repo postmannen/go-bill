@@ -9,6 +9,15 @@ body {
 /*form {
    background-color:    grey
 }*/
+
+table {
+    
+}
+table td {
+    border: 3px;
+    border-style: solid;
+}
+
 input[type="text"] {
     color: black;
     font-style: initial;

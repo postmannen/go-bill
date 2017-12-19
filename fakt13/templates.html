@@ -86,6 +86,17 @@
 
 {{define "showUserMultiple"}}
 <div class="showUsersMultipleContainer">
+<table>
+    <tr>
+        <td>Nr</td><td>Name</td><td>LastName</td><td>Mail</td><td>Address</td><td>Postnr and place</td><td>Phone</td><td>Org nr</td><br>
+    </tr>
+    {{range .}}
+        <tr>
+            <td>{{.Number}}</td><td>{{.FirstName}}</td><td>{{.LastName}}</td><td>{{.Mail}}</td><td>{{.Address}}</td><td>{{.PostNrAndPlace}}</td><td>{{.PhoneNr}}</td><td>{{.OrgNr}}</td><br>
+        </tr>
+    {{end}}
+</table>
+
 <form>
     <h3>Show user</h3>
     {{range .}}
