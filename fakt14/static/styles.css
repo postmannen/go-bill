@@ -41,7 +41,10 @@ input[type=inputUserText] {
 }
 /***********MODIFY USER************/
 .modifyUserSelectionContainer {
+    display: inline-block;
+    width: 25%;
     font-size: 20px;
+    margin-bottom: 10px;
 }
 .modifyUserSelectionContainer select  {
     font-size: 20px;
@@ -80,6 +83,7 @@ input[type=inputUserText] {
 .addUserContainer input {
     display: inline-flex;
     font-size: 20px;
+    margin-bottom: 2px;
 }
 .addUserContainer {
     display: inline-block;
