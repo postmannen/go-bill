@@ -34,6 +34,7 @@
 			The problem is only with the modify function, add works ok
 	Changed the top menu to use links insted of input box's, and dropdown with css
 	showAllUsers : replaced the input boxes with a table.
+14: Changing the css styling of the pages
 
 
 */

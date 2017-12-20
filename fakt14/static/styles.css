@@ -53,6 +53,13 @@ input[type=inputUserText] {
 }
 .modifyUserSingleContainer label {
     border: 1px solid;
+    background-color: lightgray;
+}
+.modifyUserSingleContainer .modifyUserSingleInputs {
+    margin-bottom: 10px;
+}
+.modifyUserSingleContainer .modifyUserSingleInputs input {
+    margin-bottom: 2px;
 }
 .modifyUserSelectionContainer input {
     font-size: 20px;
@@ -69,6 +76,11 @@ input[type=inputUserText] {
     font-size: 15px;
     border: 1px solid;
     background-color:white;
+}
+.modifyUserSingleContainer .modifyUserSingleConfirm {
+    display: inline-block;
+    background-color: lightgray;
+    
 }
 
 /*****************ADD USER********************/
@@ -110,6 +122,7 @@ ul li { /*styling the sub menus within this block, the li items*/
     text-align: center;
     font-size: 20px;
     margin-right: 2px;
+    margin-bottom: 1px;
     border-radius: 5px;
 }
 ul li a {   /*styling the menu link within this block*/
