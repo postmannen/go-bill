@@ -10,55 +10,8 @@ body {
    background-color:    grey
 }*/
 
-table {
-    margin-top: 3cm;
-}
-table td {
-    color: black;
-    background-color: grey;
-    opacity: .9;
-    border: 3px;
-    border-style: solid;
-}
 
-table td a {
-    text-decoration: none;
-    color: black;
-}
-
-table td:hover {
-    background-color: greenyellow;
-}
-input[type="text"] {
-    color: black;
-    font-style: initial;
-    border: 1px solid crimson;
-    font: outline;
-    border-color: black;
-    size: 50%;
-}
-
-.modifyUserSelectionContainer {
-    font-size: 20px;
-}
-.modifyUserSelectionContainer select  {
-    border: 2px solid;
-    background-color:white;
-}
-.modifyUserSelectionContainer input {
-    border: 2px solid;
-    background-color:white;
-}
-.modifyUserSingleContainer{
-    margin: 5px;
-}
-.modifyUserSingleContainer .modifyUserSingleInputs {
-    display: table;
-}
-.modifyUserSingleContainer .modifyUserSingleInputs input {
-    border: 2px solid;
-    background-color:white;
-}
+/**************SHOW ALL USER******************/
 
 .showUsersMultipleContainer {
     display: inline-block;
@@ -69,16 +22,71 @@ input[type="text"] {
 input[type=inputUserText] {
     display: block; /*Define block gives all buttons and text below each other */
 }
+.showUsersMultipleContainer table {
+    margin-top: 3cm;
+}
+.showUsersMultipleContainer table td {
+    color: black;
+    background-color: white;
+    opacity: .9;
+    border: 1px;
+    border-style: solid;
+}
+.showUsersMultipleContainer table td a {
+    text-decoration: none;
+    color: black;
+}
+.showUsersMultipleContainer table td:hover {
+    background-color: greenyellow;
+}
+/***********MODIFY USER************/
+.modifyUserSelectionContainer {
+    font-size: 20px;
+}
+.modifyUserSelectionContainer select  {
+    font-size: 20px;
+    border: 1px solid;
+    background-color:white;
+}
+.modifyUserSingleContainer label {
+    border: 1px solid;
+}
+.modifyUserSelectionContainer input {
+    font-size: 20px;
+    border: 1px solid;
+    background-color:white;
+}
+.modifyUserSingleContainer{
+    margin: 5px;
+}
+.modifyUserSingleContainer .modifyUserSingleInputs {
+    display: table;
+}
+.modifyUserSingleContainer .modifyUserSingleInputs input {
+    font-size: 15px;
+    border: 1px solid;
+    background-color:white;
+}
+
+/*****************ADD USER********************/
+.addUserContainer input[type="text"] {
+    color: black;
+    font-style: initial;
+    border: 1px solid crimson;
+    font: outline;
+    border-color: black;
+    size: 50%;
+}
 .addUserContainer input {
     display: inline-flex;
-    font-size: 25px;
+    font-size: 20px;
 }
 .addUserContainer {
     display: inline-block;
-    width: 30%;
+    width: 25%;
 }
 
-/********************MENU ITEMS**************************/
+/********************TOP MENU**************************/
 ul { /*styling the upp menu within this block, the ul items*/
     color: white;
     margin: 0px; /*zero border around element*/
