@@ -82,6 +82,7 @@ func main() {
 	http.HandleFunc("/ap", addUsersWeb)
 	http.HandleFunc("/mp", modifyUsersWeb)
 	http.HandleFunc("/", mainPage)
+	http.HandleFunc("/du", deleteUserWeb)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe(":7000", nil)
 
@@ -373,4 +374,8 @@ func showUsersWeb(w http.ResponseWriter, r *http.Request) {
 		log.Println("template execution error = ", err)
 	}
 	fmt.Fprint(w, err)
+}
+
+func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
+
 }
