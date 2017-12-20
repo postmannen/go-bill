@@ -79,59 +79,42 @@
 
 
 {{define "modifyUserSelection"}}
-<div class="modifyUserSelectionContainer"></div>
-<form>
-    <h3>Modify user</h3>
-    
-    <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
+<div class="modifyUserSelectionContainer">
+    <form>
+        <h3>Modify user</h3>
+        <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
         <select name="users">
             {{range .}}
                 <option value={{.Number}}>{{.FirstName}}</option>
             {{end}}
         </select>
         <input type="submit" name="button5" value="Modify selected">
-    
-    <hr></hr>
-</form>
+        <hr></hr>
+    </form>
 </div>
 {{end}} 
 
 {{define "showUserMultiple"}}
 <div class="showUsersMultipleContainer">
-</form>
-<table>    
-    <tr>
-        <td>Nr</td><td>Name</td><td>LastName</td><td>Mail</td><td>Address</td><td>Postnr and place</td><td>Phone</td><td>Org nr</td><br>
-    </tr>
-    {{range .}}
-        <tr>
-            <td><a href="mp?users={{.Number}}">{{.Number}}</a></td>
-            <td><a href="mp?users={{.Number}}">{{.FirstName}}</a></td>
-            <td><a href="mp?users={{.Number}}">{{.LastName}}</a></td>
-            <td><a href="mp?users={{.Number}}">{{.Mail}}</a></td>
-            <td><a href="mp?users={{.Number}}">{{.Address}}</a></td>
-            <td><a href="mp?users={{.Number}}">{{.PostNrAndPlace}}</a></td>
-            <td><a href="mp?users={{.Number}}">{{.PhoneNr}}</a></td>
-            <td><a href="mp?users={{.Number}}">{{.OrgNr}}</a></td>
-        </tr>
-    {{end}}
-</table>
-</form>
-<!--<form>
-    <h3>Show user</h3>
-    {{range .}}
-        <div>
-            <input title="The customer nr" type="text" name="nummer" placeholder={{.Number}}>
-            <input title="The name" type="text" name="navn" placeholder={{.FirstName}}>
-            <input title="The lastname" type="text" name="etternavn" placeholder={{.LastName}}>
-            <input title="The mail address" type="text" name="mail" placeholder={{.Mail}}>
-            <input title="The address" type="text" name="adresse" placeholder={{.Address}}>
-            <input title="The Post nr and place" type="text" name="post nr og sted" placeholder={{.PostNrAndPlace}}>
-            <input title="The phone number" type="text" name="telefon nummer" placeholder={{.PhoneNr}}>
-            <input title="The Org Nr" type="text" name="organisasjons nummer" placeholder={{.OrgNr}}>
-        </div>
-    {{end}}
-</form>-->
+    </form>
+        <table>    
+            <tr>
+                <td>Nr</td><td>Name</td><td>LastName</td><td>Mail</td><td>Address</td><td>Postnr and place</td><td>Phone</td><td>Org nr</td><br>
+            </tr>
+            {{range .}}
+                <tr>
+                    <td><a href="mp?users={{.Number}}">{{.Number}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.FirstName}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.LastName}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.Mail}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.Address}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.PostNrAndPlace}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.PhoneNr}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.OrgNr}}</a></td>
+                </tr>
+            {{end}}
+        </table>
+    </form>
 </div>
 {{end}} 
 
@@ -164,37 +147,8 @@
 </form>
 {{end}} 
 
-{{define "top1"}}
-    <div class="top1Container">
-        <form action="/" method="post"> <input type="submit" name="home" value="home"> </form>
-        <form action="/sp" method="post"> <input type="submit" name="button1" value="show persons"> </form>
-        <form action="/ap" method="post"> <input type="submit" name="button2" value="add persons"> </form>
-        <form action="/mp" method="post"> <input type="submit" name="button3" value="modify persons"> </form>
-    </div>
-{{end}}
-
-{{define "topMenu-old"}}
-    <div class="topMenuContainer">
-        <nav>
-            <ul class=primary>
-                <li>
-                    <a href="/">Home</a>
-                </li>
-                <li>
-                    <a href="/sp">Show all users</a>
-                </li>
-                <li>
-                    <a href="/ap">Add user</a>
-                </li>
-                <li>
-                    <a href="/mp">Modify user</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-{{end}}
-
 {{define "topMenu"}}
+<div class="topMenuContainer">
     <ul>
         <li><a href="/">Home</a></li>
         <li><a>User</a>
@@ -207,4 +161,5 @@
         <li><a>Bill</a></li>
         <li><a>About</a></li>
     </ul>
+</div>
 {{end}}

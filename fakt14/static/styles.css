@@ -39,9 +39,12 @@ input[type="text"] {
 }
 
 .modifyUserSelectionContainer {
-    display: inline-block;
-    width: 50%;
+    font-size: 20px;
 }
+.modifyUserSelectionContainer select  {
+    border: 1px solid;
+}
+
 .showUserMultiple {
     background-color: initial;
 }
