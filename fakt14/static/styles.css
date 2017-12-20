@@ -1,0 +1,107 @@
+h1 {
+    background-color: orange;
+}
+body {
+    background-image: url("/static/joker.jpg");
+    background-size: cover;
+    font-family: Arial;
+}
+/*form {
+   background-color:    grey
+}*/
+
+table {
+    margin-top: 3cm;
+}
+table td {
+    color: black;
+    background-color: grey;
+    opacity: .9;
+    border: 3px;
+    border-style: solid;
+}
+
+table td a {
+    text-decoration: none;
+    color: black;
+}
+
+table td:hover {
+    background-color: greenyellow;
+}
+input[type="text"] {
+    color: black;
+    font-style: initial;
+    border: 1px solid crimson;
+    font: outline;
+    border-color: black;
+    size: 50%;
+}
+
+.modifyUserSelectionContainer {
+    display: inline-block;
+    width: 50%;
+}
+.showUserMultiple {
+    background-color: initial;
+}
+.showUserSingleContainer{
+    margin: 5px;
+}
+.showUserSingleContainer .showUserSingleInputs {
+    display: table;
+}
+.showUsersMultipleContainer {
+    display: inline-block;
+}
+.showUserSingleConfirm {
+    margin-top: auto;
+}
+input[type=inputUserText] {
+    display: block; /*Define block gives all buttons and text below each other */
+}
+.addUserContainer input {
+    display: inline-flex;
+    font-size: 25px;
+}
+.addUserContainer {
+    display: inline-block;
+    width: 30%;
+}
+
+/********************MENU ITEMS**************************/
+ul { /*styling the upp menu within this block, the ul items*/
+    color: white;
+    margin: 0px; /*zero border around element*/
+    padding: 0px; /*zero border inside element*/
+    list-style: none; /*Removed the bullets infront of the list name*/
+    display: inline-block;
+    width: 100%;
+}
+ul li { /*styling the sub menus within this block, the li items*/
+    color: white;
+    float: left; /*Makes all the li elements aligned to the left*/
+    width: 200px;
+    height: 35px;
+    background-color: black;
+    opacity: .8;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    margin-right: 2px;
+    border-radius: 5px;
+}
+ul li a {   /*styling the menu link within this block*/
+    text-decoration: none;  /*Removed underline and things like that under the links*/
+    color: white; /*if the color is not set here the links that are pressed will have a different color*/
+    display: block;
+}
+ul li a:hover {
+    background-color: green;
+}
+ul li ul li {
+    display: none;
+}
+ul li:hover ul li { /*When we hover the ul li then do something with that ul li*/
+    display: block;
+}
