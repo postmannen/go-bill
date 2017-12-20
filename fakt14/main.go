@@ -294,7 +294,7 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 			log.Println("Du valgte ", p[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
 			indexNR = i
-			err := tmpl["init.html"].ExecuteTemplate(w, "showUserSingle", p[i]) //bruk bare en spesifik slice av struct og send til html template
+			err := tmpl["init.html"].ExecuteTemplate(w, "modifyUserSingle", p[i]) //bruk bare en spesifik slice av struct og send til html template
 			log.Println(err)
 		}
 	}

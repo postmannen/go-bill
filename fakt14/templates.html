@@ -118,10 +118,10 @@
 </div>
 {{end}} 
 
-{{define "showUserSingle"}}
+{{define "modifyUserSingle"}}
 <form>
-    <div class="showUserSingleContainer">
-        <div class="showUserSingleInputs">
+    <div class="modifyUserSingleContainer">
+        <div class="modifyUserSingleInputs">
             <!-- <input title="The customer nr" type="text" name="number" placeholder={{.Number}}> -->
             <label for="Firstname">Firstname</label>
             <input title="The name" type="inputUserText" name="firstName" placeholder={{.FirstName}}>
@@ -138,7 +138,7 @@
             <label for="Org">Org Nr</label>
             <input title="The Org nr" type="inputUserText" name="orgNr" placeholder={{.OrgNr}}>
         </div>
-        <div class="showUserSingleConfirm">
+        <div class="modifyUserSingleConfirm">
             Mark to confirm changes before you press Apply
             <input type="checkbox" name="sure" value="ok">
             <input type="submit" name="Modify" value="Apply">

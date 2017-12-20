@@ -42,18 +42,24 @@ input[type="text"] {
     font-size: 20px;
 }
 .modifyUserSelectionContainer select  {
-    border: 1px solid;
+    border: 2px solid;
+    background-color:white;
 }
-
-.showUserMultiple {
-    background-color: initial;
+.modifyUserSelectionContainer input {
+    border: 2px solid;
+    background-color:white;
 }
-.showUserSingleContainer{
+.modifyUserSingleContainer{
     margin: 5px;
 }
-.showUserSingleContainer .showUserSingleInputs {
+.modifyUserSingleContainer .modifyUserSingleInputs {
     display: table;
 }
+.modifyUserSingleContainer .modifyUserSingleInputs input {
+    border: 2px solid;
+    background-color:white;
+}
+
 .showUsersMultipleContainer {
     display: inline-block;
 }
