@@ -377,5 +377,8 @@ func showUsersWeb(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
-
+	err := tmpl["init.html"].ExecuteTemplate(w, "deleteUserCompletePage", "noneYet")
+	if err != nil {
+		log.Println("template execution error = ", err)
+	}
 }

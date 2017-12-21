@@ -103,6 +103,7 @@ input[type=inputUserText] {
 }
 
 /********************TOP MENU**************************/
+
 ul { /*styling the upp menu within this block, the ul items*/
     color: white;
     margin: 0px; /*zero border around element*/
@@ -110,6 +111,7 @@ ul { /*styling the upp menu within this block, the ul items*/
     list-style: none; /*Removed the bullets infront of the list name*/
     display: inline-block;
     width: 100%;
+
 }
 ul li { /*styling the sub menus within this block, the li items*/
     color: white;
@@ -126,6 +128,7 @@ ul li { /*styling the sub menus within this block, the li items*/
     border-radius: 5px;
 }
 ul li a {   /*styling the menu link within this block*/
+    z-index: 1;
     text-decoration: none;  /*Removed underline and things like that under the links*/
     color: white; /*if the color is not set here the links that are pressed will have a different color*/
     display: block;

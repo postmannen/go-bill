@@ -55,6 +55,18 @@
 </html>
 {{end}} 
 
+{{define "deleteUserCompletePage"}}
+<!DOCTYPE html>
+<html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}} 
+        {{template "topMenu" .}} 
+    </body>
+</html>
+
+{{end}}
+
 {{define "header"}}
 {{end}} 
 
@@ -155,7 +167,7 @@
                 <li><a href="/sp">Show all</a></li>
                 <li><a href="/ap">Add</a></li>
                 <li><a href="/mp">Modify</a></li>
-                <li><a href="/du"></a>Delete</li>
+                <li><a href="/du">Delete</a></li>
             </ul>
         </li>
         <li><a>Bill</a></li>
