@@ -11,19 +11,21 @@ body {
 }*/
 
 
-/**************SHOW ALL USER******************/
+/**************Show Single User******************/
 
-.showUsersMultipleContainer {
-    display: inline-block;
-}
 .showUserSingleConfirm {
     margin-top: auto;
 }
 input[type=inputUserText] {
     display: block; /*Define block gives all buttons and text below each other */
 }
+/*********** Show All Users ***********/
+.showUsersMultipleContainer {
+    display: inline-block;
+    font-size: 15px;
+}
 .showUsersMultipleContainer table {
-    margin-top: 3cm;
+    margin-top: 5px;
 }
 .showUsersMultipleContainer table td {
     color: black;
@@ -103,65 +105,42 @@ input[type=inputUserText] {
 }
 
 /********************TOP MENU**************************/
-.nav {
-    list-style: none;
-    font-weight: bold;
-    margin-bottom: 10px;
+ul { /*styling the upp menu within this block, the ul items*/
+    color: white;
+    margin: 0px; /*zero border around element*/
+    padding: 0px; /*zero border inside element*/
+    list-style: none; /*Removed the bullets infront of the list name*/
     display: inline-block;
-    /*float: left;/* /* Clear floats */
     width: 100%;
-    /* Bring the nav above everything else--uncomment if needed.
     position: relative;
-    z-index: 5;
-    */
-    position: relative;
-    z-index: 5;
+    z-index: 100;
 }
-.nav li {
-    /*float: left;*/
-    display: inline-block;
-    margin-right: 10px;
-    position: relative;
-    text-decoration: none;
+ul li { /*styling the sub menus within this block, the li items*/
+    color: white;
+    float: left; /*Makes all the li elements aligned to the left*/
+    width: 70px;
+    height: 35px;
+    background-color: black;
+    opacity: .8;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    margin-right: 2px;
+    margin-bottom: 1px;
+    border-radius: 5px;
 }
-.nav a {
+ul li a {   /*styling the menu link within this block*/
+    z-index: 1;
+    text-decoration: none;  /*Removed underline and things like that under the links*/
+    color: white; /*if the color is not set here the links that are pressed will have a different color*/
     display: block;
-    padding: 5px;
-    color: #fff;
-    background-color: #333;
-    text-decoration: none;
 }
-.nav a:hover {
-    color: #fff;
-    background-color: #6b0c36;
-    text-decoration: none;
+ul li a:hover {
+    background-color: green;
 }
-
-/*--- DROPDOWN ---*/
-.nav ul {
-    background-color: #fff; /* Adding a background makes the dropdown work properly in IE7+. Make this as close to your page's background as possible (i.e. white page == white background). */
-    background: rgba(255,255,255,0); /* But! Let's make the background fully transparent where we can, we don't actually want to see it if we can help it... */
-    list-style: none;
-    position: absolute;
-    left: -9999px; /* Hide off-screen when not needed (this is more accessible than display: none;) */
+ul li ul li {
+    display: none;
 }
-.nav ul li {
-    padding-top: 1px; /* Introducing a padding between the li and the a give the illusion spaced items */
-    float: none;
-}
-.nav ul a {
-    white-space: nowrap; /* Stop text wrapping and creating multi-line dropdown items */
-}
-.nav li:hover ul { /* Display the dropdown on hover */
-    left: 0; /* Bring back on-screen when needed */
-}
-.nav li:hover a { /* These create persistent hover states, meaning the top-most link stays 'hovered' even when your cursor has moved down the list. */
-    background-color: #6b0c36;
-    text-decoration: none;
-}
-.nav li:hover ul a { /* The persistent hover state does however create a global style for links even before they're hovered. Here we undo these effects. */
-    text-decoration: none;
-}
-.nav li:hover ul li a:hover { /* Here we define the most explicit hover states--what happens when you hover each individual link. */
-    background-color: #333;
+ul li:hover ul li { /*When we hover the ul li then do something with that ul li*/
+    display: block;
 }
