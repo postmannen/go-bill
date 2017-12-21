@@ -35,6 +35,18 @@
 	Changed the top menu to use links insted of input box's, and dropdown with css
 	showAllUsers : replaced the input boxes with a table.
 14: Changing the css styling of the pages
+	Added delete user function
+	Fixed an Error for counting highest nr, and number of rows which were
+	 not visible until the delete function were implemented
+	Rewrote the function to get next index number to get last index number,
+	 and return highest user uid, and count of total uid's
+
+
+Ideas:
+	Make the primary keys uid and bill ID random numbers, so you can sync the database
+	 between different devices without getting a conflict.
+	 Sorting can be done on a dummy index value that don't have to be unique
+
 
 
 */
@@ -88,15 +100,25 @@ func main() {
 
 }
 
+/****************************
+*	DATABASE FUNCTIONS		*
+*							*
+****************************/
+
 //Query the database for all users, and return a slice of struct with all users
 func queryDBForAllUserInfo(pDB *sql.DB) []User {
 	//get total rows in database
-	_, num := queryDBForNextCustomerUID(pDB)
+	num, countLines := queryDBForLastCustomerUID(pDB)
 	p := []User{}
+	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo highestNR ER = ", num)
+	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo countlines = ", countLines)
 
 	for i := 1; i <= num; i++ {
 		//append the row to slice
-		p = append(p, queryDBForSingleUserInfo(pDB, i))
+		pTemp := queryDBForSingleUserInfo(pDB, i)
+		if pTemp.Number != 0 {
+			p = append(p, queryDBForSingleUserInfo(pDB, i))
+		}
 	}
 	return p
 }
@@ -134,7 +156,7 @@ func queryDBForSingleUserInfo(db *sql.DB, uid int) User {
 }
 
 //input *sql.DB and returns pid of type int, and total number of rows as type int
-func queryDBForNextCustomerUID(db *sql.DB) (int, int) {
+func queryDBForLastCustomerUID(db *sql.DB) (int, int) {
 	rows, err := db.Query("select pid from user")
 	checkErr(err)
 	defer rows.Close()
@@ -153,10 +175,14 @@ func queryDBForNextCustomerUID(db *sql.DB) (int, int) {
 	for i := range num {
 		if highestNr < num[i] {
 			highestNr = num[i]
+			log.Println("queryDBForLastCustomerUID : highestNr = ", highestNr)
 			countLines++
 		}
 	}
-	highestNr++
+	//highestNr++	HUSK
+	//countLines++	HUSK
+	log.Println("queryDBForLastCustomerUID: highestNr = ", highestNr)
+	log.Println("queryDBForLastCustomerUID: countLines = ", countLines)
 	return highestNr, countLines
 }
 
@@ -169,10 +195,10 @@ func updateUserInDB(db *sql.DB, number int, first string, last string, mail stri
 	stmt, err := tx.Prepare("UPDATE user SET pid=?,firstname=?,lastname=?,mail=?,address=?,postnrandplace=?,phonenr=?,orgnr=? WHERE pid=?")
 	checkErr(err)
 	defer stmt.Close()
-	log.Println("Number in updateUserInDB function = ", number)
-	ape, err := stmt.Exec(number, first, last, mail, adr, ponr, phone, orgnr, number)
+	log.Println("updateUserInDB : Number in updateUserInDB function = ", number)
+	_, err = stmt.Exec(number, first, last, mail, adr, ponr, phone, orgnr, number)
 	//log.Println("VALUES TO DB : number = ",number,"first = ",first,"last = ",last,"mail = ",mail,"adr = ",adr,"ponr = ",ponr,"phone = ",phone,)
-	log.Println("TEKST FRA APE : ", ape)
+
 	tx.Commit()
 	checkErr(err)
 
@@ -237,11 +263,31 @@ func checkErr(err error, args ...string) {
 	}
 }
 
+func deleteUserInDB(db *sql.DB, number int) {
+	tx, err := db.Begin()
+	checkErr(err)
+	log.Println("deleteUserInDB: The index number of the person to delete is = ", number)
+	//Make the sql statement to execute
+	stmt, err := tx.Prepare("DELETE FROM user WHERE pid=?")
+	checkErr(err)
+	defer stmt.Close()
+	//prepare the statement with a value for the "?"
+	_, err = stmt.Exec(number)
+	tx.Commit()
+	checkErr(err)
+
+}
+
+/****************************
+*	WEBHANDLERS				*
+*							*
+****************************/
+
 //The default handler for the / main page
 func mainPage(w http.ResponseWriter, r *http.Request) {
 	err := tmpl["init.html"].ExecuteTemplate(w, "mainCompletePage", "put the data here")
 	if err != nil {
-		log.Println("template execution error = ", err)
+		log.Println("mainPage: template execution error = ", err)
 	}
 }
 
@@ -250,7 +296,7 @@ func addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	//read template file, and execute template defined within file, and send "some data" to the template
 	err := tmpl["init.html"].ExecuteTemplate(w, "addUserCompletePage", "some data")
 	if err != nil {
-		log.Println("template execution error = ", err)
+		log.Println("addUsersWeb: template execution error = ", err)
 	}
 
 	r.ParseForm()
@@ -263,8 +309,9 @@ func addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	on := r.FormValue("orgNr")
 
 	if fn != "" {
-		pid, _ := queryDBForNextCustomerUID(pDB)
-		println("UID = ", pid)
+		pid, _ := queryDBForLastCustomerUID(pDB)
+		pid++
+		println("addUsersWeb: UID = ", pid)
 		addUserToDB(pDB, pid, fn, ln, ma, ad, pa, pn, on)
 	} else {
 		//fmt.Fprintf(w, "Minimum needed is firstname")
@@ -290,14 +337,16 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	fn, _ := strconv.Atoi(r.FormValue("users"))
 
 	//Write out all the info of the selected user to the web
+	fmt.Println("modifyUsersWeb: HELE BASEN som er i p =", p)
 	for i := range p {
+		fmt.Println("modifyUsersWeb: p[i].Number = ", p[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
 		if p[i].Number == fn {
-			log.Println("Du valgte ", p[i].FirstName, p[i].LastName)
+			log.Println("modifyUsersWeb: p[i].FirstName, p[i].LastName = ", p[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
 			indexNR = i
 			err := tmpl["init.html"].ExecuteTemplate(w, "modifyUserSingle", p[i]) //bruk bare en spesifik slice av struct og send til html template
-			log.Println(err)
+			log.Println("modifyUsersWeb: error = ", err)
 		}
 	}
 
@@ -314,49 +363,49 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	if checkBox != nil {
 		if checkBox[0] == "ok" {
-			fmt.Printf("Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
+			fmt.Printf("modifyUsersWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
 			//Check what values that are changed
 			if fn2 != p[indexNR].FirstName && fn2 != "" {
-				log.Println("fn2 and FirstName are not the same ", fn2, "***", p[indexNR].FirstName)
+				log.Println("modifyUsersWeb: fn2 and FirstName are not the same ", fn2, "***", p[indexNR].FirstName)
 				p[indexNR].FirstName = fn2
 				changed = true
 			}
 			if ln2 != p[indexNR].LastName && ln2 != "" {
-				log.Println("ln2 and LastName are not the same ", ln2, "***", p[indexNR].LastName)
+				log.Println("modifyUsersWeb: ln2 and LastName are not the same ", ln2, "***", p[indexNR].LastName)
 				p[indexNR].LastName = ln2
 				changed = true
 			}
 			if ma2 != p[indexNR].Mail && ma2 != "" {
-				log.Println("ma2 and Mail are not the same ", ma2, "***", p[indexNR].Mail)
+				log.Println("modifyUsersWeb: ma2 and Mail are not the same ", ma2, "***", p[indexNR].Mail)
 				p[indexNR].Mail = ma2
 				changed = true
 			}
 			if ad2 != p[indexNR].Address && ad2 != "" {
-				log.Println("ad2 and Address are not the same ", ad2, "***", p[indexNR].Address)
+				log.Println("modifyUsersWeb: ad2 and Address are not the same ", ad2, "***", p[indexNR].Address)
 				p[indexNR].Address = ad2
 				changed = true
 			}
 			if pa2 != p[indexNR].PostNrAndPlace && pa2 != "" {
-				log.Println("pa2 and PostNrAndPlace are not the same ", pa2, "***", p[indexNR].PostNrAndPlace)
+				log.Println("modifyUsersWeb: pa2 and PostNrAndPlace are not the same ", pa2, "***", p[indexNR].PostNrAndPlace)
 				p[indexNR].PostNrAndPlace = pa2
 				changed = true
 			}
 			if pn2 != p[indexNR].PhoneNr && pn2 != "" {
-				log.Println("pn2 and PhoneNr are not the same ", pn2, "***", p[indexNR].PhoneNr)
+				log.Println("modifyUsersWeb: pn2 and PhoneNr are not the same ", pn2, "***", p[indexNR].PhoneNr)
 				p[indexNR].PhoneNr = pn2
 				changed = true
 			}
 			if on2 != p[indexNR].OrgNr && on2 != "" {
-				log.Println("on2 and OrgNr are not the same ", on2, "***", p[indexNR].OrgNr)
+				log.Println("modifyUsersWeb: on2 and OrgNr are not the same ", on2, "***", p[indexNR].OrgNr)
 				p[indexNR].OrgNr = on2
 				changed = true
 			}
 		}
 	} else {
-		log.Println("Verdien av checkbox var ikke satt")
+		log.Println("modifyUsersWeb: Verdien av checkbox var ikke satt")
 	}
 
-	log.Println("Personen du nå prøver å oppdatere har info = ", p[indexNR])
+	log.Println("modifyUsersWeb: Personen du nå prøver å oppdatere har info = ", p[indexNR])
 
 	//if any of the values was changed....update information into database
 	if changed {
@@ -371,14 +420,28 @@ func showUsersWeb(w http.ResponseWriter, r *http.Request) {
 	p := queryDBForAllUserInfo(pDB)
 	err := tmpl["init.html"].ExecuteTemplate(w, "showUserCompletePage", p)
 	if err != nil {
-		log.Println("template execution error = ", err)
+		log.Println("showUsersWeb: template execution error = ", err)
 	}
 	fmt.Fprint(w, err)
 }
 
 func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
-	err := tmpl["init.html"].ExecuteTemplate(w, "deleteUserCompletePage", "noneYet")
+	p := queryDBForAllUserInfo(pDB)
+	err := tmpl["init.html"].ExecuteTemplate(w, "deleteUserCompletePage", p)
 	if err != nil {
-		log.Println("template execution error = ", err)
+		log.Println("showUsersWeb: template execution error = ", err)
 	}
+
+	//parse the html form and get all the data
+	r.ParseForm()
+	fn, _ := strconv.Atoi(r.FormValue("users"))
+	//checkBox := r.Form["sure"]
+	fmt.Fprintln(w, fn)
+	//Call the function to delete the selected user
+	/*if checkBox != nil {
+		if checkBox[0] == "ok" {
+			deleteUserInDB(pDB, fn)
+		}
+	}*/
+	deleteUserInDB(pDB, fn)
 }

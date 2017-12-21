@@ -62,6 +62,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{template "head" .}} 
         {{template "topMenu" .}} 
+        {{template "deleteUserSelection" .}} 
     </body>
 </html>
 
@@ -100,10 +101,31 @@
                 <option value={{.Number}}>{{.FirstName}}</option>
             {{end}}
         </select>
-        <input type="submit" name="button5" value="Modify selected">
+        <input type="submit" name="submitModifyButton" value="Choose selected">
     </form>
 </div>
 {{end}} 
+
+{{define "deleteUserSelection"}}
+<div class="deleteUserSelectionContainer">
+    <form>
+        <h3>Delete user</h3>
+        <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
+        <select name="users">
+            {{range .}}
+                <option value={{.Number}}>{{.FirstName}}</option>
+            {{end}}
+        </select>
+        <input type="submit" name="submitDeleteButton" value="Delete selected">
+<!--        <div class="modifyUserSingleConfirm">
+                Mark to confirm changes before you press Apply
+                <input type="checkbox" name="sure" value="ok">
+                <input type="submit" name="Modify" value="Apply">
+        </div>-->
+    </form>
+</div>
+{{end}} 
+
 
 {{define "showUserMultiple"}}
 <div class="showUsersMultipleContainer">
