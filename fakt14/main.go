@@ -41,6 +41,9 @@
 	Rewrote the function to get next index number to get last index number,
 	 and return highest user uid, and count of total uid's
 
+TODO:
+	Keep the number 0 in the deleted user row, incase the last user is deleted
+	 then a new used added will get that number
 
 Ideas:
 	Make the primary keys uid and bill ID random numbers, so you can sync the database
