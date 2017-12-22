@@ -85,6 +85,7 @@
         <input type="text" name="poAddr" placeholder="Post nr og sted">
         <input type="text" name="phone" placeholder="Telefon nr.">
         <input type="text" name="orgNr" placeholder="Organisasjons nr">
+        <input type="text" name="countryID" placeholder="Country ID">
         <input type="submit" name="button1" value="Add">
     </div>
 </form>
@@ -98,7 +99,7 @@
         <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
         <select name="users">
             {{range .}}
-                <option value={{.Number}}>{{.FirstName}}</option>
+                <option value={{.Number}}>{{.Number}}. {{.FirstName}} {{.LastName}}</option>
             {{end}}
         </select>
         <input type="submit" name="submitModifyButton" value="Choose selected">
@@ -113,11 +114,11 @@
         <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
         <select name="users">
             {{range .}}
-                <option value={{.Number}}>{{.FirstName}}</option>
+                <option value={{.Number}}>{{.Number}}. {{.FirstName}} {{.LastName}}</option>
             {{end}}
         </select>
         <input type="submit" name="submitDeleteButton" value="Delete selected">
-<!--        <div class="modifyUserSingleConfirm">
+        <!--<div class="modifyUserSingleConfirm">
                 Mark to confirm changes before you press Apply
                 <input type="checkbox" name="sure" value="ok">
                 <input type="submit" name="Modify" value="Apply">
@@ -170,6 +171,8 @@
             <input title="The phone number" type="inputUserText" name="phone" placeholder={{.PhoneNr}}>
             <label for="Org">Org Nr</label>
             <input title="The Org nr" type="inputUserText" name="orgNr" placeholder={{.OrgNr}}>
+            <label for="country">Org Nr</label>
+            <input title="The country ID" type="inputUserText" name="countryId" placeholder={{.CountryID}}>
         </div>
         <div class="modifyUserSingleConfirm">
             Mark to confirm changes before you press Apply

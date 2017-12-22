@@ -40,7 +40,8 @@
 	 not visible until the delete function were implemented
 	Rewrote the function to get next index number to get last index number,
 	 and return highest user uid, and count of total uid's
-15:
+15: Rewrote the DB table names to use all small letters, and underscore to seperate words
+	 Changed all the code to reflect changes
 
 TODO:
 	Keep the number 0 in the deleted user row, incase the last user is deleted
@@ -78,6 +79,7 @@ type User struct { //some
 	PostNrAndPlace string
 	PhoneNr        string
 	OrgNr          string
+	CountryID      string
 }
 
 var pDB *sql.DB                        //The pointer to use with the Database
@@ -131,19 +133,19 @@ func queryDBForAllUserInfo(pDB *sql.DB) []User {
 //Query the database for the info of a single user. Takes user ID of type int as input, returns struct of single user
 func queryDBForSingleUserInfo(db *sql.DB, uid int) User {
 
-	rows, err := db.Query("select * from user where pid=?", uid)
+	rows, err := db.Query("select * from user where user_id=?", uid)
 	checkErr(err)
 
 	var pid int
 	//variables to store the rows.Scan below
-	var firstname, lastname, mail, address, postnrandplace, phonenr, orgnr string
+	var firstname, lastname, mail, address, postnrandplace, phonenr, orgnr, countryID string
 	//Next prepares the next result row for reading with the Scan method. It returns true on success,
 	//or false if there is no next result row or an error happened while preparing it.
 	//Err should be consulted to distinguish between the two cases.
 	for rows.Next() {
 		//Scan copies the columns in the current row into the values pointed at by dest.
 		//The number of values in dest must be the same as the number of columns in Rows of database.
-		rows.Scan(&pid, &firstname, &lastname, &mail, &address, &postnrandplace, &phonenr, &orgnr)
+		rows.Scan(&pid, &firstname, &lastname, &mail, &address, &postnrandplace, &phonenr, &orgnr, &countryID)
 
 	}
 	m := User{}
@@ -155,6 +157,7 @@ func queryDBForSingleUserInfo(db *sql.DB, uid int) User {
 	m.PostNrAndPlace = postnrandplace
 	m.PhoneNr = phonenr
 	m.OrgNr = orgnr
+	m.CountryID = countryID
 
 	defer rows.Close()
 	return m
@@ -162,7 +165,7 @@ func queryDBForSingleUserInfo(db *sql.DB, uid int) User {
 
 //input *sql.DB and returns the highest uid number, and line count of rows in DB
 func queryDBForLastCustomerUID(db *sql.DB) (int, int) {
-	rows, err := db.Query("select pid from user")
+	rows, err := db.Query("select user_id from user")
 	checkErr(err)
 	defer rows.Close()
 	//Prepare the slice to store numbers read from DB
@@ -192,17 +195,18 @@ func queryDBForLastCustomerUID(db *sql.DB) (int, int) {
 }
 
 //Update user in Database
-func updateUserInDB(db *sql.DB, number int, first string, last string, mail string, adr string, ponr string, phone string, orgnr string) {
+func updateUserInDB(db *sql.DB, number int, first string, last string, mail string, adr string, ponr string, phone string, orgnr string, countryID string) {
 	tx, err := db.Begin()
 	checkErr(err)
 
 	log.Println("The org nr. sendt to updateUserDB function = ", orgnr)
-	stmt, err := tx.Prepare("UPDATE user SET pid=?,firstname=?,lastname=?,mail=?,address=?,postnrandplace=?,phonenr=?,orgnr=? WHERE pid=?")
+	stmt, err := tx.Prepare("UPDATE user SET user_id=?,first_name=?,last_name=?,mail=?,address=?,post_nr_place=?,phone_nr=?,org_nr=?,country_id=? WHERE user_id=?")
 	checkErr(err)
 	defer stmt.Close()
 	log.Println("updateUserInDB : Number in updateUserInDB function = ", number)
-	_, err = stmt.Exec(number, first, last, mail, adr, ponr, phone, orgnr, number)
-	//log.Println("VALUES TO DB : number = ",number,"first = ",first,"last = ",last,"mail = ",mail,"adr = ",adr,"ponr = ",ponr,"phone = ",phone,)
+	log.Println("************", number, first, last, mail, adr, ponr, phone, orgnr, countryID, number, "*************")
+	//number is passed an extra time at the end of DB statement to fill the variable for the Query, which is done by number of user
+	_, err = stmt.Exec(number, first, last, mail, adr, ponr, phone, orgnr, countryID, number)
 
 	tx.Commit()
 	checkErr(err)
@@ -210,19 +214,19 @@ func updateUserInDB(db *sql.DB, number int, first string, last string, mail stri
 }
 
 //Adds user to Database
-func addUserToDB(db *sql.DB, number int, first string, last string, mail string, adr string, ponr string, phone string, orgnr string) {
+func addUserToDB(db *sql.DB, number int, first string, last string, mail string, adr string, ponr string, phone string, orgnr string, countryID string) {
 	//start db session
 	tx, err := db.Begin()
 	checkErr(err)
 
 	//create statement to insert values to DB
-	stmt, err := tx.Prepare("insert into user(pid,firstname,lastname,mail,address,postnrandplace,phonenr,orgnr) values(?,?,?,?,?,?,?,?)")
+	stmt, err := tx.Prepare("insert into user(user_id,first_name,last_name,mail,address,post_nr_place,phone_nr,org_nr,country_id) values(?,?,?,?,?,?,?,?,?)")
 	checkErr(err)
 	//At the end of function close the DB
 	defer stmt.Close()
 
 	//execute the statement on the DB
-	_, err = stmt.Exec(number, first, last, mail, adr, ponr, phone, orgnr)
+	_, err = stmt.Exec(number, first, last, mail, adr, ponr, phone, orgnr, countryID)
 	//commit to DB
 	tx.Commit()
 	checkErr(err)
@@ -250,7 +254,7 @@ func createDB() *sql.DB {
 						;`)
 	checkErr(err)
 
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS bills (
+	/*_, err = db.Exec(`CREATE TABLE IF NOT EXISTS bills (
 						pid integer PRIMARY KEY,
 						billNR string not null,
 						service string not null,
@@ -261,7 +265,7 @@ func createDB() *sql.DB {
 						totalSumExVat integer,
 						totalSumIncVat integer)
 	`)
-	checkErr(err)
+	checkErr(err)*/
 
 	return db
 }
@@ -278,9 +282,11 @@ func deleteUserInDB(db *sql.DB, number int) {
 	tx, err := db.Begin()
 	checkErr(err)
 	log.Println("deleteUserInDB: The index number of the person to delete is = ", number)
+
 	//Make the sql statement to execute
-	stmt, err := tx.Prepare("DELETE FROM user WHERE pid=?")
+	stmt, err := tx.Prepare("DELETE FROM user WHERE user_id=?")
 	checkErr(err)
+
 	defer stmt.Close()
 	//prepare the statement with a value for the "?"
 	_, err = stmt.Exec(number)
@@ -320,13 +326,14 @@ func addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	pa := r.FormValue("poAddr")
 	pn := r.FormValue("phone")
 	on := r.FormValue("orgNr")
+	coID := "0"
 
 	if fn != "" {
 		pid, _ := queryDBForLastCustomerUID(pDB)
 		//increment the user index nr by one for the new used to add
 		pid++
 		println("addUsersWeb: UID = ", pid)
-		addUserToDB(pDB, pid, fn, ln, ma, ad, pa, pn, on)
+		addUserToDB(pDB, pid, fn, ln, ma, ad, pa, pn, on, coID)
 	} else {
 		//fmt.Fprintf(w, "Minimum needed is firstname")
 	}
@@ -349,13 +356,13 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	//Get the value (number) of the chosen user from form dropdown menu <select name="users">
-	fn, _ := strconv.Atoi(r.FormValue("users"))
+	num, _ := strconv.Atoi(r.FormValue("users"))
 
 	//Write out all the info of the selected user to the web
 	for i := range p {
 		log.Println(ip, "modifyUsersWeb: p[i].Number = ", p[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
-		if p[i].Number == fn {
+		if p[i].Number == num {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", p[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
 			indexNR = i
@@ -365,13 +372,15 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.ParseForm()
-	fn2 := r.FormValue("firstName")
-	ln2 := r.FormValue("lastName")
-	ma2 := r.FormValue("mail")
-	ad2 := r.FormValue("address")
-	pa2 := r.FormValue("poAddr")
-	pn2 := r.FormValue("phone")
-	on2 := r.FormValue("orgNr")
+	fn := r.FormValue("firstName")
+	ln := r.FormValue("lastName")
+	ma := r.FormValue("mail")
+	ad := r.FormValue("address")
+	pa := r.FormValue("poAddr")
+	pn := r.FormValue("phone")
+	on := r.FormValue("orgNr")
+	coID := r.FormValue("countryId")
+
 	checkBox := r.Form["sure"]
 	changed := false
 
@@ -379,39 +388,44 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 		if checkBox[0] == "ok" {
 			fmt.Printf("modifyUsersWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
 			//Check what values that are changed
-			if fn2 != p[indexNR].FirstName && fn2 != "" {
-				log.Println(ip, "modifyUsersWeb: fn2 and FirstName are not the same ", fn2, "***", p[indexNR].FirstName)
-				p[indexNR].FirstName = fn2
+			if fn != p[indexNR].FirstName && fn != "" {
+				log.Println(ip, "modifyUsersWeb: fn and FirstName are not the same ", fn, "***", p[indexNR].FirstName)
+				p[indexNR].FirstName = fn
 				changed = true
 			}
-			if ln2 != p[indexNR].LastName && ln2 != "" {
-				log.Println(ip, "modifyUsersWeb: ln2 and LastName are not the same ", ln2, "***", p[indexNR].LastName)
-				p[indexNR].LastName = ln2
+			if ln != p[indexNR].LastName && ln != "" {
+				log.Println(ip, "modifyUsersWeb: ln and LastName are not the same ", ln, "***", p[indexNR].LastName)
+				p[indexNR].LastName = ln
 				changed = true
 			}
-			if ma2 != p[indexNR].Mail && ma2 != "" {
-				log.Println(ip, "modifyUsersWeb: ma2 and Mail are not the same ", ma2, "***", p[indexNR].Mail)
-				p[indexNR].Mail = ma2
+			if ma != p[indexNR].Mail && ma != "" {
+				log.Println(ip, "modifyUsersWeb: ma and Mail are not the same ", ma, "***", p[indexNR].Mail)
+				p[indexNR].Mail = ma
 				changed = true
 			}
-			if ad2 != p[indexNR].Address && ad2 != "" {
-				log.Println(ip, "modifyUsersWeb: ad2 and Address are not the same ", ad2, "***", p[indexNR].Address)
-				p[indexNR].Address = ad2
+			if ad != p[indexNR].Address && ad != "" {
+				log.Println(ip, "modifyUsersWeb: ad and Address are not the same ", ad, "***", p[indexNR].Address)
+				p[indexNR].Address = ad
 				changed = true
 			}
-			if pa2 != p[indexNR].PostNrAndPlace && pa2 != "" {
-				log.Println(ip, "modifyUsersWeb: pa2 and PostNrAndPlace are not the same ", pa2, "***", p[indexNR].PostNrAndPlace)
-				p[indexNR].PostNrAndPlace = pa2
+			if pa != p[indexNR].PostNrAndPlace && pa != "" {
+				log.Println(ip, "modifyUsersWeb: pa and PostNrAndPlace are not the same ", pa, "***", p[indexNR].PostNrAndPlace)
+				p[indexNR].PostNrAndPlace = pa
 				changed = true
 			}
-			if pn2 != p[indexNR].PhoneNr && pn2 != "" {
-				log.Println(ip, "modifyUsersWeb: pn2 and PhoneNr are not the same ", pn2, "***", p[indexNR].PhoneNr)
-				p[indexNR].PhoneNr = pn2
+			if pn != p[indexNR].PhoneNr && pn != "" {
+				log.Println(ip, "modifyUsersWeb: pn and PhoneNr are not the same ", pn, "***", p[indexNR].PhoneNr)
+				p[indexNR].PhoneNr = pn
 				changed = true
 			}
-			if on2 != p[indexNR].OrgNr && on2 != "" {
-				log.Println(ip, "modifyUsersWeb: on2 and OrgNr are not the same ", on2, "***", p[indexNR].OrgNr)
-				p[indexNR].OrgNr = on2
+			if on != p[indexNR].OrgNr && on != "" {
+				log.Println(ip, "modifyUsersWeb: on and OrgNr are not the same ", on, "***", p[indexNR].OrgNr)
+				p[indexNR].OrgNr = on
+				changed = true
+			}
+			if coID != p[indexNR].CountryID && coID != "" {
+				log.Println(ip, "modifyUsersWeb: coID and CountryID are not the same ", coID, "***", p[indexNR].CountryID)
+				p[indexNR].CountryID = coID
 				changed = true
 			}
 		}
@@ -423,7 +437,7 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//if any of the values was changed....update information into database
 	if changed {
-		updateUserInDB(pDB, p[indexNR].Number, p[indexNR].FirstName, p[indexNR].LastName, p[indexNR].Mail, p[indexNR].Address, p[indexNR].PostNrAndPlace, p[indexNR].PhoneNr, p[indexNR].OrgNr)
+		updateUserInDB(pDB, p[indexNR].Number, p[indexNR].FirstName, p[indexNR].LastName, p[indexNR].Mail, p[indexNR].Address, p[indexNR].PostNrAndPlace, p[indexNR].PhoneNr, p[indexNR].OrgNr, p[indexNR].CountryID)
 	}
 
 }
