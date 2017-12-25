@@ -42,6 +42,9 @@
 	 and return highest user uid, and count of total uid's
 15: Rewrote the DB table names to use all small letters, and underscore to seperate words
 	 Changed all the code to reflect changes
+16: Wrote the first db template to use in "template-database-creation.sql"
+	Rewrote the addUser* functions to use type User (struct) instead of single variables of type int and string
+	Rewrote the modifyUser* functions to use type User (struct) instead of single variables of type int and string
 
 TODO:
 	Keep the number 0 in the deleted user row, incase the last user is deleted
@@ -195,26 +198,26 @@ func queryDBForLastCustomerUID(db *sql.DB) (int, int) {
 }
 
 //Update user in Database
-func updateUserInDB(db *sql.DB, number int, first string, last string, mail string, adr string, ponr string, phone string, orgnr string, countryID string) {
+func updateUserInDB(db *sql.DB, u User) {
 	tx, err := db.Begin()
 	checkErr(err)
 
-	log.Println("The org nr. sendt to updateUserDB function = ", orgnr)
+	log.Println("The org nr. sendt to updateUserDB function = ", u.OrgNr)
 	stmt, err := tx.Prepare("UPDATE user SET user_id=?,first_name=?,last_name=?,mail=?,address=?,post_nr_place=?,phone_nr=?,org_nr=?,country_id=? WHERE user_id=?")
 	checkErr(err)
 	defer stmt.Close()
-	log.Println("updateUserInDB : Number in updateUserInDB function = ", number)
-	log.Println("************", number, first, last, mail, adr, ponr, phone, orgnr, countryID, number, "*************")
+	log.Println("updateUserInDB : Number in updateUserInDB function = ", u.Number)
+	log.Println("************", u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number, "*************")
 	//number is passed an extra time at the end of DB statement to fill the variable for the Query, which is done by number of user
-	_, err = stmt.Exec(number, first, last, mail, adr, ponr, phone, orgnr, countryID, number)
+	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number)
 
 	tx.Commit()
 	checkErr(err)
 
 }
 
-//Adds user to Database
-func addUserToDB(db *sql.DB, number int, first string, last string, mail string, adr string, ponr string, phone string, orgnr string, countryID string) {
+//Adds user to Database. takes pointer to DB, and type User struct as input
+func addUserToDB(db *sql.DB, u User) {
 	//start db session
 	tx, err := db.Begin()
 	checkErr(err)
@@ -226,7 +229,7 @@ func addUserToDB(db *sql.DB, number int, first string, last string, mail string,
 	defer stmt.Close()
 
 	//execute the statement on the DB
-	_, err = stmt.Exec(number, first, last, mail, adr, ponr, phone, orgnr, countryID)
+	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID)
 	//commit to DB
 	tx.Commit()
 	checkErr(err)
@@ -319,21 +322,31 @@ func addUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//r.ParseForm() lets you grab all the inputs and states from the webpage. Use FormValue to grab the specific values
 	r.ParseForm()
-	fn := r.FormValue("firstName")
+	/*fn := r.FormValue("firstName")
 	ln := r.FormValue("lastName")
 	ma := r.FormValue("mail")
 	ad := r.FormValue("address")
 	pa := r.FormValue("poAddr")
 	pn := r.FormValue("phone")
 	on := r.FormValue("orgNr")
-	coID := "0"
+	coID := "0"*/
 
-	if fn != "" {
+	u := User{}
+	u.FirstName = r.FormValue("firstName")
+	u.LastName = r.FormValue("lastName")
+	u.Mail = r.FormValue("mail")
+	u.Address = r.FormValue("address")
+	u.PostNrAndPlace = r.FormValue("poAddr")
+	u.PhoneNr = r.FormValue("phone")
+	u.OrgNr = r.FormValue("orgNr")
+	u.CountryID = "0"
+
+	if u.FirstName != "" {
 		pid, _ := queryDBForLastCustomerUID(pDB)
 		//increment the user index nr by one for the new used to add
 		pid++
 		println("addUsersWeb: UID = ", pid)
-		addUserToDB(pDB, pid, fn, ln, ma, ad, pa, pn, on, coID)
+		addUserToDB(pDB, u)
 	} else {
 		//fmt.Fprintf(w, "Minimum needed is firstname")
 	}
@@ -371,15 +384,17 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//create a variable based on user to hold the values parsed from the modify web
+	u := User{}
 	r.ParseForm()
-	fn := r.FormValue("firstName")
-	ln := r.FormValue("lastName")
-	ma := r.FormValue("mail")
-	ad := r.FormValue("address")
-	pa := r.FormValue("poAddr")
-	pn := r.FormValue("phone")
-	on := r.FormValue("orgNr")
-	coID := r.FormValue("countryId")
+	u.FirstName = r.FormValue("firstName")
+	u.LastName = r.FormValue("lastName")
+	u.Mail = r.FormValue("mail")
+	u.Address = r.FormValue("address")
+	u.PostNrAndPlace = r.FormValue("poAddr")
+	u.PhoneNr = r.FormValue("phone")
+	u.OrgNr = r.FormValue("orgNr")
+	u.CountryID = r.FormValue("countryId")
 
 	checkBox := r.Form["sure"]
 	changed := false
@@ -388,56 +403,57 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 		if checkBox[0] == "ok" {
 			fmt.Printf("modifyUsersWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
 			//Check what values that are changed
-			if fn != p[indexNR].FirstName && fn != "" {
-				log.Println(ip, "modifyUsersWeb: fn and FirstName are not the same ", fn, "***", p[indexNR].FirstName)
-				p[indexNR].FirstName = fn
+			if u.FirstName != p[indexNR].FirstName && u.FirstName != "" {
+				log.Println(ip, "modifyUsersWeb: u.FirstName and FirstName are not the same ", u.FirstName, "***", p[indexNR].FirstName)
+				p[indexNR].FirstName = u.FirstName
 				changed = true
 			}
-			if ln != p[indexNR].LastName && ln != "" {
-				log.Println(ip, "modifyUsersWeb: ln and LastName are not the same ", ln, "***", p[indexNR].LastName)
-				p[indexNR].LastName = ln
+			if u.LastName != p[indexNR].LastName && u.LastName != "" {
+				log.Println(ip, "modifyUsersWeb: u.LastName and LastName are not the same ", u.LastName, "***", p[indexNR].LastName)
+				p[indexNR].LastName = u.LastName
 				changed = true
 			}
-			if ma != p[indexNR].Mail && ma != "" {
-				log.Println(ip, "modifyUsersWeb: ma and Mail are not the same ", ma, "***", p[indexNR].Mail)
-				p[indexNR].Mail = ma
+			if u.Mail != p[indexNR].Mail && u.Mail != "" {
+				log.Println(ip, "modifyUsersWeb: u.Mail and Mail are not the same ", u.Mail, "***", p[indexNR].Mail)
+				p[indexNR].Mail = u.Mail
 				changed = true
 			}
-			if ad != p[indexNR].Address && ad != "" {
-				log.Println(ip, "modifyUsersWeb: ad and Address are not the same ", ad, "***", p[indexNR].Address)
-				p[indexNR].Address = ad
+			if u.Address != p[indexNR].Address && u.Address != "" {
+				log.Println(ip, "modifyUsersWeb: u.Address and Address are not the same ", u.Address, "***", p[indexNR].Address)
+				p[indexNR].Address = u.Address
 				changed = true
 			}
-			if pa != p[indexNR].PostNrAndPlace && pa != "" {
-				log.Println(ip, "modifyUsersWeb: pa and PostNrAndPlace are not the same ", pa, "***", p[indexNR].PostNrAndPlace)
-				p[indexNR].PostNrAndPlace = pa
+			if u.PostNrAndPlace != p[indexNR].PostNrAndPlace && u.PostNrAndPlace != "" {
+				log.Println(ip, "modifyUsersWeb: u.PostNrAndPlace and PostNrAndPlace are not the same ", u.PostNrAndPlace, "***", p[indexNR].PostNrAndPlace)
+				p[indexNR].PostNrAndPlace = u.PostNrAndPlace
 				changed = true
 			}
-			if pn != p[indexNR].PhoneNr && pn != "" {
-				log.Println(ip, "modifyUsersWeb: pn and PhoneNr are not the same ", pn, "***", p[indexNR].PhoneNr)
-				p[indexNR].PhoneNr = pn
+			if u.PhoneNr != p[indexNR].PhoneNr && u.PhoneNr != "" {
+				log.Println(ip, "modifyUsersWeb: u.PhoneNr and PhoneNr are not the same ", u.PhoneNr, "***", p[indexNR].PhoneNr)
+				p[indexNR].PhoneNr = u.PhoneNr
 				changed = true
 			}
-			if on != p[indexNR].OrgNr && on != "" {
-				log.Println(ip, "modifyUsersWeb: on and OrgNr are not the same ", on, "***", p[indexNR].OrgNr)
-				p[indexNR].OrgNr = on
+			if u.OrgNr != p[indexNR].OrgNr && u.OrgNr != "" {
+				log.Println(ip, "modifyUsersWeb: u.OrgNr and OrgNr are not the same ", u.OrgNr, "***", p[indexNR].OrgNr)
+				p[indexNR].OrgNr = u.OrgNr
 				changed = true
 			}
-			if coID != p[indexNR].CountryID && coID != "" {
-				log.Println(ip, "modifyUsersWeb: coID and CountryID are not the same ", coID, "***", p[indexNR].CountryID)
-				p[indexNR].CountryID = coID
+			if u.CountryID != p[indexNR].CountryID && u.CountryID != "" {
+				log.Println(ip, "modifyUsersWeb: coIDu.CountryID and CountryID are not the same ", u.CountryID, "***", p[indexNR].CountryID)
+				p[indexNR].CountryID = u.CountryID
 				changed = true
 			}
 		}
 	} else {
-		log.Println(ip, "modifyUsersWeb: Verdien av checkbox var ikke satt")
+		log.Println(ip, "modifyUsersWeb: The value of checkbox was not set")
 	}
 
-	log.Println(ip, "modifyUsersWeb: Personen du nå prøver å oppdatere har info = ", p[indexNR])
+	log.Println(ip, "modifyUsersWeb: The person beeing modified have this original info = ", p[indexNR])
 
 	//if any of the values was changed....update information into database
 	if changed {
-		updateUserInDB(pDB, p[indexNR].Number, p[indexNR].FirstName, p[indexNR].LastName, p[indexNR].Mail, p[indexNR].Address, p[indexNR].PostNrAndPlace, p[indexNR].PhoneNr, p[indexNR].OrgNr, p[indexNR].CountryID)
+		//updateUserInDB(pDB, p[indexNR].Number, p[indexNR].FirstName, p[indexNR].LastName, p[indexNR].Mail, p[indexNR].Address, p[indexNR].PostNrAndPlace, p[indexNR].PhoneNr, p[indexNR].OrgNr, p[indexNR].CountryID)
+		updateUserInDB(pDB, p[indexNR])
 	}
 
 }
