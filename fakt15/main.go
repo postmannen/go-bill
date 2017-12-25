@@ -42,6 +42,7 @@
 	 and return highest user uid, and count of total uid's
 15: Rewrote the DB table names to use all small letters, and underscore to seperate words
 	 Changed all the code to reflect changes
+	Created the first db layout. Found in "template-database-creating.sql"
 
 TODO:
 	Keep the number 0 in the deleted user row, incase the last user is deleted
