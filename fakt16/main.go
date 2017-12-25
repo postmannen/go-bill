@@ -197,7 +197,7 @@ func queryDBForLastCustomerUID(db *sql.DB) (int, int) {
 	return highestNr, countLines
 }
 
-//Update user in Database
+//Update user in Database, takes pointer to db and type User struct as input
 func updateUserInDB(db *sql.DB, u User) {
 	tx, err := db.Begin()
 	checkErr(err)
