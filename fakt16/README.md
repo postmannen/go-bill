@@ -50,12 +50,11 @@
     Created README.md
 
 ## TODO
-Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number
-Change the user pages to 1 page with add modify and delete
-Learn to pass values to web HandleFunc's, to make the exported user struct not exported
+* Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number
+* Change the user pages to 1 page with add modify and delete
+* Learn to pass values to web HandleFunc's, to make the exported user struct not exported
 
 ## Ideas
-	Make the primary keys uid and bill ID random numbers, so you can sync the database
-	between different devices without getting a conflict.
-	Sorting can be done on a dummy index value that don't have to be unique
+* Make the primary keys uid and bill ID random numbers, so you can sync the database between different devices without getting a conflict.
+* Sorting can be done on a dummy index value that don't have to be unique
 
