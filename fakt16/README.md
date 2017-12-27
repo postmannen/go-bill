@@ -1,6 +1,8 @@
-2: Tested person struct, and string to int conversion for person ID.
-    Iterate the slice of struct
-3: Added invoice nr. to personStruct
+##History
+
+ 2: Tested person struct, and string to int conversion for person ID.
+     Iterate the slice of struct
+ 3: Added invoice nr. to personStruct
 4: Added some menus with print and add person as options
 	Added getPersonNextNr function to look up the next available person nr
 5: Added auto next number for person
@@ -44,6 +46,8 @@
 16: Wrote the first db template to use in "template-database-creation.sql"
 	Rewrote the addUser* functions to use type User (struct) instead of single variables of type int and string
 	Rewrote the modifyUser* functions to use type User (struct) instead of single variables of type int and string
+    Split the main package into main.go, web.go, and db.go.
+    Created README.md
 
 TODO:
 	Keep the number 0 in the deleted user row, incase the last user is deleted
