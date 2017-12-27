@@ -43,11 +43,11 @@
 	 and return highest user uid, and count of total uid's
 15. Rewrote the DB table names to use all small letters, and underscore to seperate words
 	 Changed all the code to reflect changes
-16. Wrote the first db template to use in "template-database-creation.sql"
-    Rewrote the addUser* functions to use type User (struct) instead of single variables of type int and string
-    Rewrote the modifyUser* functions to use type User (struct) instead of single variables of type int and string
-    Split the main package into main.go, web.go, and db.go.
-    Created README.md
+16. Wrote the first db template to use in "template-database-creation.sql"  
+    Rewrote the addUser* functions to use type User (struct) instead of single variables of type int and string  
+    Rewrote the modifyUser* functions to use type User (struct) instead of single variables of type int and string  
+    Split the main package into main.go, web.go, and db.go.  
+    Created README.md  
 
 ## TODO
 * Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number
