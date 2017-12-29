@@ -6,7 +6,7 @@
     </html>
 </head>
 {{end}} 
-
+<!-- ******************* COMPLETE PAGES ***********************-->
 {{define "addUserCompletePage"}}
 <!DOCTYPE html>
 <html>
@@ -65,14 +65,29 @@
         {{template "deleteUserSelection" .}} 
     </body>
 </html>
+{{end}}
 
+{{define "createBillCompletePage"}}
+<!DOCTYPE html>
+    <html>
+        <body>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            {{template "head" .}}
+            {{template "topMenu"}}
+            {{template "createBillLine" .}}
+        </body>
+
+    </html>
 {{end}}
 
 {{define "header"}}
 {{end}} 
 
 {{define "index"}}
+    Nothing here yet
 {{end}} 
+
+<!-- ******************* USER PAGES ***********************-->
 
 {{define "addUser"}}
 <form>
@@ -90,7 +105,6 @@
     </div>
 </form>
 {{end}} 
-
 
 {{define "modifyUserSelection"}}
 <div class="modifyUserSelectionContainer">
@@ -181,8 +195,19 @@
         </div>
     </div>
 </form>
-{{end}} 
+{{end}}
 
+<!-- ******************* BILL PAGES *********************-->
+{{define "createBillLine"}}
+    <form action="test"></form>
+        <input type="text" name="test" placeholder="test">
+        <input type="submit" name="createBillLineButton" value="Add line">
+    </form>
+{{end}}
+
+
+<!-- ******************* TOP MENU ***********************-->
+<!-- The link opened by the href below is controlled via the http.HandleFunc in main.go-->
 {{define "topMenu"}}
 <div class="topMenuContainer">
     <ul class="nav">
@@ -195,7 +220,11 @@
                 <li><a href="/du">Delete</a></li>
             </ul>
         </li>
-        <li><a>Bill</a></li>
+        <li><a>Bill</a>
+            <ul>
+                <li><a href="/createBill">Create</a></li>
+            </ul>
+        </li>
         <li><a>About</a></li>
     </ul>
 </div>

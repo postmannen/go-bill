@@ -31,14 +31,6 @@ func addUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//r.ParseForm() lets you grab all the inputs and states from the webpage. Use FormValue to grab the specific values
 	r.ParseForm()
-	/*fn := r.FormValue("firstName")
-	ln := r.FormValue("lastName")
-	ma := r.FormValue("mail")
-	ad := r.FormValue("address")
-	pa := r.FormValue("poAddr")
-	pn := r.FormValue("phone")
-	on := r.FormValue("orgNr")
-	coID := "0"*/
 
 	u := User{}
 	u.FirstName = r.FormValue("firstName")
@@ -197,4 +189,19 @@ func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 		}
 	}*/
 	deleteUserInDB(pDB, fn)
+}
+
+//The web handler to create bills
+func billCreateWeb(w http.ResponseWriter, r *http.Request) {
+	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", "SOME DATA HERE ????")
+	if err != nil {
+		log.Println("createBillCompletePage: template execution error = ", err)
+	}
+	r.ParseForm()
+	fmt.Fprintf(w, "%v", r.FormValue("test"))
+
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLine", "SOME DATA HERE ????")
+	if err != nil {
+		log.Println("createBillCompletePage: template execution error = ", err)
+	}
 }
