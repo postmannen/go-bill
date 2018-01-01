@@ -120,6 +120,16 @@ input[type=inputUserText] {
     display: inline-block;
     width: 25%;
 }
+/********************BILL PAGES**************************/
+div.createBillLineContainer  {
+    display: block;
+    width: 25%;
+}
+div.createBillLineContainer .createBillLine {
+    
+    font-size: 20px;
+}
+
 
 /********************TOP MENU**************************/
 ul { /*styling the upp menu within this block, the ul items*/

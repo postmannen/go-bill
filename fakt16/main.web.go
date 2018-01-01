@@ -197,11 +197,23 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("createBillCompletePage: template execution error = ", err)
 	}
-	r.ParseForm()
-	fmt.Fprintf(w, "%v", r.FormValue("test"))
 
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLine", "SOME DATA HERE ????")
+	//a struct for the bill lines. Fields must be export (starting Capital letter) to be passed to template
+	type billLines struct {
+		LineNR      int
+		Description string
+		//just create some linenumbers for testing
+	}
+	line := []billLines{}
+	line = append(line, billLines{LineNR: 1, Description: "Noe en"})
+	line = append(line, billLines{LineNR: 2, Description: "Noe to"})
+	line = append(line, billLines{LineNR: 3, Description: "Noe tre"})
+	line = append(line, billLines{LineNR: 4, Description: "Noe fire"})
+	fmt.Println(line)
+
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLine", line)
 	if err != nil {
 		log.Println("createBillCompletePage: template execution error = ", err)
 	}
+
 }

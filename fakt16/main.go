@@ -36,6 +36,8 @@ func main() {
 	pDB = createDB()
 	defer pDB.Close()
 
+	//HandleFunc takes a handle (ResponseWriter) as first parameter,
+	//and pointer to Request function as second parameter
 	http.HandleFunc("/sp", showUsersWeb)
 	http.HandleFunc("/ap", addUsersWeb)
 	http.HandleFunc("/mp", modifyUsersWeb)

@@ -199,10 +199,23 @@
 
 <!-- ******************* BILL PAGES *********************-->
 {{define "createBillLine"}}
-    <form action="test"></form>
-        <input type="text" name="test" placeholder="test">
-        <input type="submit" name="createBillLineButton" value="Add line">
+    <div class="createBillLineContainer">
+        <div class="createBillLine">
+            <form>
+                {{range .}}
+                    <input type="text" name="billLineNR{{.LineNR}}" value="tekstverdi{{.LineNR}}">
+                    <input type="text" name="billLineDescription{{.LineNR}}" value="{{.Description}}">
+                {{end}}
+            </form>
+        </div>
+    </div>
+{{end}}
+
+{{define "createBillAddLineButton"}}
+    <form>
+        <input type="submit" name="knapp" value="verdi">
     </form>
+
 {{end}}
 
 
