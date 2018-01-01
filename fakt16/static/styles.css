@@ -124,10 +124,19 @@ input[type=inputUserText] {
 div.createBillLineContainer  {
     display: block;
     width: 25%;
+    background-color: blue;
 }
 div.createBillLineContainer .createBillLine {
-    
+    background-color: green;
     font-size: 20px;
+}
+
+div.createBillLineContainer div.createBillLine div.test {
+    background-color: red;
+}
+
+div.createBillLineContainer div.createBillLine div.test input[type="text"] {
+    border: purple solid thick;
 }
 
 

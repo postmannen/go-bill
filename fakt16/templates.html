@@ -203,8 +203,10 @@
         <div class="createBillLine">
             <form>
                 {{range .}}
+                <div class="test">
                     <input type="text" name="billLineNR{{.LineNR}}" value="tekstverdi{{.LineNR}}">
                     <input type="text" name="billLineDescription{{.LineNR}}" value="{{.Description}}">
+                </div>
                 {{end}}
             </form>
         </div>
