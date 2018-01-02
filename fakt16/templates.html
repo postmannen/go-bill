@@ -75,7 +75,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             {{template "head" .}}
             {{template "topMenu"}}
-            <!--{{template "createBillLines" .}}-->
+            {{template "createBillUserSelection" .}}
         </body>
 
     </html>
@@ -238,6 +238,35 @@
         <input type="submit" name="addBillForUserButton" value="Choose selected">
     </form>
 </div>
+{{end}}
+
+{{define "billShowUserSingle"}}
+<form>
+    <div class="modifyUserSingleContainer">
+        <div class="modifyUserSingleInputs">
+            <!-- <input title="The customer nr" type="text" name="number" placeholder={{.Number}}> -->
+            <label for="Firstname">Firstname</label>
+            <input title="The name" type="inputUserText" name="firstName" placeholder="{{.FirstName}}">
+            <label for="Lastname">Lastname</label>
+            <input title="The lastname" type="inputUserText" name="lastName" placeholder="{{.LastName}}">
+            <label for="Mail">Mail</label>
+            <input title="The mail address" type="inputUserText" name="mail" placeholder="{{.Mail}}">
+            <label for="Address">Address</label>
+            <input title="The address" type="inputUserText" name="address" placeholder="{{.Address}}">
+            <label for="PostNrAndPlace">PostNrAndPlace</label>
+            <input title="The Post nr and place" type="inputUserText" name="poAddr" placeholder="{{.PostNrAndPlace}}">
+            <label for="Phone">Phone</label>
+            <input title="The phone number" type="inputUserText" name="phone" placeholder="{{.PhoneNr}}">
+            <label for="Org">Org Nr</label>
+            <input title="The Org nr" type="inputUserText" name="orgNr" placeholder="{{.OrgNr}}">
+            <label for="country">Org Nr</label>
+            <input title="The country ID" type="inputUserText" name="countryId" placeholder="{{.CountryID}}">
+        </div>
+        <div class="modifyUserSingleConfirm">
+            <input type="submit" name="addBill" value="Add Bill">
+        </div>
+    </div>
+</form>
 {{end}}
 
 <!-- ******************* TOP MENU ***********************-->

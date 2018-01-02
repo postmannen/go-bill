@@ -195,9 +195,30 @@ func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	p := queryDBForAllUserInfo(pDB)
 
-	err := tmpl["init.html"].ExecuteTemplate(w, "createBillUserSelection", p)
+	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", p)
 	if err != nil {
 		log.Println("createBillUserSelection: template execution error = ", err)
+	}
+
+	ip := r.RemoteAddr
+
+	//Parse all the variables in the html form to get all the data
+	r.ParseForm()
+
+	//Get the value (number) of the chosen user from form dropdown menu <select name="users">
+	num, _ := strconv.Atoi(r.FormValue("users"))
+
+	//Write out all the info of the selected user to the web
+	for i := range p {
+		log.Println(ip, "modifyUsersWeb: p[i].Number = ", p[i].Number)
+		//Iterate over the complete struct of users until the chosen user is found
+		if p[i].Number == num {
+			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", p[i].FirstName, p[i].LastName)
+			//Store the index nr in slice of the chosen user
+			indexNR = i
+			err := tmpl["init.html"].ExecuteTemplate(w, "billShowUserSingle", p[i]) //bruk bare en spesifik slice av struct og send til html template
+			log.Println(ip, "modifyUsersWeb: error = ", err)
+		}
 	}
 
 	//a struct for the bill lines. Fields must be export (starting Capital letter) to be passed to template
