@@ -35,10 +35,10 @@ type Bill struct {
 
 //BillLines struct. Fields must be export (starting Capital letter) to be passed to template
 type BillLines struct {
-	ItemID             int
-	LineNR             int
-	Description        string
 	BillID             int
+	ItemID             int
+	LineID             int
+	Description        string
 	Quantity           int
 	DiscountPercentage int
 	VatUsed            int

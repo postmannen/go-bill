@@ -136,6 +136,38 @@ func addUserToDB(db *sql.DB, u User) {
 
 //************************** BILL SECTION ***********************************
 
+//Query the database all the bill lines for a specific bill nr. Takes bill_id of type int as input,
+//returns a slice of struct type BillLines
+func queryDBForBillLinesInfo(db *sql.DB, uid int) []BillLines {
+
+	rows, err := db.Query("select * from user where user_id=?", uid)
+	checkErr(err)
+
+	//variables to store the rows.Scan below
+
+	var indx int
+	/*var indx, BillID, LineID, ItemID, Quantity, DiscountPercentage, VatUsed int
+	var Description string
+	var PriceExVat float64*/
+	read := BillLines{}
+
+	m := []BillLines{}
+	//Next prepares the next result row for reading with the Scan method. It returns true on success,
+	//or false if there is no next result row or an error happened while preparing it.
+	//Err should be consulted to distinguish between the two cases.
+	for rows.Next() {
+		//Scan copies the columns in the current row into the values pointed at by dest.
+		//The number of values in dest must be the same as the number of columns in Rows of database.
+		rows.Scan(&indx, &read.BillID, &read.LineID, &read.ItemID, &read.Description, &read.Quantity, &read.DiscountPercentage, &read.VatUsed, &read.PriceExVat)
+
+		//DO THIS WORK ?????????????? trying to append a struct into a slice of structs of the same type
+		m = append(m, read)
+	}
+
+	defer rows.Close()
+	return m
+}
+
 //input *sql.DB and returns the highest bill number, and line count of rows in DB
 func queryDBForLastBillID(db *sql.DB) (int, int) {
 	rows, err := db.Query("SELECT bill_id FROM bills")
