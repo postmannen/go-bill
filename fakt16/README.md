@@ -44,11 +44,14 @@
     Rewrote the modifyUser* functions to use type User (struct) instead of single variables of type int and string  
     Split the main package into main.go, web.go, and db.go.  
     Created README.md  
+	Created the initiall bill page
+	Added the choose user html part
 
 ## TODO
 * Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number
 * Change the user pages to 1 page with add modify and delete
 * Learn to pass values to web HandleFunc's, to make the exported user struct not exported
+* Check if templates can be reused
 
 ## Ideas
 * Make the primary keys uid and bill ID random numbers, so you can sync the database between different devices without getting a conflict.
