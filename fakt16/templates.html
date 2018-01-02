@@ -222,9 +222,23 @@
     <form>
         <input type="submit" name="knapp" value="verdi">
     </form>
-
 {{end}}
 
+{{define "createBillUserSelection"}}
+<!--Use the same css as for modify User, TODO: Rewrite the naming to something more generic -->
+<div class="modifyUserSelectionContainer">
+    <form>
+        <h3>Select user</h3>
+        <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
+        <select name="users">
+            {{range .}}
+                <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
+            {{end}}
+        </select>
+        <input type="submit" name="addBillForUserButton" value="Choose selected">
+    </form>
+</div>
+{{end}}
 
 <!-- ******************* TOP MENU ***********************-->
 <!-- The link opened by the href below is controlled via the http.HandleFunc in main.go-->

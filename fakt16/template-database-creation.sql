@@ -49,7 +49,8 @@ CREATE TABLE bills (
 	due_date text,
 	comment string,
 	totalt_ex_vat real,
-	total_inc_vat real
+	total_inc_vat real,
+	paid integer
 );
 
 COMMIT;

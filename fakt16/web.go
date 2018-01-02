@@ -193,9 +193,11 @@ func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 
 //The web handler to create bills
 func billCreateWeb(w http.ResponseWriter, r *http.Request) {
-	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", "SOME DATA HERE ????")
+	p := queryDBForAllUserInfo(pDB)
+
+	err := tmpl["init.html"].ExecuteTemplate(w, "createBillUserSelection", p)
 	if err != nil {
-		log.Println("createBillCompletePage: template execution error = ", err)
+		log.Println("createBillUserSelection: template execution error = ", err)
 	}
 
 	//a struct for the bill lines. Fields must be export (starting Capital letter) to be passed to template
@@ -210,16 +212,20 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		PriceExVat         float64
 		//just create some linenumbers for testing
 	}
-	line := []billLines{}
-	line = append(line, billLines{LineNR: 1, Description: "Noe en", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
-	line = append(line, billLines{LineNR: 2, Description: "Noe to", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
-	line = append(line, billLines{LineNR: 3, Description: "Noe tre", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
-	line = append(line, billLines{LineNR: 4, Description: "Noe fire", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
-	fmt.Println(line)
 
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLine", line)
-	if err != nil {
-		log.Println("createBillCompletePage: template execution error = ", err)
-	}
+	/*
+		//create a slice of type billLines to hold all the billLines
+		line := []billLines{}
+		line = append(line, billLines{LineNR: 1, Description: "Noe en", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
+		line = append(line, billLines{LineNR: 2, Description: "Noe to", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
+		line = append(line, billLines{LineNR: 3, Description: "Noe tre", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
+		line = append(line, billLines{LineNR: 4, Description: "Noe fire", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
+		fmt.Println(line)
+
+		err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", line)
+		if err != nil {
+			log.Println("createBillCompletePage: template execution error = ", err)
+		}
+	*/
 
 }
