@@ -153,18 +153,18 @@ func createDB() *sql.DB {
 						;`)
 	checkErr(err)
 
-	/*_, err = db.Exec(`CREATE TABLE IF NOT EXISTS bills (
-						pid integer PRIMARY KEY,
-						billNR string not null,
-						service string not null,
-						amount string not null,
-						priceExVat integer not null,
-						discount integer,
-						priceIncVat integer,
-						totalSumExVat integer,
-						totalSumIncVat integer)
-	`)
-	checkErr(err)*/
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS bill_lines (
+		indx int PRIMARY KEY,
+		bill_id int,
+		line_id int,
+		item_id int,
+		description string,
+		quantity int,
+		discount_percentage int,
+		vat_used int,
+		price_ex_vat real)
+	;`)
+	checkErr(err)
 
 	return db
 }

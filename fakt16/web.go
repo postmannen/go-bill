@@ -200,15 +200,21 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 
 	//a struct for the bill lines. Fields must be export (starting Capital letter) to be passed to template
 	type billLines struct {
-		LineNR      int
-		Description string
+		ItemID             int
+		LineNR             int
+		Description        string
+		BillID             int
+		Quantity           int
+		DiscountPercentage int
+		VatUsed            int
+		PriceExVat         float64
 		//just create some linenumbers for testing
 	}
 	line := []billLines{}
-	line = append(line, billLines{LineNR: 1, Description: "Noe en"})
-	line = append(line, billLines{LineNR: 2, Description: "Noe to"})
-	line = append(line, billLines{LineNR: 3, Description: "Noe tre"})
-	line = append(line, billLines{LineNR: 4, Description: "Noe fire"})
+	line = append(line, billLines{LineNR: 1, Description: "Noe en", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
+	line = append(line, billLines{LineNR: 2, Description: "Noe to", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
+	line = append(line, billLines{LineNR: 3, Description: "Noe tre", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
+	line = append(line, billLines{LineNR: 4, Description: "Noe fire", Quantity: 1, DiscountPercentage: 0, VatUsed: 25, PriceExVat: 999})
 	fmt.Println(line)
 
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLine", line)

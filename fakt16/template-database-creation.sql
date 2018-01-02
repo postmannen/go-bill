@@ -12,8 +12,8 @@ country_id string);
 	INSERT INTO user VALUES(2,'Dolly','Duck','dolly@andeby.com','Ducksvei 2','1 Andeby',222,'null',0);
 	INSERT INTO user VALUES(3,'Doffen','Duck','doffen@andeby.com','Ducksvei 1','1 Andeby',333,'null',0);
 	INSERT INTO user VALUES(4,'Skrue','McDuck','skrue@andeby.com','Pengebingen','1 Andeby',99999999,'999.999.999',0);
-	INSERT INTO user VALUES(5,'Mikke','Mus','mikke@andeby.com','1 Musveien','1 Andeby',1432,'null',0
-	);
+	INSERT INTO user VALUES(5,'Mikke','Mus','mikke@andeby.com','1 Musveien','1 Andeby',1432,'null',0);
+	INSERT INTO user VALUES(7,'Kit','Walker','kit@fantomet.com','Hodeskallegrotten','De dype skoger','Apepost','null',0);
 
 CREATE TABLE country (
 	country_id string PRIMARY KEY,
@@ -30,7 +30,7 @@ CREATE TABLE items (
 	storage_amount int
 );
 
-CREATE TABLE bill_details (
+CREATE TABLE bill_lines (
 	indx int PRIMARY KEY,
 	bill_id int,
 	line_id int,
@@ -38,8 +38,8 @@ CREATE TABLE bill_details (
 	description string,
 	quantity int,
 	discount_percentage int,
-	price_ex_vat real,
-	vat_used int
+	vat_used int,
+	price_ex_vat real
 );
 
 CREATE TABLE bills (

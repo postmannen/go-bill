@@ -123,7 +123,7 @@ input[type=inputUserText] {
 /********************BILL PAGES**************************/
 div.createBillLineContainer  {
     display: block;
-    width: 25%;
+    width: 75%;
     background-color: blue;
 }
 div.createBillLineContainer .createBillLine {
@@ -133,12 +133,29 @@ div.createBillLineContainer .createBillLine {
 
 div.createBillLineContainer div.createBillLine div.test {
     background-color: red;
+    display: inline-flex;
 }
 
 div.createBillLineContainer div.createBillLine div.test input[type="text"] {
-    border: purple solid thick;
+    border: black solid thin;
 }
 
+/****The individual fields of the bill lines*/
+div.createBillLineContainer div.createBillLine div.test input[name*="billLineNR"] {
+    width: 30px;
+}
+div.createBillLineContainer div.createBillLine div.test input[name*="Description"] {
+    width: 200px;
+}
+div.createBillLineContainer div.createBillLine div.test input[name="billLineQuantity"] {
+    width: 40px;
+}
+div.createBillLineContainer div.createBillLine div.test input[name="billLineDiscountPercentage"] {
+    width: 30px;
+}
+div.createBillLineContainer div.createBillLine div.test input[name="billLineVatUsed"] {
+    width: 30px;
+}
 
 /********************TOP MENU**************************/
 ul { /*styling the upp menu within this block, the ul items*/

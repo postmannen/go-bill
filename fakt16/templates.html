@@ -75,7 +75,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             {{template "head" .}}
             {{template "topMenu"}}
-            {{template "createBillLine" .}}
+            <!--{{template "createBillLines" .}}-->
         </body>
 
     </html>
@@ -199,14 +199,18 @@
 {{end}}
 
 <!-- ******************* BILL PAGES *********************-->
-{{define "createBillLine"}}
+{{define "createBillLines"}}
     <div class="createBillLineContainer">
         <div class="createBillLine">
             <form>
                 {{range .}}
                 <div class="test">
-                    <input type="text" name="billLineNR{{.LineNR}}" value="tekstverdi{{.LineNR}}">
-                    <input type="text" name="billLineDescription{{.LineNR}}" value="{{.Description}}">
+                    <input type="text" name="billLineNR{{.LineNR}}" value="Lnr:{{.LineNR}}">
+                    <textarea cols="20" rows="1" name="billLineDescription{{.LineNR}}"></textarea>
+                    <input type="text" name="billLineQuantity" value="{{.Quantity}}">
+                    <input type="text" name="billLineDiscountPercentage" value="{{.DiscountPercentage}}">
+                    <input type="text" name="billLineVatUsed" value="{{.VatUsed}}">
+                    <input type="text" name="billLinePriceExVat" value="{{.PriceExVat}}">
                 </div>
                 {{end}}
             </form>
