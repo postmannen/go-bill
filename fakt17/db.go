@@ -216,7 +216,7 @@ func addBillToDB(db *sql.DB, b Bill) {
 	}
 
 	//create statement to insert values to DB
-	stmt, err := tx.Prepare("insert into bills(bill_id,user_id,created_date,due_date,comment,total_ex_vat,total_inc_vat,paid) values(?,?,?,?,?,?,?,?)")
+	stmt, err := tx.Prepare("insert into bills(bill_id,user_id,create_date,due_date,comment,total_ex_vat,total_inc_vat,paid) values(?,?,?,?,?,?,?,?)")
 	if err != nil {
 		log.Println("ERROR: addBillToDB: statement problem = ", err)
 	}
