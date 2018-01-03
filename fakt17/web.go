@@ -248,23 +248,26 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	//if the add button were pushed
 	if buttonAction == "add" {
 
-		//TODO: create a new bill_id in bills database
+		//create a new bill_id in bills database
 		//use the next available bill number
 		//use the chosen user id for user_id
-		//---------------------------------
 		newBill := Bill{}
 		newBill.BillID = totalBillNumbers + 1
 		newBill.UserID = activeUserID
 
-		addBillToDB(pDB, newBill)
-		//---------------------------------
+		//create a new bill and return the new billID to use later
+		newBillID := addBillToDB(pDB, newBill)
+		log.Println("billCreateWeb: newBillID = ", newBillID)
 
+		//---------------------------------
 		//TODO: create a new blank bill line in the bill_lines database
 		//use a new bill_id from the code above
 		//use the chosen users id for user_id
+		indxLastNumber, indxCountLines := queryDBForLastBillLineIndx(pDB)
 
+		//---------------------------------
 		//Read all the bill lines for the given billID, and put them in a slice for iteraring later
-		mySlice := queryDBForBillLinesInfo(pDB, 11) //TODO:using billID 11 for testing
+		mySlice := queryDBForBillLinesInfo(pDB, newBillID) //TODO:using billID 11 for testing
 		log.Println("billCreateWeb: mySlice = ", mySlice)
 
 		//Print bill lines to web

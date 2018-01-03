@@ -206,9 +206,8 @@ func queryDBForLastBillID(db *sql.DB) (int, int) {
 	return highestNr, countLines
 }
 
-//WORKING HERE !!!
-//Adds new bill to Database. takes pointer to DB, and type bill struct as input
-func addBillToDB(db *sql.DB, b Bill) {
+//Adds new bill to Database. takes pointer to DB, and type bill struct as input. Returns bill ID of type int
+func addBillToDB(db *sql.DB, b Bill) int {
 	//start db session
 	tx, err := db.Begin()
 	if err != nil {
@@ -233,27 +232,62 @@ func addBillToDB(db *sql.DB, b Bill) {
 		log.Println("ERROR: addBillToDB: stmt.Exec problem = ", err)
 	}
 
+	return b.BillID
 }
 
+//WORKING HERE !!!
 //*****TODO: WRITE CORRECT FUNCTION HERE. right now this is just a copy of the addBillToDB function.
-//Adds new bill line to Database. takes pointer to DB, and type bill struct as input
-func addBillLineToDB(db *sql.DB, b Bill) {
+//Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
+//Create a function to keep track of the next available indx number in database
+func addBillLineToDB(db *sql.DB, b BillLines, indx int) {
 	//start db session
 	tx, err := db.Begin()
 	checkErr(err)
 
 	//create statement to insert values to DB
-	stmt, err := tx.Prepare("insert into bills(bill_id,user_id,create_date,due_date,comment,total_ex_vat,total_inc_vat,paid) values(?,?,?,?,?,?,?,?)")
+	stmt, err := tx.Prepare("insert into bills(indx,bill_id,line_id,item_id,description,quantity,discount_percentage,vat_used,price_ex_vat) values(?,?,?,?,?,?,?,?,?)")
 	checkErr(err)
 	//At the end of function close the DB
 	defer stmt.Close()
 
 	//execute the statement on the DB
-	_, err = stmt.Exec(b.BillID, b.UserID, b.CreatedDate, b.DueDate, b.Comment, b.TotalExVat, b.TotalIncVat, b.Paid)
+	_, err = stmt.Exec(indx, b.BillID, b.LineID, b.ItemID, b.Description, b.Quantity, b.DiscountPercentage, b.VatUsed, b.PriceExVat)
 	//commit to DB
 	tx.Commit()
 	checkErr(err)
 
+}
+
+func queryDBForLastBillLineIndx(db *sql.DB) (int, int) {
+	rows, err := db.Query("SELECT indx FROM bill_lines")
+	checkErr(err)
+	defer rows.Close()
+
+	//Prepare the slice to store numbers read from DB
+	var num []int
+
+	for rows.Next() {
+		var readValue int
+		//The number of values below must be the same amount
+		//as the number of rows in the DB
+		err := rows.Scan(&readValue) //reads data from db and puts it into the address of the variable
+		checkErr(err)
+		num = append(num, readValue)
+	}
+
+	highestNr := 0
+	countLines := 0
+	//iterate the slice, and find the highest number, and number of lines.
+	for i := range num {
+		if highestNr < num[i] {
+			highestNr = num[i]
+			log.Println("queryDBForLastBillLineIndx : highestNr = ", highestNr)
+			countLines++
+		}
+	}
+	log.Println("queryDBForLastBillLineIndx: highestNr = ", highestNr)
+	log.Println("queryDBForLastBillLineIndx: countLines = ", countLines)
+	return highestNr, countLines
 }
 
 //**************************  creates the database  ********************************
