@@ -211,19 +211,27 @@ func queryDBForLastBillID(db *sql.DB) (int, int) {
 func addBillToDB(db *sql.DB, b Bill) {
 	//start db session
 	tx, err := db.Begin()
-	checkErr(err)
+	if err != nil {
+		log.Println("ERROR: addBillToDB: ", err)
+	}
 
 	//create statement to insert values to DB
-	stmt, err := tx.Prepare("insert into bills(bill_id,user_id,create_date,due_date,comment,total_ex_vat,total_inc_vat,paid) values(?,?,?,?,?,?,?,?)")
-	checkErr(err)
+	stmt, err := tx.Prepare("insert into bills(bill_id,user_id,created_date,due_date,comment,total_ex_vat,total_inc_vat,paid) values(?,?,?,?,?,?,?,?)")
+	if err != nil {
+		log.Println("ERROR: addBillToDB: statement problem = ", err)
+	}
 	//At the end of function close the DB
 	defer stmt.Close()
+
+	log.Println("addBillToDB: The struct b of type Bill contains = ", b)
 
 	//execute the statement on the DB
 	_, err = stmt.Exec(b.BillID, b.UserID, b.CreatedDate, b.DueDate, b.Comment, b.TotalExVat, b.TotalIncVat, b.Paid)
 	//commit to DB
 	tx.Commit()
-	checkErr(err)
+	if err != nil {
+		log.Println("ERROR: addBillToDB: stmt.Exec problem = ", err)
+	}
 
 }
 
@@ -285,10 +293,10 @@ func createDB() *sql.DB {
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS bills (
 						bill_id int PRIMARY KEY,
 						user_id int,
-						created_date text,
+						create_date text,
 						due_date text,
 						comment string,
-						totalt_ex_vat real,
+						total_ex_vat real,
 						total_inc_vat real,
 						paid integer)
 					;`)

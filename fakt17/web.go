@@ -246,13 +246,28 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
 
 	//if the add button were pushed
-	billIDToGet := 11
 	if buttonAction == "add" {
-		//Read all the bill lines for the given billID
-		mySlice := queryDBForBillLinesInfo(pDB, billIDToGet)
+
+		//TODO: create a new bill_id in bills database
+		//use the next available bill number
+		//use the chosen user id for user_id
+		//---------------------------------
+		newBill := Bill{}
+		newBill.BillID = totalBillNumbers + 1
+		newBill.UserID = activeUserID
+
+		addBillToDB(pDB, newBill)
+		//---------------------------------
+
+		//TODO: create a new blank bill line in the bill_lines database
+		//use a new bill_id from the code above
+		//use the chosen users id for user_id
+
+		//Read all the bill lines for the given billID, and put them in a slice for iteraring later
+		mySlice := queryDBForBillLinesInfo(pDB, 11) //TODO:using billID 11 for testing
 		log.Println("billCreateWeb: mySlice = ", mySlice)
 
-		//creates bill lines
+		//Print bill lines to web
 		err := tmpl["init.html"].ExecuteTemplate(w, "createBillLines", mySlice)
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
