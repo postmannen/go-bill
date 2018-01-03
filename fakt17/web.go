@@ -211,6 +211,13 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 	num, _ := strconv.Atoi(r.FormValue("users"))
 
+	//if sentence to keep the chosen user ID. Reason is that it resets to 0 when the page is redrawn after "choose" is pushed
+	if r.FormValue("chooseUserButton") == "choose" {
+		activeUserID = num
+	}
+	fmt.Println("-----------------num = ", num)
+	fmt.Println("-----------------activeUserID = ", activeUserID)
+
 	//Write out all the info of the selected user to the web
 	for i := range p {
 		log.Println(ip, "modifyUsersWeb: p[i].Number = ", p[i].Number)
@@ -238,11 +245,15 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
 
 	//if the add button were pushed
+	billIDToGet := 11
 	if buttonAction == "add" {
+		mySlice := queryDBForBillLinesInfo(pDB, billIDToGet)
+		log.Println("billCreateWeb: mySlice = ", mySlice)
+
 		//creates bill lines
-		err := tmpl["init.html"].ExecuteTemplate(w, "createBillLines", p)
+		err := tmpl["init.html"].ExecuteTemplate(w, "createBillLines", mySlice)
 		if err != nil {
-			log.Println("createBillUserSelection: template execution error = ", err)
+			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 	}
 }

@@ -205,8 +205,9 @@
             <form>
                 {{range .}}
                 <div class="test">
-                    <input type="text" name="billLineNR{{.LineNR}}" value="Lnr:{{.LineNR}}">
-                    <textarea cols="20" rows="1" name="billLineDescription{{.LineNR}}"></textarea>
+                    <input type="text" name="billLineID" value="Lnr:{{.LineID}}">
+                    <!--<textarea cols="20" rows="1" name="billLineDescription" value="{{.Description}}"></textarea>-->
+                    <input type="text" name="billLineDescription" value="{{.Description}}">
                     <input type="text" name="billLineQuantity" value="{{.Quantity}}">
                     <input type="text" name="billLineDiscountPercentage" value="{{.DiscountPercentage}}">
                     <input type="text" name="billLineVatUsed" value="{{.VatUsed}}">
@@ -235,7 +236,7 @@
                 <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
             {{end}}
         </select>
-        <input type="submit" name="addBillForUserButton" value="Choose selected">
+        <input type="submit" name="chooseUserButton" value="choose">
     </form>
 </div>
 {{end}}

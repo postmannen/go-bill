@@ -138,9 +138,9 @@ func addUserToDB(db *sql.DB, u User) {
 
 //Query the database all the bill lines for a specific bill nr. Takes bill_id of type int as input,
 //returns a slice of struct type BillLines
-func queryDBForBillLinesInfo(db *sql.DB, uid int) []BillLines {
+func queryDBForBillLinesInfo(db *sql.DB, billID int) []BillLines {
 
-	rows, err := db.Query("select * from user where user_id=?", uid)
+	rows, err := db.Query("select * from bill_lines where bill_id=?", billID)
 	checkErr(err)
 
 	//variables to store the rows.Scan below
@@ -149,21 +149,26 @@ func queryDBForBillLinesInfo(db *sql.DB, uid int) []BillLines {
 	/*var indx, BillID, LineID, ItemID, Quantity, DiscountPercentage, VatUsed int
 	var Description string
 	var PriceExVat float64*/
-	read := BillLines{}
 
+	//used to store the single row values read from DB
+	mm := BillLines{}
+
+	//used to store a slice of all the values from mm
 	m := []BillLines{}
+
 	//Next prepares the next result row for reading with the Scan method. It returns true on success,
 	//or false if there is no next result row or an error happened while preparing it.
 	//Err should be consulted to distinguish between the two cases.
 	for rows.Next() {
 		//Scan copies the columns in the current row into the values pointed at by dest.
 		//The number of values in dest must be the same as the number of columns in Rows of database.
-		rows.Scan(&indx, &read.BillID, &read.LineID, &read.ItemID, &read.Description, &read.Quantity, &read.DiscountPercentage, &read.VatUsed, &read.PriceExVat)
+		rows.Scan(&indx, &mm.BillID, &mm.LineID, &mm.ItemID, &mm.Description, &mm.Quantity, &mm.DiscountPercentage, &mm.VatUsed, &mm.PriceExVat)
 
 		//DO THIS WORK ?????????????? trying to append a struct into a slice of structs of the same type
-		m = append(m, read)
+		m = append(m, mm)
+		log.Println("queryDBForBillLinesInfo: Content of mm : ", mm)
 	}
-
+	log.Println("queryDBForBillLinesInfo: Content of m : ", mm)
 	defer rows.Close()
 	return m
 }

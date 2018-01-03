@@ -36,8 +36,8 @@ type Bill struct {
 //BillLines struct. Fields must be export (starting Capital letter) to be passed to template
 type BillLines struct {
 	BillID             int
-	ItemID             int
 	LineID             int
+	ItemID             int
 	Description        string
 	Quantity           int
 	DiscountPercentage int
@@ -49,6 +49,7 @@ type BillLines struct {
 var pDB *sql.DB                        //The pointer to use with the Database
 var tmpl map[string]*template.Template //map to hold all templates
 var indexNR int                        //to store the index nr. in slice where chosen person is stored
+var activeUserID int                   //to store the active user beeing worked on in the different web pages
 
 func init() {
 	//initate the templates
