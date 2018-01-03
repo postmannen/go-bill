@@ -263,7 +263,10 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		//TODO: create a new blank bill line in the bill_lines database
 		//use a new bill_id from the code above
 		//use the chosen users id for user_id
-		indxLastNumber, indxCountLines := queryDBForLastBillLineIndx(pDB)
+		bl := BillLines{}
+		bl.BillID = newBillID
+		bl.LineID = 1
+		addBillLineToDB(pDB, bl)
 
 		//---------------------------------
 		//Read all the bill lines for the given billID, and put them in a slice for iteraring later

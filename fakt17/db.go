@@ -227,7 +227,7 @@ func addBillToDB(db *sql.DB, b Bill) int {
 	//execute the statement on the DB
 	_, err = stmt.Exec(b.BillID, b.UserID, b.CreatedDate, b.DueDate, b.Comment, b.TotalExVat, b.TotalIncVat, b.Paid)
 	//commit to DB
-	tx.Commit()
+	err = tx.Commit()
 	if err != nil {
 		log.Println("ERROR: addBillToDB: stmt.Exec problem = ", err)
 	}
@@ -242,11 +242,15 @@ func addBillToDB(db *sql.DB, b Bill) int {
 func addBillLineToDB(db *sql.DB, b BillLines) {
 	//start db session
 	tx, err := db.Begin()
-	checkErr(err)
+	if err != nil {
+		log.Println("ERROR: addBillLineToDB: Error starting db.begin = ", err)
+	}
 
 	//create statement to insert values to DB
 	stmt, err := tx.Prepare("insert into bills(indx,bill_id,line_id,item_id,description,quantity,discount_percentage,vat_used,price_ex_vat) values(?,?,?,?,?,?,?,?,?)")
-	checkErr(err)
+	if err != nil {
+		log.Println("ERROR: addBillLineToDB: stmt error = ", err)
+	}
 	//At the end of function close the DB
 	defer stmt.Close()
 
@@ -256,9 +260,14 @@ func addBillLineToDB(db *sql.DB, b BillLines) {
 
 	//execute the statement on the DB
 	_, err = stmt.Exec(indx, b.BillID, b.LineID, b.ItemID, b.Description, b.Quantity, b.DiscountPercentage, b.VatUsed, b.PriceExVat)
+	if err != nil {
+		log.Println("ERROR: addBillLineToDB: stmt.Execute error = ", err)
+	}
 	//commit to DB
-	tx.Commit()
-	checkErr(err)
+	err = tx.Commit()
+	if err != nil {
+		log.Println("ERROR: addBillLineToDB: tx.Commit error = ", err)
+	}
 
 }
 
