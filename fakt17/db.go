@@ -227,7 +227,7 @@ func addBillToDB(db *sql.DB, b Bill) {
 
 }
 
-//*****TODO: WRITE CORRECT FUNCTION HERE
+//*****TODO: WRITE CORRECT FUNCTION HERE. right now this is just a copy of the addBillToDB function.
 //Adds new bill line to Database. takes pointer to DB, and type bill struct as input
 func addBillLineToDB(db *sql.DB, b Bill) {
 	//start db session

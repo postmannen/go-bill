@@ -248,6 +248,7 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	//if the add button were pushed
 	billIDToGet := 11
 	if buttonAction == "add" {
+		//Read all the bill lines for the given billID
 		mySlice := queryDBForBillLinesInfo(pDB, billIDToGet)
 		log.Println("billCreateWeb: mySlice = ", mySlice)
 
