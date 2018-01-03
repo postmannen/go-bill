@@ -247,7 +247,7 @@ func addBillLineToDB(db *sql.DB, b BillLines) {
 	}
 
 	//create statement to insert values to DB
-	stmt, err := tx.Prepare("insert into bills(indx,bill_id,line_id,item_id,description,quantity,discount_percentage,vat_used,price_ex_vat) values(?,?,?,?,?,?,?,?,?)")
+	stmt, err := tx.Prepare("insert into bill_lines(indx,bill_id,line_id,item_id,description,quantity,discount_percentage,vat_used,price_ex_vat) values(?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		log.Println("ERROR: addBillLineToDB: stmt error = ", err)
 	}
