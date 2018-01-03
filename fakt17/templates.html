@@ -186,7 +186,7 @@
             <input title="The phone number" type="inputUserText" name="phone" placeholder="{{.PhoneNr}}">
             <label for="Org">Org Nr</label>
             <input title="The Org nr" type="inputUserText" name="orgNr" placeholder="{{.OrgNr}}">
-            <label for="country">Org Nr</label>
+            <label for="country">Country</label>
             <input title="The country ID" type="inputUserText" name="countryId" placeholder="{{.CountryID}}">
         </div>
         <div class="modifyUserSingleConfirm">
@@ -221,7 +221,7 @@
 
 {{define "createBillAddLineButton"}}
     <form>
-        <input type="submit" name="knapp" value="verdi">
+        <input type="submit" name="addLine" value="add">
     </form>
 {{end}}
 
@@ -243,27 +243,26 @@
 
 {{define "billShowUserSingle"}}
 <form>
-    <div class="modifyUserSingleContainer">
-        <div class="modifyUserSingleInputs">
-            <!-- <input title="The customer nr" type="text" name="number" placeholder={{.Number}}> -->
-            <label for="Firstname">Firstname</label>
-            <input title="The name" type="inputUserText" name="firstName" placeholder="{{.FirstName}}">
-            <label for="Lastname">Lastname</label>
-            <input title="The lastname" type="inputUserText" name="lastName" placeholder="{{.LastName}}">
-            <label for="Mail">Mail</label>
-            <input title="The mail address" type="inputUserText" name="mail" placeholder="{{.Mail}}">
-            <label for="Address">Address</label>
-            <input title="The address" type="inputUserText" name="address" placeholder="{{.Address}}">
-            <label for="PostNrAndPlace">PostNrAndPlace</label>
-            <input title="The Post nr and place" type="inputUserText" name="poAddr" placeholder="{{.PostNrAndPlace}}">
-            <label for="Phone">Phone</label>
-            <input title="The phone number" type="inputUserText" name="phone" placeholder="{{.PhoneNr}}">
-            <label for="Org">Org Nr</label>
-            <input title="The Org nr" type="inputUserText" name="orgNr" placeholder="{{.OrgNr}}">
-            <label for="country">Org Nr</label>
-            <input title="The country ID" type="inputUserText" name="countryId" placeholder="{{.CountryID}}">
+    <div class="ShowUserSingleContainer">
+        <div class="UserSingleInputs">
+                <label class="infoBox1" for="Firstname">Firstname</label>
+                <input class="infoBox2" title="The name" type="inputUserText" name="firstName" placeholder="{{.FirstName}}">
+                <label class="infoBox1" for="Lastname">Lastname</label>
+                <input class="infoBox2" title="The lastname" type="inputUserText" name="lastName" placeholder="{{.LastName}}">
+                <label class="infoBox1" for="Mail">Mail</label>
+                <input class="infoBox2" title="The mail address" type="inputUserText" name="mail" placeholder="{{.Mail}}">
+                <label class="infoBox1" for="Address">Address</label>
+                <input class="infoBox2" title="The address" type="inputUserText" name="address" placeholder="{{.Address}}">
+                <label class="infoBox1" for="PostNrAndPlace">PostNrAndPlace</label>
+                <input class="infoBox2" title="The Post nr and place" type="inputUserText" name="poAddr" placeholder="{{.PostNrAndPlace}}">
+                <label class="infoBox1" for="Phone">Phone</label>
+                <input class="infoBox2" title="The phone number" type="inputUserText" name="phone" placeholder="{{.PhoneNr}}">
+                <label class="infoBox1" for="Org">Org Nr</label>
+                <input class="infoBox2" title="The Org nr" type="inputUserText" name="orgNr" placeholder="{{.OrgNr}}">
+                <label class="infoBox1" for="country">Country</label>
+                <input class="infoBox2" title="The country ID" type="inputUserText" name="countryId" placeholder="{{.CountryID}}">
         </div>
-        <div class="modifyUserSingleConfirm">
+        <div class="UserSingleConfirm">
             <input type="submit" name="userActionButton" value="add">
             <input type="submit" name="userActionButton" value="modify">
         </div>

@@ -123,7 +123,7 @@ input[type=inputUserText] {
 /********************BILL PAGES**************************/
 div.createBillLineContainer  {
     display: block;
-    width: 75%;
+    width: 100%;
     background-color: blue;
 }
 div.createBillLineContainer .createBillLine {
@@ -156,6 +156,18 @@ div.createBillLineContainer div.createBillLine div.test input[name="billLineDisc
 div.createBillLineContainer div.createBillLine div.test input[name="billLineVatUsed"] {
     width: 30px;
 }
+/****The show user part*/
+div.ShowUserSingleContainer div.UserSingleInputs {
+    display: inline-block;
+}
+div.ShowUserSingleContainer div.UserSingleInputs label[class="infoBox1"] {
+    min-width: 130px;
+    float: left;
+}
+div.ShowUserSingleContainer div.UserSingleInputs input{
+    background-color: lightgray;
+}
+
 
 /********************TOP MENU**************************/
 ul { /*styling the upp menu within this block, the ul items*/

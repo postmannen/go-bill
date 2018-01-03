@@ -227,6 +227,27 @@ func addBillToDB(db *sql.DB, b Bill) {
 
 }
 
+//*****TODO: WRITE CORRECT FUNCTION HERE
+//Adds new bill line to Database. takes pointer to DB, and type bill struct as input
+func addBillLineToDB(db *sql.DB, b Bill) {
+	//start db session
+	tx, err := db.Begin()
+	checkErr(err)
+
+	//create statement to insert values to DB
+	stmt, err := tx.Prepare("insert into bills(bill_id,user_id,create_date,due_date,comment,total_ex_vat,total_inc_vat,paid) values(?,?,?,?,?,?,?,?)")
+	checkErr(err)
+	//At the end of function close the DB
+	defer stmt.Close()
+
+	//execute the statement on the DB
+	_, err = stmt.Exec(b.BillID, b.UserID, b.CreatedDate, b.DueDate, b.Comment, b.TotalExVat, b.TotalIncVat, b.Paid)
+	//commit to DB
+	tx.Commit()
+	checkErr(err)
+
+}
+
 //**************************  creates the database  ********************************
 func createDB() *sql.DB {
 	//1. Open connection

@@ -212,17 +212,18 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	num, _ := strconv.Atoi(r.FormValue("users"))
 
 	//if sentence to keep the chosen user ID. Reason is that it resets to 0 when the page is redrawn after "choose" is pushed
+	//put the value in chooseUserButton which is a global variable
 	if r.FormValue("chooseUserButton") == "choose" {
 		activeUserID = num
 	}
-	fmt.Println("-----------------num = ", num)
-	fmt.Println("-----------------activeUserID = ", activeUserID)
+	log.Println("billCreateWeb: The number active now in the user select box: num = ", num)
+	log.Println("billCreateWeb: The number chosen in the user select box:activeUserID = ", activeUserID)
 
 	//Write out all the info of the selected user to the web
 	for i := range p {
 		log.Println(ip, "modifyUsersWeb: p[i].Number = ", p[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
-		if p[i].Number == num {
+		if p[i].Number == activeUserID {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", p[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
 			indexNR = i
