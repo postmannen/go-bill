@@ -194,13 +194,13 @@ func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 //************************* CREATE BILLS *******************************
 
 //The web handler to create bills
-func billCreateWeb(w http.ResponseWriter, r *http.Request) {
+func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 	data := webData{}
 
-	data.users = queryDBForAllUserInfo(pDB)
+	data.Users = queryDBForAllUserInfo(pDB)
 
 	//creates the header and the select box from templates
-	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", data.users) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", data) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	if err != nil {
 		log.Println("createBillUserSelection: template execution error = ", err)
 	}
@@ -224,14 +224,14 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	log.Println("billCreateWeb: The number chosen in the user select box:activeUserID = ", activeUserID)
 
 	//Write out all the info of the selected user to the web
-	for i := range data.users {
-		log.Println(ip, "modifyUsersWeb: p[i].Number = ", data.users[i].Number)
+	for i := range data.Users {
+		log.Println(ip, "modifyUsersWeb: p[i].Number = ", data.Users[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
-		if data.users[i].Number == activeUserID {
-			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", data.users[i].FirstName, data.users[i].LastName)
+		if data.Users[i].Number == activeUserID {
+			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", data.Users[i].FirstName, data.Users[i].LastName)
 			//Store the index nr in slice of the chosen user
 			indexNR = i
-			err := tmpl["init.html"].ExecuteTemplate(w, "billShowUserSingle", data.users[i]) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			err := tmpl["init.html"].ExecuteTemplate(w, "billShowUserSingle", data.Users[i]) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			log.Println(ip, "modifyUsersWeb: error = ", err)
 		}
 	}
@@ -262,49 +262,8 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		//create a new bill and return the new billID to use later
 		currentBillID = addBillToDB(pDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", currentBillID)
-
-		//create a new blank bill line in the bill_lines database
-		//use a new bill_id from the code above
-		//use the chosen users id for user_id
-		bl := BillLines{}
-		bl.BillID = currentBillID
-		bl.LineID = 1
-		addBillLineToDB(pDB, bl)
-
 	}
+}
 
-	if buttonAction == "modify" {
-		fmt.Println("----------- YOU PRESSED MODIFY")
-	}
-
-	//Add a new bill line to the current bill
-	r.ParseForm()
-
-	buttonAction = r.FormValue("billLineActionButton")
-	if buttonAction == "add line" {
-		fmt.Println("----------YOU PRESSED add line BUTTON")
-		lastBillLine, _ := queryDBForLastBillLine(pDB, currentBillID)
-		log.Println("createBillUserSelection: new bill line button pushed: lastBillLine =", lastBillLine)
-
-		bl := BillLines{}
-		bl.BillID = currentBillID
-		bl.LineID = lastBillLine + 1
-		addBillLineToDB(pDB, bl)
-	}
-
-	//Read all the bill lines for the given billID, and put them in a slice for iteraring later
-	log.Println("INFO: billCreateWeb: currentBillID = ", currentBillID)
-	data.bLines = queryDBForBillLinesInfo(pDB, currentBillID)
-	log.Println("billCreateWeb: mySlice = ", data.bLines)
-
-	//Print bill lines to web
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", data.bLines) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	if err != nil {
-		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
-	}
-
-	r.ParseForm()
-	fmt.Println("############# r.Form = ", r.Form)
-	r.ParseMultipartForm(1000)
-	fmt.Println("############# r.MultipartForm = ", r.MultipartForm)
+func billCreateWebBillLines(w http.ResponseWriter, r *http.Request) {
 }

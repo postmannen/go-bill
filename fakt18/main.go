@@ -48,8 +48,8 @@ type BillLines struct {
 
 //webData struct, used to feed data to the web templates
 type webData struct {
-	users  []User
-	bLines []BillLines
+	Users  []User
+	BLines []BillLines
 }
 
 var pDB *sql.DB                        //The pointer to use with the Database
@@ -76,7 +76,7 @@ func main() {
 	http.HandleFunc("/mp", modifyUsersWeb)
 	http.HandleFunc("/", mainPage)
 	http.HandleFunc("/du", deleteUserWeb)
-	http.HandleFunc("/createBill", billCreateWeb)
+	http.HandleFunc("/createBillSelectUser", billCreateWebSelectUser)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe(":7000", nil)
 

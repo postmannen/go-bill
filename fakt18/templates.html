@@ -223,7 +223,7 @@
         <h3>Select user</h3>
         <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
         <select name="users">
-            {{range .}}
+            {{range .Users}}
                 <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
             {{end}}
         </select>
@@ -287,7 +287,7 @@
         </li>
         <li><a>Bill</a>
             <ul>
-                <li><a href="/createBill">Create</a></li>
+                <li><a href="/createBillSelectUser">Create</a></li>
             </ul>
         </li>
         <li><a>About</a></li>
