@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+{{define "head"}}
+<head >
+    <title>Faktura</title> <!-- This is the text that is shown in the tab of the browser. Title shall be inside <head> -->
+    <html>
+    <link rel="stylesheet" href="/static/styles.css">
+    </html>
+</head>
+{{end}} 
+<!-- ******************* COMPLETE PAGES ***********************-->
+{{define "addUserCompletePage"}}
+<!DOCTYPE html>
+    <body> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}
+        {{template "topMenu" .}} 
+        {{template "addUser" .}} 
+    </body>
+{{end}} 
+
+{{define "showUserCompletePage"}} 
+<!DOCTYPE html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}} 
+        {{template "topMenu" .}} 
+        {{template "showUserMultiple" .}} 
+    </body>
+{{end}} 
+
+{{define "mainCompletePage"}}
+<!DOCTYPE html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}  
+        {{template "topMenu" .}}
+        {{template "index" .}}
+    </body>
+{{end}} 
+
+{{define "modifyUserCompletePage"}}
+<!DOCTYPE html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}} 
+        {{template "topMenu" .}} 
+        {{template "modifyUserSelection" .}} 
+    </body>
+{{end}} 
+
+{{define "deleteUserCompletePage"}}
+<!DOCTYPE html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}} 
+        {{template "topMenu" .}} 
+        {{template "deleteUserSelection" .}} 
+    </body>
+{{end}}
+
+{{define "createBillCompletePage"}}
+<!DOCTYPE html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}
+        {{template "topMenu"}}
+        {{template "createBillUserSelection" .}}
+    </body>
+{{end}}
+
+{{define "header"}}
+{{end}} 
+
+{{define "index"}}
+    Nothing here yet
+{{end}} 
+
+<!-- ******************* USER PAGES ***********************-->
+
+{{define "addUser"}}
+<form>
+    <div class="addUserContainer">
+        <h3>Add user</h3>
+        <input type="text" name="firstName" placeholder="Fornavn" required pattern="[a-zA-ZæøåÆØÅ]+">
+        <input type="text" name="lastName" placeholder="Etternavn">
+        <input type="text" name="mail" placeholder="Mail" required pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{3,}$" title="Please enter a valid email.">
+        <input type="text" name="address" placeholder="Adresse">
+        <input type="text" name="poAddr" placeholder="Post nr og sted">
+        <input type="text" name="phone" placeholder="Telefon nr.">
+        <input type="text" name="orgNr" placeholder="Organisasjons nr">
+        <input type="text" name="countryID" placeholder="Country ID">
+        <input type="submit" name="button1" value="Add">
+    </div>
+</form>
+{{end}} 
+
+{{define "modifyUserSelection"}}
+<div class="modifyUserSelectionContainer">
+    <form>
+        <h3>Modify user</h3>
+        <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
+        <select name="users">
+            {{range .}}
+                <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
+            {{end}}
+        </select>
+        <input type="submit" name="submitModifyButton" value="Choose selected">
+    </form>
+</div>
+{{end}} 
+
+{{define "deleteUserSelection"}}
+<div class="deleteUserSelectionContainer">
+    <form>
+        <h3>Delete user</h3>
+        <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
+        <select name="users">
+            {{range .}}
+                <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
+            {{end}}
+        </select>
+        <input type="submit" name="submitDeleteButton" value="Delete selected">
+        <!--<div class="modifyUserSingleConfirm">
+                Mark to confirm changes before you press Apply
+                <input type="checkbox" name="sure" value="ok">
+                <input type="submit" name="Modify" value="Apply">
+        </div>-->
+    </form>
+</div>
+{{end}} 
+
+
+{{define "showUserMultiple"}}
+<div class="showUsersMultipleContainer">
+    <form>
+        <table>    
+            <tr>
+                <td>Nr</td><td>Name</td><td>LastName</td><td>Mail</td><td>Address</td><td>Postnr and place</td><td>Phone</td><td>Org nr</td><br>
+            </tr>
+            {{range .}}
+                <tr>
+                    <td><a href="mp?users={{.Number}}">{{.Number}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.FirstName}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.LastName}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.Mail}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.Address}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.PostNrAndPlace}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.PhoneNr}}</a></td>
+                    <td><a href="mp?users={{.Number}}">{{.OrgNr}}</a></td>
+                </tr>
+            {{end}}
+        </table>
+    </form>
+</div>
+{{end}} 
+
+{{define "modifyUserSingle"}}
+<form>
+    <div class="modifyUserSingleContainer">
+        <div class="modifyUserSingleInputs">
+            <!-- <input title="The customer nr" type="text" name="number" placeholder={{.Number}}> -->
+            <label for="Firstname">Firstname</label>
+            <input title="The name" type="inputUserText" name="firstName" placeholder="{{.FirstName}}">
+            <label for="Lastname">Lastname</label>
+            <input title="The lastname" type="inputUserText" name="lastName" placeholder="{{.LastName}}">
+            <label for="Mail">Mail</label>
+            <input title="The mail address" type="inputUserText" name="mail" placeholder="{{.Mail}}">
+            <label for="Address">Address</label>
+            <input title="The address" type="inputUserText" name="address" placeholder="{{.Address}}">
+            <label for="PostNrAndPlace">PostNrAndPlace</label>
+            <input title="The Post nr and place" type="inputUserText" name="poAddr" placeholder="{{.PostNrAndPlace}}">
+            <label for="Phone">Phone</label>
+            <input title="The phone number" type="inputUserText" name="phone" placeholder="{{.PhoneNr}}">
+            <label for="Org">Org Nr</label>
+            <input title="The Org nr" type="inputUserText" name="orgNr" placeholder="{{.OrgNr}}">
+            <label for="country">Country</label>
+            <input title="The country ID" type="inputUserText" name="countryId" placeholder="{{.CountryID}}">
+        </div>
+        <div class="modifyUserSingleConfirm">
+            Mark to confirm changes before you press Apply
+            <input type="checkbox" name="sure" value="ok">
+            <input type="submit" name="Modify" value="Apply">
+        </div>
+    </div>
+</form>
+{{end}}
+
+<!-- ******************* BILL PAGES *********************-->
+{{define "createBillLines"}}
+<form>
+    <div class="createBillLineContainer">
+        <div class="createBillLine">
+                {{range .}}
+                <div class="billLines">
+                    <input type="text" name="billLineID" value="Lnr:{{.LineID}}">
+                    <!--<textarea cols="20" rows="1" name="billLineDescription" value="{{.Description}}"></textarea>-->
+                    <input type="text" name="billLineDescription" value="{{.Description}}">
+                    <input type="text" name="billLineQuantity" value="{{.Quantity}}">
+                    <input type="text" name="billLineDiscountPercentage" value="{{.DiscountPercentage}}">
+                    <input type="text" name="billLineVatUsed" value="{{.VatUsed}}">
+                    <input type="text" name="billLinePriceExVat" value="{{.PriceExVat}}">
+                </div>
+                <div class="billLineButtons">
+                    <input type="submit" name="billLineActionButton" value="add line">
+                    <input type="submit" name="billLineActionButton" value="modify line">
+                </div>
+                {{end}}
+        </div>
+    </div>
+</form>
+{{end}}
+
+{{define "createBillAddLineButton"}}
+    <form>
+        <input type="submit" name="addLine" value="add">
+    </form>
+{{end}}
+
+{{define "createBillUserSelection"}}
+<!--Use the same css as for modify User, TODO: Rewrite the naming to something more generic -->
+<div class="modifyUserSelectionContainer">
+    <form>
+        <h3>Select user</h3>
+        <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
+        <select name="users">
+            {{range .}}
+                <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
+            {{end}}
+        </select>
+        <input type="submit" name="chooseUserButton" value="choose">
+    </form>
+</div>
+{{end}}
+
+{{define "billShowUserSingle"}}
+<form>
+    <div class="ShowUserSingleContainer">
+        <div class="UserSingleInputs">
+                <label class="infoBox1" for="Firstname">Firstname</label>
+                <input class="infoBox2" title="The name" type="inputUserText" name="firstName" placeholder="{{.FirstName}}">
+                <label class="infoBox1" for="Lastname">Lastname</label>
+                <input class="infoBox2" title="The lastname" type="inputUserText" name="lastName" placeholder="{{.LastName}}">
+                <label class="infoBox1" for="Mail">Mail</label>
+                <input class="infoBox2" title="The mail address" type="inputUserText" name="mail" placeholder="{{.Mail}}">
+                <label class="infoBox1" for="Address">Address</label>
+                <input class="infoBox2" title="The address" type="inputUserText" name="address" placeholder="{{.Address}}">
+                <label class="infoBox1" for="PostNrAndPlace">PostNrAndPlace</label>
+                <input class="infoBox2" title="The Post nr and place" type="inputUserText" name="poAddr" placeholder="{{.PostNrAndPlace}}">
+                <label class="infoBox1" for="Phone">Phone</label>
+                <input class="infoBox2" title="The phone number" type="inputUserText" name="phone" placeholder="{{.PhoneNr}}">
+                <label class="infoBox1" for="Org">Org Nr</label>
+                <input class="infoBox2" title="The Org nr" type="inputUserText" name="orgNr" placeholder="{{.OrgNr}}">
+                <label class="infoBox1" for="country">Country</label>
+                <input class="infoBox2" title="The country ID" type="inputUserText" name="countryId" placeholder="{{.CountryID}}">
+        </div>
+        <div class="UserSingleConfirm">
+            <input type="submit" name="userActionButton" value="add bill">
+            <input type="submit" name="userActionButton" value="modify">
+        </div>
+    </div>
+</form>
+{{end}}
+
+{{define "showBills"}}
+<form>
+    <select name="bills">
+        <option value="test1">test1</option>
+        <option value="test2">test2</option>
+    </select>    
+    <input type="submit" name="Choose bill">
+</form>
+{{end}}
+
+<!-- ******************* TOP MENU ***********************-->
+<!-- The link opened by the href below is controlled via the http.HandleFunc in main.go-->
+{{define "topMenu"}}
+<div class="topMenuContainer">
+    <ul class="nav">
+        <li><a href="/">Home</a></li>
+        <li><a>User</a>
+            <ul>
+                <li><a href="/sp">Show all</a></li>
+                <li><a href="/ap">Add</a></li>
+                <li><a href="/mp">Modify</a></li>
+                <li><a href="/du">Delete</a></li>
+            </ul>
+        </li>
+        <li><a>Bill</a>
+            <ul>
+                <li><a href="/createBill">Create</a></li>
+            </ul>
+        </li>
+        <li><a>About</a></li>
+    </ul>
+</div>
+{{end}}
