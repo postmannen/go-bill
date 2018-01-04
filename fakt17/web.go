@@ -232,7 +232,7 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//Get the next available bill_id from DB
+	//Get the last used bill_id from DB
 	totalBillNumbers, totalLineCount := queryDBForLastBillID(pDB)
 	log.Println(ip, "billCreateWeb: totalBillNumbers = ", totalBillNumbers)
 	log.Println(ip, "billCreateWeb: totalLineCount = ", totalLineCount)
@@ -260,23 +260,29 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		newBill.UserID = activeUserID
 
 		//create a new bill and return the new billID to use later
-		newBillID := addBillToDB(pDB, newBill)
-		log.Println("billCreateWeb: newBillID = ", newBillID)
+		currentBillID = addBillToDB(pDB, newBill)
+		log.Println("billCreateWeb: newBillID = ", currentBillID)
 
 		//create a new blank bill line in the bill_lines database
 		//use a new bill_id from the code above
 		//use the chosen users id for user_id
 		bl := BillLines{}
-		bl.BillID = newBillID
+		bl.BillID = currentBillID
 		bl.LineID = 1
 		addBillLineToDB(pDB, bl)
 
-		//Read all the bill lines for the given billID, and put them in a slice for iteraring later
-		bLines = queryDBForBillLinesInfo(pDB, newBillID)
-		log.Println("billCreateWeb: mySlice = ", bLines)
-
-		//NOTE: moved the "print lines to web" out of the block...see below outside if sentence
 	}
+
+	//-----------------
+	//TODO:
+	//Add a new bill line to the current bill
+
+	//-----------------
+
+	//Read all the bill lines for the given billID, and put them in a slice for iteraring later
+	fmt.Println("-----------currentBillID = ", currentBillID)
+	bLines = queryDBForBillLinesInfo(pDB, currentBillID)
+	log.Println("billCreateWeb: mySlice = ", bLines)
 
 	//Print bill lines to web
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", bLines)
