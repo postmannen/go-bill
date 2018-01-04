@@ -195,10 +195,12 @@ func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 
 //The web handler to create bills
 func billCreateWeb(w http.ResponseWriter, r *http.Request) {
-	p := queryDBForAllUserInfo(pDB)
+	data := webData{}
+
+	data.users = queryDBForAllUserInfo(pDB)
 
 	//creates the header and the select box from templates
-	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", p) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", data.users) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	if err != nil {
 		log.Println("createBillUserSelection: template execution error = ", err)
 	}
@@ -222,24 +224,17 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	log.Println("billCreateWeb: The number chosen in the user select box:activeUserID = ", activeUserID)
 
 	//Write out all the info of the selected user to the web
-	for i := range p {
-		log.Println(ip, "modifyUsersWeb: p[i].Number = ", p[i].Number)
+	for i := range data.users {
+		log.Println(ip, "modifyUsersWeb: p[i].Number = ", data.users[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
-		if p[i].Number == activeUserID {
-			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", p[i].FirstName, p[i].LastName)
+		if data.users[i].Number == activeUserID {
+			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", data.users[i].FirstName, data.users[i].LastName)
 			//Store the index nr in slice of the chosen user
 			indexNR = i
-			err := tmpl["init.html"].ExecuteTemplate(w, "billShowUserSingle", p[i]) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			err := tmpl["init.html"].ExecuteTemplate(w, "billShowUserSingle", data.users[i]) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			log.Println(ip, "modifyUsersWeb: error = ", err)
 		}
 	}
-
-	//-------------------------
-	//TODO:
-	//Execute template with list of the chosen users bills
-	// ordering of bills is last create date on top
-
-	//-------------------------
 
 	//Get the last used bill_id from DB
 	totalBillNumbers, totalLineCount := queryDBForLastBillID(pDB)
@@ -253,10 +248,6 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	log.Println("r.FormValue = ", r.FormValue("userActionButton"))
 	buttonAction := r.FormValue("userActionButton")
 	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
-
-	//UNDO TO HERE
-	//Slice used to store the specific bill lines for a bill read from database
-	var bLines []BillLines
 
 	//if the add bill button were pushed
 	if buttonAction == "add bill" {
@@ -303,11 +294,11 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 
 	//Read all the bill lines for the given billID, and put them in a slice for iteraring later
 	log.Println("INFO: billCreateWeb: currentBillID = ", currentBillID)
-	bLines = queryDBForBillLinesInfo(pDB, currentBillID)
-	log.Println("billCreateWeb: mySlice = ", bLines)
+	data.bLines = queryDBForBillLinesInfo(pDB, currentBillID)
+	log.Println("billCreateWeb: mySlice = ", data.bLines)
 
 	//Print bill lines to web
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", bLines) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", data.bLines) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}

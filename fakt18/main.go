@@ -48,7 +48,8 @@ type BillLines struct {
 
 //webData struct, used to feed data to the web templates
 type webData struct {
-	Users []User
+	users  []User
+	bLines []BillLines
 }
 
 var pDB *sql.DB                        //The pointer to use with the Database
