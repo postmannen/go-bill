@@ -236,7 +236,6 @@ func addBillToDB(db *sql.DB, b Bill) int {
 }
 
 //WORKING HERE !!!
-//*****TODO: WRITE CORRECT FUNCTION HERE. right now this is just a copy of the addBillToDB function.
 //Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
 //Create a function to keep track of the next available indx number in database
 func addBillLineToDB(db *sql.DB, b BillLines) {
@@ -254,7 +253,8 @@ func addBillLineToDB(db *sql.DB, b BillLines) {
 	//At the end of function close the DB
 	defer stmt.Close()
 
-	//get last used index number in indx row, and increment it by one to prepare for the next record
+	//get last used index number in indx row,
+	// and increment it by one to prepare for the next record
 	indx, _ := queryDBForLastBillLineIndx(pDB)
 	indx++
 

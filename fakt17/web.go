@@ -273,14 +273,8 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	//-----------------
-	//TODO:
-	//Add a new bill line to the current bill
-
-	//-----------------
-
 	//Read all the bill lines for the given billID, and put them in a slice for iteraring later
-	fmt.Println("-----------currentBillID = ", currentBillID)
+	log.Println("INFO: billCreateWeb: currentBillID = ", currentBillID)
 	bLines = queryDBForBillLinesInfo(pDB, currentBillID)
 	log.Println("billCreateWeb: mySlice = ", bLines)
 
@@ -290,8 +284,27 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}
 
+	//-----------------
+	//TODO:
+	//Add a new bill line to the current bill
 	r.ParseForm()
-	fmt.Println("#############", r.Form)
+
+	buttonAction = r.FormValue("billLineActionButton")
+
+	if buttonAction == "add line" {
+		fmt.Println("----------YOU PRESSED add line BUTTON")
+		lastBillLine, _ := queryDBForLastBillLine(pDB, currentBillID)
+		log.Println("createBillUserSelection: new bill line button pushed: lastBillLine =", lastBillLine)
+
+		bl := BillLines{}
+		bl.BillID = currentBillID
+		bl.LineID = lastBillLine + 1
+		addBillLineToDB(pDB, bl)
+	}
+	//-----------------
+
+	r.ParseForm()
+	fmt.Println("############# r.Form = ", r.Form)
 	r.ParseMultipartForm(1000)
-	fmt.Println("#############", r.MultipartForm)
+	fmt.Println("############# r.MultipartForm = ", r.MultipartForm)
 }
