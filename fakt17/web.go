@@ -234,6 +234,13 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//-------------------------
+	//TODO:
+	//Execute template with list of the chosen users bills
+	// ordering of bills is last create date on top
+
+	//-------------------------
+
 	//Get the last used bill_id from DB
 	totalBillNumbers, totalLineCount := queryDBForLastBillID(pDB)
 	log.Println(ip, "billCreateWeb: totalBillNumbers = ", totalBillNumbers)
@@ -275,13 +282,14 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	//-----------------
-	//TODO:
+	if buttonAction == r.FormValue("modify") {
+		fmt.Println("----------- YOU PRESSED MODIFY")
+	}
+
 	//Add a new bill line to the current bill
 	r.ParseForm()
 
 	buttonAction = r.FormValue("billLineActionButton")
-
 	if buttonAction == "add line" {
 		fmt.Println("----------YOU PRESSED add line BUTTON")
 		lastBillLine, _ := queryDBForLastBillLine(pDB, currentBillID)
@@ -292,7 +300,6 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		bl.LineID = lastBillLine + 1
 		addBillLineToDB(pDB, bl)
 	}
-	//-----------------
 
 	//Read all the bill lines for the given billID, and put them in a slice for iteraring later
 	log.Println("INFO: billCreateWeb: currentBillID = ", currentBillID)

@@ -261,6 +261,16 @@
 </form>
 {{end}}
 
+{{define "showBills"}}
+<form>
+    <select name="bills">
+        <option value="test1">test1</option>
+        <option value="test2">test2</option>
+    </select>    
+    <input type="submit" name="Choose bill">
+</form>
+{{end}}
+
 <!-- ******************* TOP MENU ***********************-->
 <!-- The link opened by the href below is controlled via the http.HandleFunc in main.go-->
 {{define "topMenu"}}

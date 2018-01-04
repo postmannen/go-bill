@@ -86,7 +86,7 @@ func queryDBForLastCustomerUID(db *sql.DB) (int, int) {
 	for i := range num {
 		if highestNr < num[i] {
 			highestNr = num[i]
-			log.Println("queryDBForLastCustomerUID : highestNr = ", highestNr)
+			//log.Println("queryDBForLastCustomerUID : highestNr = ", highestNr)
 			countLines++
 		}
 	}
@@ -197,7 +197,7 @@ func queryDBForLastBillID(db *sql.DB) (int, int) {
 	for i := range num {
 		if highestNr < num[i] {
 			highestNr = num[i]
-			log.Println("queryDBForLastBillID : highestNr = ", highestNr)
+			//log.Println("queryDBForLastBillID : highestNr = ", highestNr)
 			countLines++
 		}
 	}
@@ -295,7 +295,7 @@ func queryDBForLastBillLineIndx(db *sql.DB) (int, int) {
 	for i := range num {
 		if highestNr < num[i] {
 			highestNr = num[i]
-			log.Println("queryDBForLastBillLineIndx : highestNr = ", highestNr)
+			//log.Println("queryDBForLastBillLineIndx : highestNr = ", highestNr)
 			countLines++
 		}
 	}
@@ -329,7 +329,7 @@ func queryDBForLastBillLine(db *sql.DB, billID int) (int, int) {
 	for i := range num {
 		if highestNr < num[i] {
 			highestNr = num[i]
-			log.Println("queryDBForLastBillLineIndx : highestNr = ", highestNr)
+			//log.Println("queryDBForLastBillLineIndx : highestNr = ", highestNr)
 			countLines++
 		}
 	}
