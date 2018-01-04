@@ -245,7 +245,11 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	buttonAction := r.FormValue("userActionButton")
 	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
 
-	//if the add button were pushed
+	//UNDO TO HERE
+	//Slice used to store the specific bill lines for a bill read from database
+	var bLines []BillLines
+
+	//if the add bill button were pushed
 	if buttonAction == "add bill" {
 
 		//create a new bill_id in bills database
@@ -266,24 +270,20 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		bl.BillID = newBillID
 		bl.LineID = 1
 		addBillLineToDB(pDB, bl)
-		//---------------------------------
-		//TODO: Create an "add bill line" button to the left of the bill line
-
-		//lastBillLine, _ := queryDBForLastBillLine(pDB, newBillID)
-		//log.Println("INFO: billCreateWeb: last bill line contains = ", lastBillLine)
-
-		//---------------------------------
 
 		//Read all the bill lines for the given billID, and put them in a slice for iteraring later
-		mySlice := queryDBForBillLinesInfo(pDB, newBillID) //TODO:using billID 11 for testing
-		log.Println("billCreateWeb: mySlice = ", mySlice)
+		bLines = queryDBForBillLinesInfo(pDB, newBillID)
+		log.Println("billCreateWeb: mySlice = ", bLines)
 
-		//Print bill lines to web
-		err := tmpl["init.html"].ExecuteTemplate(w, "createBillLines", mySlice)
-		if err != nil {
-			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
-		}
+		//NOTE: moved the "print lines to web" out of the block...see below outside if sentence
 	}
+
+	//Print bill lines to web
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", bLines)
+	if err != nil {
+		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+	}
+
 	r.ParseForm()
 	fmt.Println("#############", r.Form)
 	r.ParseMultipartForm(1000)

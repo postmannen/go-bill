@@ -10,75 +10,62 @@
 <!-- ******************* COMPLETE PAGES ***********************-->
 {{define "addUserCompletePage"}}
 <!DOCTYPE html>
-<html>
     <body> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{template "head" .}}
         {{template "topMenu" .}} 
         {{template "addUser" .}} 
     </body>
-</html>
 {{end}} 
 
 {{define "showUserCompletePage"}} 
 <!DOCTYPE html>
-<html>
     <body>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{template "head" .}} 
         {{template "topMenu" .}} 
         {{template "showUserMultiple" .}} 
     </body>
-</html>
 {{end}} 
 
 {{define "mainCompletePage"}}
 <!DOCTYPE html>
-<html>
     <body>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{template "head" .}}  
         {{template "topMenu" .}}
         {{template "index" .}}
     </body>
-</html> 
 {{end}} 
 
 {{define "modifyUserCompletePage"}}
 <!DOCTYPE html>
-<html>
     <body>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{template "head" .}} 
         {{template "topMenu" .}} 
         {{template "modifyUserSelection" .}} 
     </body>
-</html>
 {{end}} 
 
 {{define "deleteUserCompletePage"}}
 <!DOCTYPE html>
-<html>
     <body>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{template "head" .}} 
         {{template "topMenu" .}} 
         {{template "deleteUserSelection" .}} 
     </body>
-</html>
 {{end}}
 
 {{define "createBillCompletePage"}}
 <!DOCTYPE html>
-    <html>
-        <body>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            {{template "head" .}}
-            {{template "topMenu"}}
-            {{template "createBillUserSelection" .}}
-        </body>
-
-    </html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}
+        {{template "topMenu"}}
+        {{template "createBillUserSelection" .}}
+    </body>
 {{end}}
 
 {{define "header"}}
