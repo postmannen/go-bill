@@ -215,6 +215,8 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	//put the value in chooseUserButton which is a global variable
 	if r.FormValue("chooseUserButton") == "choose" {
 		activeUserID = num
+		//reset currentBillID so a new user dont inherit the last bill used for another user.
+		currentBillID = 0
 	}
 	log.Println("billCreateWeb: The number active now in the user select box: num = ", num)
 	log.Println("billCreateWeb: The number chosen in the user select box:activeUserID = ", activeUserID)
@@ -273,17 +275,6 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	//Read all the bill lines for the given billID, and put them in a slice for iteraring later
-	log.Println("INFO: billCreateWeb: currentBillID = ", currentBillID)
-	bLines = queryDBForBillLinesInfo(pDB, currentBillID)
-	log.Println("billCreateWeb: mySlice = ", bLines)
-
-	//Print bill lines to web
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", bLines)
-	if err != nil {
-		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
-	}
-
 	//-----------------
 	//TODO:
 	//Add a new bill line to the current bill
@@ -302,6 +293,17 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		addBillLineToDB(pDB, bl)
 	}
 	//-----------------
+
+	//Read all the bill lines for the given billID, and put them in a slice for iteraring later
+	log.Println("INFO: billCreateWeb: currentBillID = ", currentBillID)
+	bLines = queryDBForBillLinesInfo(pDB, currentBillID)
+	log.Println("billCreateWeb: mySlice = ", bLines)
+
+	//Print bill lines to web
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", bLines)
+	if err != nil {
+		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+	}
 
 	r.ParseForm()
 	fmt.Println("############# r.Form = ", r.Form)
