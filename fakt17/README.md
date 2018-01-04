@@ -46,7 +46,9 @@
     Created README.md  
 	Created the initiall bill page
 	Added the choose user html part
-
+17. Added bills table
+    Added new bill functionality to create bill page
+	Added new line to bill listing
 ## TODO
 * Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number
 * Change the user pages to 1 page with add modify and delete

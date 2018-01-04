@@ -282,7 +282,7 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	if buttonAction == r.FormValue("modify") {
+	if buttonAction == "modify" {
 		fmt.Println("----------- YOU PRESSED MODIFY")
 	}
 
