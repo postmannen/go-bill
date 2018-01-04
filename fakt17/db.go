@@ -271,8 +271,43 @@ func addBillLineToDB(db *sql.DB, b BillLines) {
 
 }
 
+//query db for the last used Bill Line Index. Returns last used indx, and lineCount
 func queryDBForLastBillLineIndx(db *sql.DB) (int, int) {
 	rows, err := db.Query("SELECT indx FROM bill_lines")
+	checkErr(err)
+	defer rows.Close()
+
+	//Prepare the slice to store numbers read from DB
+	var num []int
+
+	for rows.Next() {
+		var readValue int
+		//The number of values below must be the same amount
+		//as the number of rows in the DB
+		err := rows.Scan(&readValue) //reads data from db and puts it into the address of the variable
+		checkErr(err)
+		num = append(num, readValue)
+	}
+
+	highestNr := 0
+	countLines := 0
+	//iterate the slice, and find the highest number, and number of lines.
+	for i := range num {
+		if highestNr < num[i] {
+			highestNr = num[i]
+			log.Println("queryDBForLastBillLineIndx : highestNr = ", highestNr)
+			countLines++
+		}
+	}
+	log.Println("queryDBForLastBillLineIndx: highestNr = ", highestNr)
+	log.Println("queryDBForLastBillLineIndx: countLines = ", countLines)
+	return highestNr, countLines
+}
+
+//query db for the last used Bill Line for specific bill.
+//Input: *sql.DBReturns, and billID. Returns: last used bill line, and lineCount
+func queryDBForLastBillLine(db *sql.DB, billID int) (int, int) {
+	rows, err := db.Query("SELECT line_id FROM bill_lines WHERE bill_id=?", billID)
 	checkErr(err)
 	defer rows.Close()
 

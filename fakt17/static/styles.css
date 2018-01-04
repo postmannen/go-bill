@@ -131,29 +131,29 @@ div.createBillLineContainer .createBillLine {
     font-size: 20px;
 }
 
-div.createBillLineContainer div.createBillLine div.test {
+div.createBillLineContainer div.createBillLine div.billLines {
     background-color: red;
     display: inline-flex;
 }
 
-div.createBillLineContainer div.createBillLine div.test input[type="text"] {
+div.createBillLineContainer div.createBillLine div.billLines input[type="text"] {
     border: black solid thin;
 }
 
 /****The individual fields of the bill lines*/
-div.createBillLineContainer div.createBillLine div.test input[name*="billLineNR"] {
+div.createBillLineContainer div.createBillLine div.billLines input[name*="billLineNR"] {
     width: 30px;
 }
-div.createBillLineContainer div.createBillLine div.test input[name*="Description"] {
+div.createBillLineContainer div.createBillLine div.billLines input[name*="Description"] {
     width: 200px;
 }
-div.createBillLineContainer div.createBillLine div.test input[name="billLineQuantity"] {
+div.createBillLineContainer div.createBillLine div.billLines input[name="billLineQuantity"] {
     width: 40px;
 }
-div.createBillLineContainer div.createBillLine div.test input[name="billLineDiscountPercentage"] {
+div.createBillLineContainer div.createBillLine div.billLines input[name="billLineDiscountPercentage"] {
     width: 30px;
 }
-div.createBillLineContainer div.createBillLine div.test input[name="billLineVatUsed"] {
+div.createBillLineContainer div.createBillLine div.billLines input[name="billLineVatUsed"] {
     width: 30px;
 }
 /****The show user part*/

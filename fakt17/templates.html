@@ -200,11 +200,11 @@
 
 <!-- ******************* BILL PAGES *********************-->
 {{define "createBillLines"}}
+<form>
     <div class="createBillLineContainer">
         <div class="createBillLine">
-            <form>
                 {{range .}}
-                <div class="test">
+                <div class="billLines">
                     <input type="text" name="billLineID" value="Lnr:{{.LineID}}">
                     <!--<textarea cols="20" rows="1" name="billLineDescription" value="{{.Description}}"></textarea>-->
                     <input type="text" name="billLineDescription" value="{{.Description}}">
@@ -213,10 +213,14 @@
                     <input type="text" name="billLineVatUsed" value="{{.VatUsed}}">
                     <input type="text" name="billLinePriceExVat" value="{{.PriceExVat}}">
                 </div>
+                <div class="billLineButtons">
+                    <input type="submit" name="billLineActionButton" value="add line">
+                    <input type="submit" name="billLineActionButton" value="modify line">
+                </div>
                 {{end}}
-            </form>
         </div>
     </div>
+</form>
 {{end}}
 
 {{define "createBillAddLineButton"}}
@@ -263,7 +267,7 @@
                 <input class="infoBox2" title="The country ID" type="inputUserText" name="countryId" placeholder="{{.CountryID}}">
         </div>
         <div class="UserSingleConfirm">
-            <input type="submit" name="userActionButton" value="add">
+            <input type="submit" name="userActionButton" value="add bill">
             <input type="submit" name="userActionButton" value="modify">
         </div>
     </div>

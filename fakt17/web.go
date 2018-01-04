@@ -246,7 +246,7 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
 
 	//if the add button were pushed
-	if buttonAction == "add" {
+	if buttonAction == "add bill" {
 
 		//create a new bill_id in bills database
 		//use the next available bill number
@@ -259,16 +259,21 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 		newBillID := addBillToDB(pDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", newBillID)
 
-		//---------------------------------
-		//TODO: create a new blank bill line in the bill_lines database
+		//create a new blank bill line in the bill_lines database
 		//use a new bill_id from the code above
 		//use the chosen users id for user_id
 		bl := BillLines{}
 		bl.BillID = newBillID
 		bl.LineID = 1
 		addBillLineToDB(pDB, bl)
+		//---------------------------------
+		//TODO: Create an "add bill line" button to the left of the bill line
+
+		//lastBillLine, _ := queryDBForLastBillLine(pDB, newBillID)
+		//log.Println("INFO: billCreateWeb: last bill line contains = ", lastBillLine)
 
 		//---------------------------------
+
 		//Read all the bill lines for the given billID, and put them in a slice for iteraring later
 		mySlice := queryDBForBillLinesInfo(pDB, newBillID) //TODO:using billID 11 for testing
 		log.Println("billCreateWeb: mySlice = ", mySlice)
@@ -279,4 +284,8 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 	}
+	r.ParseForm()
+	fmt.Println("#############", r.Form)
+	r.ParseMultipartForm(1000)
+	fmt.Println("#############", r.MultipartForm)
 }
