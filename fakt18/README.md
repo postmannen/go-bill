@@ -49,6 +49,8 @@
 17. Added bills table
     Added new bill functionality to create bill page
 	Added new line to bill listing
+18. TODO: Rewrite so all templates are drawn on bill create startup, and not after some action is taken
+
 ## TODO
 * Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number
 * Change the user pages to 1 page with add modify and delete

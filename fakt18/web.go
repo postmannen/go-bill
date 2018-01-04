@@ -198,7 +198,7 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	p := queryDBForAllUserInfo(pDB)
 
 	//creates the header and the select box from templates
-	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", p)
+	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", p) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	if err != nil {
 		log.Println("createBillUserSelection: template execution error = ", err)
 	}
@@ -229,7 +229,7 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", p[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
 			indexNR = i
-			err := tmpl["init.html"].ExecuteTemplate(w, "billShowUserSingle", p[i]) //bruk bare en spesifik slice av struct og send til html template
+			err := tmpl["init.html"].ExecuteTemplate(w, "billShowUserSingle", p[i]) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			log.Println(ip, "modifyUsersWeb: error = ", err)
 		}
 	}
@@ -307,7 +307,7 @@ func billCreateWeb(w http.ResponseWriter, r *http.Request) {
 	log.Println("billCreateWeb: mySlice = ", bLines)
 
 	//Print bill lines to web
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", bLines)
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", bLines) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}
