@@ -262,6 +262,15 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 		//create a new bill and return the new billID to use later
 		currentBillID = addBillToDB(pDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", currentBillID)
+
+		//fmt.Println("----METHOD = ", r.Method)
+		//http.Redirect(w, r, "https://erter.org", 303)
+
+		//TODO: Check if this redirect can be done in a better way since it makes a short flash before the page is redirected.
+		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+		if err != nil {
+			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+		}
 	}
 }
 
