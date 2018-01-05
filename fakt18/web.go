@@ -274,5 +274,5 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func billCreateWebBillLines(w http.ResponseWriter, r *http.Request) {
+func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 }

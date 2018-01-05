@@ -77,6 +77,7 @@ func main() {
 	http.HandleFunc("/", mainPage)
 	http.HandleFunc("/du", deleteUserWeb)
 	http.HandleFunc("/createBillSelectUser", billCreateWebSelectUser)
+	http.HandleFunc("/editBill", billCreateWebBillEdit)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe(":7000", nil)
 
