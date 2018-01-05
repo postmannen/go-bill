@@ -266,7 +266,8 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 		//fmt.Println("----METHOD = ", r.Method)
 		//http.Redirect(w, r, "https://erter.org", 303)
 
-		//TODO: Check if this redirect can be done in a better way since it makes a short flash before the page is redirected.
+		//TODO: Check if this redirect can be done in a better way since it makes a short flash only before the page is redirected,
+		//but only in firefox
 		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
@@ -275,4 +276,8 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
+	err := tmpl["init.html"].ExecuteTemplate(w, "editBillCompletePage", "some data")
+	if err != nil {
+		log.Println("editBillCompletePage: template execution error = ", err)
+	}
 }

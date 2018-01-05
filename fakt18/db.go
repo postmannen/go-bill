@@ -173,6 +173,41 @@ func queryDBForBillLinesInfo(db *sql.DB, billID int) []BillLines {
 	return m
 }
 
+//------------
+//Query the database all the bills for a specific user_id. Takes user_id of type int as input,
+//returns a slice of struct type Bill
+func queryDBForBillsForUser(db *sql.DB, userID int) []Bill {
+
+	rows, err := db.Query("select * from bill_lines where user_id=?", userID)
+	if err != nil {
+		log.Println("ERROR: queryDBForBillsForUser: Query error = ", err)
+	}
+
+	//used to store the single row values read from DB
+	mm := Bill{}
+
+	//used to store a slice of all the values from mm
+	m := []Bill{}
+
+	//Next prepares the next result row for reading with the Scan method. It returns true on success,
+	//or false if there is no next result row or an error happened while preparing it.
+	//Err should be consulted to distinguish between the two cases.
+	for rows.Next() {
+		//Scan copies the columns in the current row into the values pointed at by dest.
+		//The number of values in dest must be the same as the number of columns in Rows of database.
+		rows.Scan(&mm.BillID, &mm.UserID, &mm.CreatedDate, &mm.DueDate, &mm.Comment, &mm.TotalExVat, &mm.TotalIncVat, &mm.Paid)
+
+		//DO THIS WORK ?????????????? trying to append a struct into a slice of structs of the same type
+		m = append(m, mm)
+		log.Println("queryDBForBillsForUser: Content of mm : ", mm)
+	}
+	log.Println("queryDBForBillsForUser: Content of m : ", mm)
+	defer rows.Close()
+	return m
+}
+
+//------------
+
 //input *sql.DB and returns the highest bill number, and line count of rows in DB
 func queryDBForLastBillID(db *sql.DB) (int, int) {
 	rows, err := db.Query("SELECT bill_id FROM bills")

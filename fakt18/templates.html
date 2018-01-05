@@ -68,6 +68,16 @@
     </body>
 {{end}}
 
+{{define "editBillCompletePage"}}
+<!DOCTYPE html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}
+        {{template "topMenu"}}
+        {{template "editBill" .}}
+    </body>
+{{end}}
+
 {{define "header"}}
 {{end}} 
 
@@ -272,7 +282,16 @@
 {{end}}
 
 {{define "redirectToEditBill"}}
-    <meta http-equiv="refresh" content="0; URL=/sp">
+    <meta http-equiv="refresh" content="0; URL=/editBill">
+{{end}}
+
+{{define "editBill"}}
+    <select multiple>
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="opel">Opel</option>
+        <option value="audi">Audi</option>
+    </select>
 {{end}}
 
 <!-- ******************* TOP MENU ***********************-->
