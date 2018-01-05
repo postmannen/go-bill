@@ -178,7 +178,7 @@ func queryDBForBillLinesInfo(db *sql.DB, billID int) []BillLines {
 //returns a slice of struct type Bill
 func queryDBForBillsForUser(db *sql.DB, userID int) []Bill {
 
-	rows, err := db.Query("select * from bill_lines where user_id=?", userID)
+	rows, err := db.Query("select * from bills where user_id=?", userID)
 	if err != nil {
 		log.Println("ERROR: queryDBForBillsForUser: Query error = ", err)
 	}

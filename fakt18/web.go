@@ -280,4 +280,5 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("editBillCompletePage: template execution error = ", err)
 	}
+	fmt.Fprintf(w, "output from db : %v\n", queryDBForBillsForUser(pDB, activeUserID))
 }
