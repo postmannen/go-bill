@@ -280,5 +280,9 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("editBillCompletePage: template execution error = ", err)
 	}
-	fmt.Fprintf(w, "output from db : %v\n", queryDBForBillsForUser(pDB, activeUserID))
+
+	//TODO: FLytte denne over i select user siden, så dataene er med inn når siden vises ?
+	billsForUser := []Bill{}
+	billsForUser = queryDBForBillsForUser(pDB, activeUserID)
+	fmt.Fprintln(w, billsForUser)
 }

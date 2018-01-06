@@ -193,6 +193,9 @@ ul li { /*styling the sub menus within this block, the li items*/
     margin-right: 2px;
     margin-bottom: 1px;
     border-radius: 5px;
+    transition: all 0.3s linear;
+    transform-origin: 10 0;
+    transform: perspective(800px) rotateY(10deg);
 }
 ul li a {   /*styling the menu link within this block*/
     z-index: 1;
@@ -202,6 +205,10 @@ ul li a {   /*styling the menu link within this block*/
 }
 ul li a:hover {
     background-color: green;
+    border-radius: 5px;
+    transition: all 0.3s linear;
+    transform-origin: 0 0;
+    transform: perspective(800px) rotateY(10deg);
 }
 ul li ul li {
     display: none;
