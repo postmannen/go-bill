@@ -266,8 +266,6 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 		//fmt.Println("----METHOD = ", r.Method)
 		//http.Redirect(w, r, "https://erter.org", 303)
 
-		//TODO: Check if this redirect can be done in a better way since it makes a short flash only before the page is redirected,
-		//but only in firefox
 		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
@@ -275,8 +273,15 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/*
+TODO:
+	- Rename the "add bill " button to "manage bills"
+	-
+
+*/
+
 func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
-	//ERROR, Tar ikke hensyn til bruker id. Slår alltid opp på den som har faktura 5 osv.
+	fmt.Println("INFO: Active user ID when call for bills = ", activeUserID)
 	BillsForUser := []Bill{}
 	BillsForUser = queryDBForBillsForUser(pDB, activeUserID)
 	fmt.Println("INFO: billCreateWebBillEdit: BillsForUser = ", BillsForUser)
