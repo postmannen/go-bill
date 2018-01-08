@@ -1,5 +1,6 @@
 h1 {
     background-color: orange;
+    margin: 0;
 }
 body {
     background-image: url("/static/joker.jpg");
@@ -206,9 +207,22 @@ ul li a {   /*styling the menu link within this block*/
 ul li a:hover {
     background-color: green;
     border-radius: 5px;
+    /*transition makes the color fade of the item*/
     transition: all 0.3s linear;
-    transform-origin: 0 0;
-    transform: perspective(800px) rotateY(10deg);
+    /*rotate the item*/
+    -webkit-transform:rotate(-3deg);
+    -o-transform:rotate(-3deg);
+    -moz-transform:rotate(-3deg);
+    transform:rotate(-3deg);
+    /*scale*/
+    -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
+    -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+    box-shadow:10px 10px 7px rgba(0,0,0,.7);
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    position:relative;
+    z-index:5;
 }
 ul li ul li {
     display: none;

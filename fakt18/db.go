@@ -203,6 +203,8 @@ func queryDBForBillsForUser(db *sql.DB, userID int) []Bill {
 	}
 	log.Println("queryDBForBillsForUser: Content of m : ", mm)
 	defer rows.Close()
+
+	fmt.Println("INFO: queryDBForBillsForUser : The slice of bills for user looks like = ", m)
 	return m
 }
 
