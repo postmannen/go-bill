@@ -16,15 +16,15 @@ import (
 //Query the database for all users, and return a slice of struct with all users
 func queryDBForAllUserInfo(pDB *sql.DB) []User {
 	//get total rows in database
-	num, countLines := queryDBForLastCustomerUID(pDB)
+	lastUserID, countLines := queryDBForLastCustomerUID(pDB)
 	p := []User{}
-	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo highestNR ER = ", num)
+	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo highestNR ER = ", lastUserID)
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo countlines = ", countLines)
 
-	for i := 1; i <= num; i++ {
+	for i := 0; i <= lastUserID; i++ {
 		//append the row to slice
 		pTemp := queryDBForSingleUserInfo(pDB, i)
-		if pTemp.Number != 0 {
+		if pTemp.Number != 999999999 {
 			p = append(p, queryDBForSingleUserInfo(pDB, i))
 		}
 	}

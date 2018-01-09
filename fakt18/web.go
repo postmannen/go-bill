@@ -202,7 +202,7 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 	data.Users = queryDBForAllUserInfo(pDB)
 
 	//creates the header and the select box from templates
-	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", data) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	err := tmpl["init.html"].ExecuteTemplate(w, "createBillCompletePage", data)
 	if err != nil {
 		log.Println("createBillUserSelection: template execution error = ", err)
 	}
@@ -212,22 +212,22 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 	//Parse all the variables in the html form to get all the data
 	r.ParseForm()
 
-	//Get the value (number) of the chosen user from form dropdown menu <select name="users">
-	num, _ := strconv.Atoi(r.FormValue("users"))
-
-	//if sentence to keep the chosen user ID. Reason is that it resets to 0 when the page is redrawn after "choose" is pushed
+	//'if' sentence to keep the chosen user ID. Reason is that it resets to 0 when the page is redrawn after "choose" is pushed
 	//put the value in chooseUserButton which is a global variable
 	if r.FormValue("chooseUserButton") == "choose" {
+		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
+		num, _ := strconv.Atoi(r.FormValue("users"))
+
 		activeUserID = num
 		//reset currentBillID so a new user dont inherit the last bill used for another user.
 		currentBillID = 0
 	}
-	log.Println("billCreateWeb: The number active now in the user select box: num = ", num)
+
 	log.Println("billCreateWeb: The number chosen in the user select box:activeUserID = ", activeUserID)
 
-	//Write out all the info of the selected user to the web
+	//Iterate the slice of all the users found in db to find the data for the user selected
 	for i := range data.Users {
-		log.Println(ip, "modifyUsersWeb: p[i].Number = ", data.Users[i].Number)
+		//log.Println(ip, "modifyUsersWeb: p[i].Number = ", data.Users[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
 		if data.Users[i].Number == activeUserID {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", data.Users[i].FirstName, data.Users[i].LastName)
@@ -239,9 +239,8 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Get the last used bill_id from DB
-	totalBillNumbers, totalLineCount := queryDBForLastBillID(pDB)
-	log.Println(ip, "billCreateWeb: totalBillNumbers = ", totalBillNumbers)
-	log.Println(ip, "billCreateWeb: totalLineCount = ", totalLineCount)
+	highestBillNR, totalLineCount := queryDBForLastBillID(pDB)
+	log.Println(ip, "billCreateWeb: highestBillNR = ", highestBillNR, ", and totaltLineCount = ", totalLineCount)
 
 	//Check which of the two input buttons where pushed. They both have name=userActionButton,
 	//and the value can be read with r.FormValue("userActionButton")
@@ -263,15 +262,14 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(buttonAction, "pressed")
 
 		//get the last used bill id
-		totalBillNumbers, totalLineCount := queryDBForLastBillID(pDB)
-		log.Println("billCreateWeb: totalBillNumbers = ", totalBillNumbers)
-		log.Println("billCreateWeb: totalLineCount = ", totalLineCount)
+		highestBillNR, totalLineCount := queryDBForLastBillID(pDB)
+		log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", totaltLineCount = ", totalLineCount)
 
 		//create a new bill_id in bills database
 		//use the next available bill number
 		//use the chosen user id for user_id
 		newBill := Bill{}
-		newBill.BillID = totalBillNumbers + 1
+		newBill.BillID = highestBillNR + 1
 		newBill.UserID = activeUserID
 
 		//create a new bill and return the new billID to use later
@@ -288,7 +286,7 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("INFO: Active user ID when call for bills = ", activeUserID)
+	fmt.Println("INFO: billCreateWebBillEdit: Active user ID when call for bills = ", activeUserID)
 	BillsForUser := []Bill{}
 	BillsForUser = queryDBForBillsForUser(pDB, activeUserID)
 	fmt.Println("INFO: billCreateWebBillEdit: BillsForUser = ", BillsForUser)
@@ -310,22 +308,21 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.ParseForm()
-	fmt.Println("r.ParseForm = ", r.Form)
+	fmt.Println("r.Form = ", r.Form)
 
-	buttonAction := r.FormValue("userActionButton")
 	billID, _ := strconv.Atoi(r.FormValue("billID"))
 
-	if buttonAction == "choose bill" {
-		fmt.Println(buttonAction, "pressed")
+	if r.FormValue("userActionButton") == "choose bill" {
 		log.Println("INFO: billCreateWebBillEdit: billID =", billID)
 		fmt.Println("billID = ", billID)
 		currentBillID = billID
 
 	}
 
-	billLines := queryDBForBillLinesInfo(pDB, billID)
+	billLines := queryDBForBillLinesInfo(pDB, currentBillID)
 	fmt.Println("***********billLines =", billLines)
 	fmt.Println("billCreateWebBillEdit: queryDBForBillLinesInfo: billLines = ", billLines)
+	fmt.Println("*****Prøver å tegne opp billLines********")
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", billLines)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
@@ -335,10 +332,7 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("...........form inneholder = ", r.Form)
 	fmt.Println("currentBillID inneholder =", currentBillID)
 
-	buttonAction = r.FormValue("billLineActionButton")
-	if buttonAction == "add line" {
-		fmt.Println("Du trykket add Line")
-
+	if r.FormValue("billLineActionButton") == "add line" {
 		billLine := BillLines{}
 		billLine.BillID = currentBillID
 		fmt.Println("#######billid some benyttes er =", currentBillID)
@@ -348,5 +342,8 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 		billLine.Description = "noe tekst"
 
 		addBillLineToDB(pDB, billLine)
+
 	}
 }
+
+//TODO: Move select bill dropdown to select user window
