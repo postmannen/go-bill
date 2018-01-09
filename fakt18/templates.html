@@ -264,7 +264,7 @@
                 <input class="infoBox2" title="The country ID" type="inputUserText" name="countryId" placeholder="{{.CountryID}}">
         </div>
         <div class="UserSingleConfirm">
-            <input type="submit" name="userActionButton" value="add bill">
+            <input type="submit" name="userActionButton" value="manage bills">
             <!--<input type="submit" name="userActionButton" value="modify">-->
         </div>
     </div>
@@ -286,11 +286,12 @@
 {{end}}
 
 {{define "editBill"}}
-    <select multiple>
+    <select>
         {{range .}}
-            <option value="volvo">{{.BillID}}</option>
+            <option value="{{.BillID}}">{{.BillID}}</option>
         {{end}}
     </select>
+    <input type="submit" name="userActionButton" value="choose bill">
 {{end}}
 
 <!-- ******************* TOP MENU ***********************-->

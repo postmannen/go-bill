@@ -249,8 +249,8 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 	buttonAction := r.FormValue("userActionButton")
 	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
 
-	//if the add bill button were pushed
-	if buttonAction == "add bill" {
+	//if the manage bills button were pushed
+	if buttonAction == "manage bills" {
 
 		//create a new bill_id in bills database
 		//use the next available bill number
@@ -275,7 +275,7 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 
 /*
 TODO:
-	- Rename the "add bill " button to "manage bills"
+	- DONE: Rename the "add bill " button to "manage bills"
 	-
 
 */
@@ -285,6 +285,17 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 	BillsForUser := []Bill{}
 	BillsForUser = queryDBForBillsForUser(pDB, activeUserID)
 	fmt.Println("INFO: billCreateWebBillEdit: BillsForUser = ", BillsForUser)
+
+	//Sort the bills so the last bill_id is first in the slice, and then shown on top of the listing
+	for i := 0; i < len(BillsForUser); i++ {
+		for ii := 0; ii < len(BillsForUser); ii++ {
+			if BillsForUser[i].BillID > BillsForUser[ii].BillID {
+				tmp := BillsForUser[ii]
+				BillsForUser[ii] = BillsForUser[i]
+				BillsForUser[i] = tmp
+			}
+		}
+	}
 
 	err := tmpl["init.html"].ExecuteTemplate(w, "editBillCompletePage", BillsForUser)
 	if err != nil {
