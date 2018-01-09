@@ -299,7 +299,27 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 
 	err := tmpl["init.html"].ExecuteTemplate(w, "editBillCompletePage", BillsForUser)
 	if err != nil {
-		log.Println("editBillCompletePage: template execution error = ", err)
+		log.Println("billCreateWebBillEdit: template execution error = ", err)
 	}
 
+	r.ParseForm()
+	fmt.Println("r.ParseForm = ", r.Form)
+
+	buttonAction := r.FormValue("userActionButton")
+	billID, _ := strconv.Atoi(r.FormValue("billID"))
+
+	fmt.Println("billID = ", billID)
+
+	if buttonAction == "choose bill" {
+		fmt.Println(buttonAction, "pressed")
+		log.Println("INFO: billCreateWebBillEdit: billID =", billID)
+
+	}
+
+	billLines := queryDBForBillLinesInfo(pDB, billID)
+	fmt.Println("--------billLines = ", billLines)
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", billLines)
+	if err != nil {
+		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+	}
 }

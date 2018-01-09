@@ -125,16 +125,16 @@ input[type=inputUserText] {
 div.createBillLineContainer  {
     display: block;
     width: 100%;
-    background-color: blue;
+    background-color: inherit;
 }
 div.createBillLineContainer .createBillLine {
-    background-color: green;
+    background-color: inherit;
     font-size: 20px;
 }
 
 div.createBillLineContainer div.createBillLine div.billLines {
-    background-color: red;
-    display: inline-flex;
+    background-color: inherit;
+    /*display: inline-flex;*/
 }
 
 div.createBillLineContainer div.createBillLine div.billLines input[type="text"] {

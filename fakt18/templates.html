@@ -286,12 +286,16 @@
 {{end}}
 
 {{define "editBill"}}
-    <select>
+<form>
+    <select name="billID">
         {{range .}}
             <option value="{{.BillID}}">{{.BillID}}</option>
         {{end}}
     </select>
     <input type="submit" name="userActionButton" value="choose bill">
+    <input type="submit" name="userActionButton" value="add new bill">
+
+</form>
 {{end}}
 
 <!-- ******************* TOP MENU ***********************-->
