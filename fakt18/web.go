@@ -251,6 +251,19 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 
 	//if the manage bills button were pushed
 	if buttonAction == "manage bills" {
+		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+		if err != nil {
+			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+		}
+	}
+
+	if buttonAction == "add new bill" {
+		fmt.Println(buttonAction, "pressed")
+
+		//get the last used bill id
+		totalBillNumbers, totalLineCount := queryDBForLastBillID(pDB)
+		log.Println("billCreateWeb: totalBillNumbers = ", totalBillNumbers)
+		log.Println("billCreateWeb: totalLineCount = ", totalLineCount)
 
 		//create a new bill_id in bills database
 		//use the next available bill number
@@ -262,14 +275,6 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 		//create a new bill and return the new billID to use later
 		currentBillID = addBillToDB(pDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", currentBillID)
-
-		//fmt.Println("----METHOD = ", r.Method)
-		//http.Redirect(w, r, "https://erter.org", 303)
-
-		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
-		if err != nil {
-			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
-		}
 	}
 }
 
