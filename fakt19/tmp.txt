@@ -1,0 +1,72 @@
+//Get the last used bill_id from DB
+	totalBillNumbers, totalLineCount := queryDBForLastBillID(pDB)
+	log.Println(ip, "billCreateWeb: totalBillNumbers = ", totalBillNumbers)
+	log.Println(ip, "billCreateWeb: totalLineCount = ", totalLineCount)
+
+	//Check which of the two input buttons where pushed. They both have name=userActionButton,
+	//and the value can be read with r.FormValue("userActionButton")
+	r.ParseForm()
+	log.Println("r.Form shows = ", r.Form)
+	log.Println("r.FormValue = ", r.FormValue("userActionButton"))
+	buttonAction := r.FormValue("userActionButton")
+	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
+
+	//if the add bill button were pushed
+	if buttonAction == "add bill" {
+
+		//create a new bill_id in bills database
+		//use the next available bill number
+		//use the chosen user id for user_id
+		newBill := Bill{}
+		newBill.BillID = totalBillNumbers + 1
+		newBill.UserID = activeUserID
+
+		//create a new bill and return the new billID to use later
+		currentBillID = addBillToDB(pDB, newBill)
+		log.Println("billCreateWeb: newBillID = ", currentBillID)
+//HIT-------------
+		//create a new blank bill line in the bill_lines database
+		//use a new bill_id from the code above
+		//use the chosen users id for user_id
+		bl := BillLines{}
+		bl.BillID = currentBillID
+		bl.LineID = 1
+		addBillLineToDB(pDB, bl)
+
+	}
+
+	if buttonAction == "modify" {
+		fmt.Println("----------- YOU PRESSED MODIFY")
+	}
+
+	//Add a new bill line to the current bill
+	r.ParseForm()
+
+	buttonAction = r.FormValue("billLineActionButton")
+	if buttonAction == "add line" {
+		fmt.Println("----------YOU PRESSED add line BUTTON")
+		lastBillLine, _ := queryDBForLastBillLine(pDB, currentBillID)
+		log.Println("createBillUserSelection: new bill line button pushed: lastBillLine =", lastBillLine)
+
+		bl := BillLines{}
+		bl.BillID = currentBillID
+		bl.LineID = lastBillLine + 1
+		addBillLineToDB(pDB, bl)
+	}
+
+	//Read all the bill lines for the given billID, and put them in a slice for iteraring later
+	log.Println("INFO: billCreateWeb: currentBillID = ", currentBillID)
+	data.BLines = queryDBForBillLinesInfo(pDB, currentBillID)
+	log.Println("billCreateWeb: mySlice = ", data.BLines)
+
+	//Print bill lines to web
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", data.BLines) //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	if err != nil {
+		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+	}
+
+	r.ParseForm()
+	fmt.Println("############# r.Form = ", r.Form)
+	r.ParseMultipartForm(1000)
+	fmt.Println("############# r.MultipartForm = ", r.MultipartForm)
+}
