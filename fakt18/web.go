@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 /****************************
@@ -275,15 +277,15 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 		//create a new bill and return the new billID to use later
 		currentBillID = addBillToDB(pDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", currentBillID)
+
+		billLine := BillLines{}
+		billLine.BillID = currentBillID
+		billLine.LineID = 1
+		billLine.Description = "noe tekst"
+
+		addBillLineToDB(pDB, billLine)
 	}
 }
-
-/*
-TODO:
-	- DONE: Rename the "add bill " button to "manage bills"
-	-
-
-*/
 
 func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: Active user ID when call for bills = ", activeUserID)
@@ -313,18 +315,38 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 	buttonAction := r.FormValue("userActionButton")
 	billID, _ := strconv.Atoi(r.FormValue("billID"))
 
-	fmt.Println("billID = ", billID)
-
 	if buttonAction == "choose bill" {
 		fmt.Println(buttonAction, "pressed")
 		log.Println("INFO: billCreateWebBillEdit: billID =", billID)
+		fmt.Println("billID = ", billID)
+		currentBillID = billID
 
 	}
 
 	billLines := queryDBForBillLinesInfo(pDB, billID)
-	fmt.Println("--------billLines = ", billLines)
+	fmt.Println("***********billLines =", billLines)
+	fmt.Println("billCreateWebBillEdit: queryDBForBillLinesInfo: billLines = ", billLines)
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", billLines)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+	}
+
+	r.ParseForm()
+	fmt.Println("...........form inneholder = ", r.Form)
+	fmt.Println("currentBillID inneholder =", currentBillID)
+
+	buttonAction = r.FormValue("billLineActionButton")
+	if buttonAction == "add line" {
+		fmt.Println("Du trykket add Line")
+
+		billLine := BillLines{}
+		billLine.BillID = currentBillID
+		fmt.Println("#######billid some benyttes er =", currentBillID)
+		//create a random number for the bill line....for now....
+		rand.Seed(time.Now().UnixNano())
+		billLine.LineID = rand.Intn(10000)
+		billLine.Description = "noe tekst"
+
+		addBillLineToDB(pDB, billLine)
 	}
 }
