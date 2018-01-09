@@ -218,18 +218,18 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 		num, _ := strconv.Atoi(r.FormValue("users"))
 
-		activeUserID = num
+		data.ActiveUserID = num
 		//reset currentBillID so a new user dont inherit the last bill used for another user.
 		currentBillID = 0
 	}
 
-	log.Println("billCreateWeb: The number chosen in the user select box:activeUserID = ", activeUserID)
+	log.Println("billCreateWeb: The number chosen in the user select box:data.activeUserID = ", data.ActiveUserID)
 
 	//Iterate the slice of all the users found in db to find the data for the user selected
 	for i := range data.Users {
 		//log.Println(ip, "modifyUsersWeb: p[i].Number = ", data.Users[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
-		if data.Users[i].Number == activeUserID {
+		if data.Users[i].Number == data.ActiveUserID && data.Users[i].Number != 0 {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName = ", data.Users[i].FirstName, data.Users[i].LastName)
 			//Store the index nr in slice of the chosen user
 			indexNR = i
@@ -270,7 +270,7 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 		//use the chosen user id for user_id
 		newBill := Bill{}
 		newBill.BillID = highestBillNR + 1
-		newBill.UserID = activeUserID
+		newBill.UserID = data.ActiveUserID
 
 		//create a new bill and return the new billID to use later
 		currentBillID = addBillToDB(pDB, newBill)
@@ -286,9 +286,10 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("INFO: billCreateWebBillEdit: Active user ID when call for bills = ", activeUserID)
+	data := webData{}
+	fmt.Println("INFO: billCreateWebBillEdit: Active user ID when call for bills = ", data.ActiveUserID)
 	BillsForUser := []Bill{}
-	BillsForUser = queryDBForBillsForUser(pDB, activeUserID)
+	BillsForUser = queryDBForBillsForUser(pDB, data.ActiveUserID)
 	fmt.Println("INFO: billCreateWebBillEdit: BillsForUser = ", BillsForUser)
 
 	//Sort the bills so the last bill_id is first in the slice, and then shown on top of the listing

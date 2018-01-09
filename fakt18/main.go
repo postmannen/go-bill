@@ -50,9 +50,9 @@ type BillLines struct {
 type webData struct {
 	Users         []User
 	BLines        []BillLines
-	BillsForUSer  []Bill
-	activeUserID  int
-	currentBillID int
+	BillsForUser  []Bill
+	ActiveUserID  int
+	CurrentBillID int
 }
 
 var pDB *sql.DB                        //The pointer to use with the Database
