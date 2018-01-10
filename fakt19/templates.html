@@ -214,7 +214,7 @@
                     <input type="submit" name="billLineActionButton" value="add line">
                     <input type="submit" name="billLineActionButton" value="modify line">
                 </div>
-                {{end}}
+               {{end}} 
         </div>
     </div>
 </form>
@@ -233,6 +233,7 @@
         <h3>Select user</h3>
         <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
         <select name="users">
+            <option disabled selected value> -- select an option -- </option>
             {{range .Users}}
                 <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
             {{end}}

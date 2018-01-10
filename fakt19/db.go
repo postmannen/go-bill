@@ -21,10 +21,11 @@ func queryDBForAllUserInfo(pDB *sql.DB) []User {
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo highestNR ER = ", lastUserID)
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo countlines = ", countLines)
 
-	for i := 0; i <= lastUserID; i++ {
+	for i := 1; i <= lastUserID; i++ {
 		//append the row to slice
 		pTemp := queryDBForSingleUserInfo(pDB, i)
-		if pTemp.Number != 999999999 {
+		//if user is not deleted, append the user id to the slice
+		if pTemp.Number != 0 {
 			p = append(p, queryDBForSingleUserInfo(pDB, i))
 		}
 	}
@@ -182,6 +183,7 @@ func queryDBForBillsForUser(db *sql.DB, userID int) []Bill {
 	if err != nil {
 		log.Println("ERROR: queryDBForBillsForUser: Query error = ", err)
 	}
+	log.Println("INFO: queryDBForBillsForUser: userID =", userID)
 
 	//used to store the single row values read from DB
 	mm := Bill{}

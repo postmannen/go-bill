@@ -3,8 +3,8 @@ h1 {
     margin: 0;
 }
 body {
-    /*background-image: url("/static/joker.jpg");
-    background-size: cover;*/
+    background-image: url("/static/joker.jpg");
+    background-size: cover;
     font-family: Arial;
 }
 /*form {

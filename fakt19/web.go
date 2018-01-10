@@ -197,7 +197,7 @@ func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 
 //The web handler to create bills
 func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
-	data := webData{}
+	//data := webData{}
 
 	data.Users = queryDBForAllUserInfo(pDB)
 
@@ -286,7 +286,7 @@ func billCreateWebSelectUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
-	data := webData{}
+	//data := webData{}
 	fmt.Println("INFO: billCreateWebBillEdit: Active user ID when call for bills = ", data.ActiveUserID)
 	BillsForUser := []Bill{}
 	BillsForUser = queryDBForBillsForUser(pDB, data.ActiveUserID)
@@ -321,9 +321,9 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	billLines := queryDBForBillLinesInfo(pDB, currentBillID)
-	fmt.Println("***********billLines =", billLines)
 	fmt.Println("billCreateWebBillEdit: queryDBForBillLinesInfo: billLines = ", billLines)
 	fmt.Println("*****Prøver å tegne opp billLines********")
+
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", billLines)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
@@ -348,3 +348,9 @@ func billCreateWebBillEdit(w http.ResponseWriter, r *http.Request) {
 }
 
 //TODO: Move select bill dropdown to select user window
+//Sjekk ut : Lage en template som bare tegner en bill line, og så kan man heller kjøre den templaten flere ganger
+//	med forskjellige data fra slice som input. Da blir det kanskje mulig å oppdatere siden fortløpende ???
+
+//ERROR: Den viser bill linjene hvis user bare har 1 bill. Har den 2 så viser den ikke lenger.
+//			Prøv å legg alle variablene over i global og se om det kan være noe den mangler når den
+//			prøver å tegne opp alle bill linjene.......evt. sjekk logger først.

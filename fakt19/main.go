@@ -19,6 +19,7 @@ type User struct { //some
 	PhoneNr        string
 	OrgNr          string
 	CountryID      string
+	Selected       string
 }
 
 //Bill struct specifications
@@ -60,6 +61,7 @@ var tmpl map[string]*template.Template //map to hold all templates
 var indexNR int                        //to store the index nr. in slice where chosen person is stored
 var activeUserID int                   //to store the active user beeing worked on in the different web pages
 var currentBillID int                  //to store the active bill id beeing worked on in different web pages
+var data webData
 
 func init() {
 	//initate the templates
