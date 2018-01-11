@@ -68,13 +68,13 @@
     </body>
 {{end}}
 
-{{define "editBillCompletePage"}}
+{{define "billLinesComplete"}}
 <!DOCTYPE html>
     <body>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{template "head" .}}
         {{template "topMenu"}}
-        {{template "editBill" .}}
+        {{template "editBillSelectBox" .}}
     </body>
 {{end}}
 
@@ -287,7 +287,7 @@
     <meta http-equiv="refresh" content="0; URL=/editBill">
 {{end}}
 
-{{define "editBill"}}
+{{define "editBillSelectBox"}}
 <form>
     <select name="billID">
         {{range .}}

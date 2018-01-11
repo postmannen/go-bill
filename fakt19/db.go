@@ -169,7 +169,7 @@ func queryDBForBillLinesInfo(db *sql.DB, billID int) []BillLines {
 		m = append(m, mm)
 		log.Println("queryDBForBillLinesInfo: Content of mm : ", mm)
 	}
-	log.Println("queryDBForBillLinesInfo: Content of m : ", mm)
+	log.Println("queryDBForBillLinesInfo: Content of m : ", m)
 	defer rows.Close()
 	return m
 }
