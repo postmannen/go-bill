@@ -234,16 +234,11 @@ func webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		highestBillNR, totalLineCount := queryDBForLastBillID(pDB)
 		log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", totaltLineCount = ", totalLineCount)
 
-		//create a new bill_id in bills database
-		//use the next available bill number
-		//use the chosen user id for user_id
 		newBill := Bill{}
 		newBill.BillID = highestBillNR + 1
 		newBill.UserID = data.ActiveUserID
 		t := time.Now()
-		t:= fmt.Sprint(t.Format("2006-01-02 15:04:05")
-		newBill.CreatedDate = t.String()
-
+		newBill.CreatedDate = fmt.Sprint(t.Format("2006-01-02 15:04:05"))
 		//create a new bill and return the new billID to use later
 		data.CurrentBillID = addBillToDB(pDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", data.CurrentBillID)

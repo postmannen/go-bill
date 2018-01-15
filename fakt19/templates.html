@@ -291,7 +291,7 @@
 <form>
     <select name="billID">
         {{range .}}
-            <option value="{{.BillID}}">{{.BillID}}</option>
+            <option value="{{.BillID}}">{{.BillID}}.   {{.CreatedDate}}</option>
         {{end}}
     </select>
     <input type="submit" name="userActionButton" value="choose bill">
