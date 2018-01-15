@@ -64,7 +64,7 @@ var data webData
 func init() {
 	//initate the templates
 	tmpl = make(map[string]*template.Template)
-	tmpl["init.html"] = template.Must(template.ParseFiles("templates.html"))
+	tmpl["init.html"] = template.Must(template.ParseFiles("static/templates.html"))
 }
 
 func main() {
