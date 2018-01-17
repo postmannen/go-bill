@@ -54,9 +54,10 @@ type webData struct {
 	BillsForUser  []Bill
 	ActiveUserID  int //to store the active user beeing worked on in the different web pages
 	CurrentBillID int //to store the active bill id beeing worked on in different web pages
+	PDB           *sql.DB
 }
 
-var pDB *sql.DB                        //The pointer to use with the Database
+//var pDB *sql.DB                        //The pointer to use with the Database
 var tmpl map[string]*template.Template //map to hold all templates
 var indexNR int                        //to store the index nr. in slice where chosen person is stored
 //var data webData
@@ -69,10 +70,9 @@ func init() {
 
 func main() {
 	//create DB and store pointer in pDB
-	pDB = createDB()
-	defer pDB.Close()
-
 	data := webData{}
+	data.PDB = createDB()
+	defer data.PDB.Close()
 
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
 	//and pointer to Request function as second parameter

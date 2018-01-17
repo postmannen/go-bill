@@ -294,7 +294,7 @@ func addBillLineToDB(db *sql.DB, b BillLines) {
 
 	//get last used index number in indx row,
 	// and increment it by one to prepare for the next record
-	indx, _ := queryDBForLastBillLineIndx(pDB)
+	indx, _ := queryDBForLastBillLineIndx(db)
 	indx++
 
 	//execute the statement on the DB
