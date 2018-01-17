@@ -59,7 +59,7 @@ type webData struct {
 var pDB *sql.DB                        //The pointer to use with the Database
 var tmpl map[string]*template.Template //map to hold all templates
 var indexNR int                        //to store the index nr. in slice where chosen person is stored
-var data webData
+//var data webData
 
 func init() {
 	//initate the templates
@@ -72,15 +72,17 @@ func main() {
 	pDB = createDB()
 	defer pDB.Close()
 
+	data := webData{}
+
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
 	//and pointer to Request function as second parameter
-	http.HandleFunc("/sp", showUsersWeb)
-	http.HandleFunc("/ap", addUsersWeb)
-	http.HandleFunc("/mp", modifyUsersWeb)
-	http.HandleFunc("/", mainPage)
-	http.HandleFunc("/du", deleteUserWeb)
-	http.HandleFunc("/createBillSelectUser", webBillSelectUser)
-	http.HandleFunc("/editBill", webBillLines)
+	http.HandleFunc("/sp", data.showUsersWeb)
+	http.HandleFunc("/ap", data.addUsersWeb)
+	http.HandleFunc("/mp", data.modifyUsersWeb)
+	http.HandleFunc("/", data.mainPage)
+	http.HandleFunc("/du", data.deleteUserWeb)
+	http.HandleFunc("/createBillSelectUser", data.webBillSelectUser)
+	http.HandleFunc("/editBill", data.webBillLines)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe(":7000", nil)
 
