@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"html/template"
 	"net/http"
 
@@ -11,22 +10,9 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-//webData struct, used to feed data to the web templates
-type webData struct {
-	Users         []db.User
-	BLines        []db.BillLines
-	BillsForUser  []db.Bill
-	ActiveUserID  int //to store the active user beeing worked on in the different web pages
-	CurrentBillID int //to store the active bill id beeing worked on in different web pages
-}
-
-type webVars struct {
-	pDB *sql.DB
-}
-
 var tmpl map[string]*template.Template //map to hold all templates
 var indexNR int                        //to store the index nr. in slice where chosen person is stored
-var data webData
+var myWeb web
 
 func init() {
 	//initate the templates

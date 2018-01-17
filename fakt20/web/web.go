@@ -1,18 +1,26 @@
 package web
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/postmannen/fakt/fakt20/db"
 )
 
-/****************************
-*	WEBHANDLERS				*
-*							*
-****************************/
+//WebData struct, used to feed data to the web templates
+type WebData struct {
+	Users         []db.User
+	BLines        []db.BillLines
+	BillsForUser  []db.Bill
+	ActiveUserID  int     //to store the active user beeing worked on in the different web pages
+	CurrentBillID int     //to store the active bill id beeing worked on in different web pages
+	PointerDB     *sql.DB //Pointer to database
+}
 
 //The default handler for the / main page
 func MainPage(w http.ResponseWriter, r *http.Request) {
