@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"database/sql"
@@ -6,10 +6,47 @@ import (
 	"log"
 )
 
-/****************************
-*	DATABASE FUNCTIONS		*
-*							*
-****************************/
+//User is used for all customers and users
+type User struct {
+	Number         int
+	FirstName      string
+	LastName       string
+	Mail           string
+	Address        string
+	PostNrAndPlace string
+	PhoneNr        string
+	OrgNr          string
+	CountryID      string
+	Selected       string
+}
+
+//Bill struct specifications
+type Bill struct {
+	BillID      int
+	UserID      int
+	CreatedDate string
+	DueDate     string
+	Comment     string
+	TotalExVat  float64
+	TotalIncVat float64
+	Paid        int
+}
+
+//BillLines struct. Fields must be export (starting Capital letter) to be passed to template
+type BillLines struct {
+	BillID             int
+	LineID             int
+	ItemID             int
+	Description        string
+	Quantity           int
+	DiscountPercentage int
+	VatUsed            int
+	PriceExVat         float64
+	//just create some linenumbers for testing
+}
+
+//pDB The pointer to use with the Database
+//var pDB *sql.DB
 
 //************************ USER SECTION ************************
 
@@ -274,9 +311,6 @@ func addBillToDB(db *sql.DB, b Bill) int {
 	return b.BillID
 }
 
-//WORKING HERE !!!
-//Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
-//Create a function to keep track of the next available indx number in database
 func addBillLineToDB(db *sql.DB, b BillLines) {
 	//start db session
 	tx, err := db.Begin()
@@ -294,7 +328,7 @@ func addBillLineToDB(db *sql.DB, b BillLines) {
 
 	//get last used index number in indx row,
 	// and increment it by one to prepare for the next record
-	indx, _ := queryDBForLastBillLineIndx(pDB)
+	indx, _ := queryDBForLastBillLineIndx(db)
 	indx++
 
 	//execute the statement on the DB
@@ -377,8 +411,8 @@ func queryDBForLastBillLine(db *sql.DB, billID int) (int, int) {
 	return highestNr, countLines
 }
 
-//**************************  creates the database  ********************************
-func createDB() *sql.DB {
+//Create the database
+func Create() *sql.DB {
 	//1. Open connection
 
 	db, err := sql.Open("sqlite3", "./fakt.db") //return types = *DB, error

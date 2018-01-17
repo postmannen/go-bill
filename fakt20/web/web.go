@@ -1,4 +1,4 @@
-package main
+package web
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ import (
 ****************************/
 
 //The default handler for the / main page
-func mainPage(w http.ResponseWriter, r *http.Request) {
+func MainPage(w http.ResponseWriter, r *http.Request) {
 	//start a web page based on template
 	err := tmpl["init.html"].ExecuteTemplate(w, "mainCompletePage", "put the data here")
 	if err != nil {
@@ -24,7 +24,7 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 }
 
 //The web handler for adding persons
-func addUsersWeb(w http.ResponseWriter, r *http.Request) {
+func AddUsersWeb(w http.ResponseWriter, r *http.Request) {
 	err := tmpl["init.html"].ExecuteTemplate(w, "addUserCompletePage", "some data")
 	if err != nil {
 		log.Println("addUsersWeb: template execution error = ", err)
@@ -51,7 +51,7 @@ func addUsersWeb(w http.ResponseWriter, r *http.Request) {
 }
 
 //The web handler for modifying a person
-func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
+func ModifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	ip := r.RemoteAddr
 	//query the userDB for all users and put the returning slice with result in p
 	p := queryDBForAllUserInfo(pDB)
@@ -145,7 +145,7 @@ func modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 }
 
 //The web handler to show and print out all registered users in the database
-func showUsersWeb(w http.ResponseWriter, r *http.Request) {
+func ShowUsersWeb(w http.ResponseWriter, r *http.Request) {
 	p := queryDBForAllUserInfo(pDB)
 	err := tmpl["init.html"].ExecuteTemplate(w, "showUserCompletePage", p)
 	if err != nil {
@@ -155,7 +155,7 @@ func showUsersWeb(w http.ResponseWriter, r *http.Request) {
 }
 
 //The web handler to delete a person
-func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
+func DeleteUserWeb(w http.ResponseWriter, r *http.Request) {
 	p := queryDBForAllUserInfo(pDB)
 	err := tmpl["init.html"].ExecuteTemplate(w, "deleteUserCompletePage", p)
 	if err != nil {
@@ -171,7 +171,7 @@ func deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 //************************* CREATE BILLS *******************************
 
 //The web handler to the user selection in create bills
-func webBillSelectUser(w http.ResponseWriter, r *http.Request) {
+func WebBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	data.Users = queryDBForAllUserInfo(pDB)
 	ip := r.RemoteAddr
 
