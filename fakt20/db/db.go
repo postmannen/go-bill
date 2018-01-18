@@ -4,54 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+
+	"github.com/postmannen/fakt/fakt20/data"
 )
-
-//User is used for all customers and users
-type User struct { //some
-	Number         int
-	FirstName      string
-	LastName       string
-	Mail           string
-	Address        string
-	PostNrAndPlace string
-	PhoneNr        string
-	OrgNr          string
-	CountryID      string
-	Selected       string
-}
-
-//Bill struct specifications
-type Bill struct {
-	BillID      int
-	UserID      int
-	CreatedDate string
-	DueDate     string
-	Comment     string
-	TotalExVat  float64
-	TotalIncVat float64
-	Paid        int
-}
-
-//BillLines struct. Fields must be export (starting Capital letter) to be passed to template
-type BillLines struct {
-	BillID             int
-	LineID             int
-	ItemID             int
-	Description        string
-	Quantity           int
-	DiscountPercentage int
-	VatUsed            int
-	PriceExVat         float64
-	//just create some linenumbers for testing
-}
 
 //************************ USER SECTION ************************
 
 //QueryDBForAllUserInfo , Query the database for all users, and return a slice of struct with all users
-func QueryDBForAllUserInfo(pDB *sql.DB) []User {
+func QueryDBForAllUserInfo(pDB *sql.DB) []data.User {
 	//get total rows in database
 	lastUserID, countLines := QueryDBForLastCustomerUID(pDB)
-	p := []User{}
+	p := []data.User{}
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo highestNR ER = ", lastUserID)
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo countlines = ", countLines)
 
@@ -67,7 +30,7 @@ func QueryDBForAllUserInfo(pDB *sql.DB) []User {
 }
 
 //QueryDBForSingleUserInfo , Query the database for the info of a single user. Takes user ID of type int as input, returns struct of single user
-func QueryDBForSingleUserInfo(db *sql.DB, uid int) User {
+func QueryDBForSingleUserInfo(db *sql.DB, uid int) data.User {
 
 	rows, err := db.Query("select * from user where user_id=?", uid)
 	checkErr(err)
@@ -84,7 +47,7 @@ func QueryDBForSingleUserInfo(db *sql.DB, uid int) User {
 		rows.Scan(&pid, &firstname, &lastname, &mail, &address, &postnrandplace, &phonenr, &orgnr, &countryID)
 
 	}
-	m := User{}
+	m := data.User{}
 	m.Number = pid
 	m.FirstName = firstname
 	m.LastName = lastname
@@ -131,7 +94,7 @@ func QueryDBForLastCustomerUID(db *sql.DB) (int, int) {
 }
 
 //UpdateUserInDB , Update user in Database, takes pointer to db and type User struct as input
-func UpdateUserInDB(db *sql.DB, u User) {
+func UpdateUserInDB(db *sql.DB, u data.User) {
 	tx, err := db.Begin()
 	checkErr(err)
 
@@ -150,7 +113,7 @@ func UpdateUserInDB(db *sql.DB, u User) {
 }
 
 //AddUserToDB , Adds user to Database. takes pointer to DB, and type User struct as input
-func AddUserToDB(db *sql.DB, u User) {
+func AddUserToDB(db *sql.DB, u data.User) {
 	//start db session
 	tx, err := db.Begin()
 	checkErr(err)
@@ -173,7 +136,7 @@ func AddUserToDB(db *sql.DB, u User) {
 
 //QueryDBForBillLinesInfo , Query the database all the bill lines for a specific bill nr. Takes bill_id of type int as input,
 //returns a slice of struct type BillLines
-func QueryDBForBillLinesInfo(db *sql.DB, billID int) []BillLines {
+func QueryDBForBillLinesInfo(db *sql.DB, billID int) []data.BillLines {
 
 	rows, err := db.Query("select * from bill_lines where bill_id=?", billID)
 	checkErr(err)
@@ -186,10 +149,10 @@ func QueryDBForBillLinesInfo(db *sql.DB, billID int) []BillLines {
 	var PriceExVat float64*/
 
 	//used to store the single row values read from DB
-	mm := BillLines{}
+	mm := data.BillLines{}
 
 	//used to store a slice of all the values from mm
-	m := []BillLines{}
+	m := []data.BillLines{}
 
 	//Next prepares the next result row for reading with the Scan method. It returns true on success,
 	//or false if there is no next result row or an error happened while preparing it.
@@ -210,7 +173,7 @@ func QueryDBForBillLinesInfo(db *sql.DB, billID int) []BillLines {
 
 //QueryDBForBillsForUser , Query the database all the bills for a specific user_id. Takes user_id of type int as input,
 //returns a slice of struct type Bill
-func QueryDBForBillsForUser(db *sql.DB, userID int) []Bill {
+func QueryDBForBillsForUser(db *sql.DB, userID int) []data.Bill {
 
 	rows, err := db.Query("select * from bills where user_id=?", userID)
 	if err != nil {
@@ -219,10 +182,10 @@ func QueryDBForBillsForUser(db *sql.DB, userID int) []Bill {
 	log.Println("INFO: queryDBForBillsForUser: userID =", userID)
 
 	//used to store the single row values read from DB
-	mm := Bill{}
+	mm := data.Bill{}
 
 	//used to store a slice of all the values from mm
-	m := []Bill{}
+	m := []data.Bill{}
 
 	//Next prepares the next result row for reading with the Scan method. It returns true on success,
 	//or false if there is no next result row or an error happened while preparing it.
@@ -279,7 +242,7 @@ func QueryDBForLastBillID(db *sql.DB) (int, int) {
 }
 
 //AddBillToDB , Adds new bill to Database. takes pointer to DB, and type bill struct as input. Returns bill ID of type int
-func AddBillToDB(db *sql.DB, b Bill) int {
+func AddBillToDB(db *sql.DB, b data.Bill) int {
 	//start db session
 	tx, err := db.Begin()
 	if err != nil {
@@ -309,7 +272,7 @@ func AddBillToDB(db *sql.DB, b Bill) int {
 
 //AddBillLineToDB , Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
 //Create a function to keep track of the next available indx number in database
-func AddBillLineToDB(db *sql.DB, b BillLines) {
+func AddBillLineToDB(db *sql.DB, b data.BillLines) {
 	//start db session
 	tx, err := db.Begin()
 	if err != nil {

@@ -6,14 +6,15 @@ import (
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/postmannen/fakt/fakt20/data"
 	"github.com/postmannen/fakt/fakt20/db"
 )
 
 //webData struct, used to feed data to the web templates
 type webData struct {
-	Users         []db.User
-	BLines        []db.BillLines
-	BillsForUser  []db.Bill
+	Users         []data.User
+	BLines        []data.BillLines
+	BillsForUser  []data.Bill
 	ActiveUserID  int //to store the active user beeing worked on in the different web pages
 	CurrentBillID int //to store the active bill id beeing worked on in different web pages
 	PDB           *sql.DB

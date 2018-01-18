@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/postmannen/fakt/fakt20/data"
 	"github.com/postmannen/fakt/fakt20/db"
 )
 
@@ -28,7 +29,7 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.ParseForm()
-	u := db.User{}
+	u := data.User{}
 	u.FirstName = r.FormValue("firstName")
 	u.LastName = r.FormValue("lastName")
 	u.Mail = r.FormValue("mail")
@@ -42,7 +43,9 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 		pid, _ := db.QueryDBForLastCustomerUID(d.PDB)
 		//increment the user index nr by one for the new used to add
 		pid++
+		fmt.Println("------pid ---------- = ", pid)
 		println("addUsersWeb: UID = ", pid)
+		u.Number = pid
 		db.AddUserToDB(d.PDB, u)
 	}
 }
@@ -80,7 +83,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//create a variable based on user to hold the values parsed from the modify web
-	u := db.User{}
+	u := data.User{}
 	r.ParseForm()
 	u.FirstName = r.FormValue("firstName")
 	u.LastName = r.FormValue("lastName")
@@ -231,7 +234,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		highestBillNR, totalLineCount := db.QueryDBForLastBillID(d.PDB)
 		log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", totaltLineCount = ", totalLineCount)
 
-		newBill := db.Bill{}
+		newBill := data.Bill{}
 		newBill.BillID = highestBillNR + 1
 		newBill.UserID = d.ActiveUserID
 		t := time.Now()
@@ -240,7 +243,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		d.CurrentBillID = db.AddBillToDB(d.PDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", d.CurrentBillID)
 
-		billLine := db.BillLines{}
+		billLine := data.BillLines{}
 		billLine.BillID = d.CurrentBillID
 		billLine.LineID = 1
 		billLine.Description = "noe tekst"
@@ -297,7 +300,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("data.CurrentBillID inneholder =", d.CurrentBillID)
 
 	if r.FormValue("billLineActionButton") == "add line" {
-		billLine := db.BillLines{}
+		billLine := data.BillLines{}
 		billLine.BillID = d.CurrentBillID
 		fmt.Println("#######billid some benyttes er =", d.CurrentBillID)
 		//create a random number for the bill line....for now....
