@@ -55,11 +55,12 @@ type webData struct {
 	ActiveUserID  int //to store the active user beeing worked on in the different web pages
 	CurrentBillID int //to store the active bill id beeing worked on in different web pages
 	PDB           *sql.DB
+	indexNR       int //to store the index nr. in slice where the chosen user is stored
 }
 
 //var pDB *sql.DB                        //The pointer to use with the Database
 var tmpl map[string]*template.Template //map to hold all templates
-var indexNR int                        //to store the index nr. in slice where chosen person is stored
+//var indexNR int                        //to store the index nr. in slice where chosen person is stored
 //var data webData
 
 func init() {
