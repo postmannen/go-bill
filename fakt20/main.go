@@ -6,52 +6,14 @@ import (
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/postmannen/fakt/fakt20/db"
 )
-
-//User is used for all customers and users
-type User struct { //some
-	Number         int
-	FirstName      string
-	LastName       string
-	Mail           string
-	Address        string
-	PostNrAndPlace string
-	PhoneNr        string
-	OrgNr          string
-	CountryID      string
-	Selected       string
-}
-
-//Bill struct specifications
-type Bill struct {
-	BillID      int
-	UserID      int
-	CreatedDate string
-	DueDate     string
-	Comment     string
-	TotalExVat  float64
-	TotalIncVat float64
-	Paid        int
-}
-
-//BillLines struct. Fields must be export (starting Capital letter) to be passed to template
-type BillLines struct {
-	BillID             int
-	LineID             int
-	ItemID             int
-	Description        string
-	Quantity           int
-	DiscountPercentage int
-	VatUsed            int
-	PriceExVat         float64
-	//just create some linenumbers for testing
-}
 
 //webData struct, used to feed data to the web templates
 type webData struct {
-	Users         []User
-	BLines        []BillLines
-	BillsForUser  []Bill
+	Users         []db.User
+	BLines        []db.BillLines
+	BillsForUser  []db.Bill
 	ActiveUserID  int //to store the active user beeing worked on in the different web pages
 	CurrentBillID int //to store the active bill id beeing worked on in different web pages
 	PDB           *sql.DB
@@ -67,9 +29,10 @@ func init() {
 }
 
 func main() {
+
 	//create DB and store pointer in pDB
 	data := webData{}
-	data.PDB = createDB()
+	data.PDB = db.CreateDB()
 	defer data.PDB.Close()
 
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
