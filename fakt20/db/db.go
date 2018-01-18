@@ -10,27 +10,27 @@ import (
 
 //************************ USER SECTION ************************
 
-//QueryDBForAllUserInfo , Query the database for all users, and return a slice of struct with all users
-func QueryDBForAllUserInfo(pDB *sql.DB) []data.User {
+//QueryAllUserInfo , Query the database for all users, and return a slice of struct with all users
+func QueryAllUserInfo(pDB *sql.DB) []data.User {
 	//get total rows in database
-	lastUserID, countLines := QueryDBForLastCustomerUID(pDB)
+	lastUserID, countLines := QueryForLastUID(pDB)
 	p := []data.User{}
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo highestNR ER = ", lastUserID)
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo countlines = ", countLines)
 
 	for i := 1; i <= lastUserID; i++ {
 		//append the row to slice
-		pTemp := QueryDBForSingleUserInfo(pDB, i)
+		pTemp := QuerySingleUserInfo(pDB, i)
 		//if user is not deleted, append the user id to the slice
 		if pTemp.Number != 0 {
-			p = append(p, QueryDBForSingleUserInfo(pDB, i))
+			p = append(p, QuerySingleUserInfo(pDB, i))
 		}
 	}
 	return p
 }
 
-//QueryDBForSingleUserInfo , Query the database for the info of a single user. Takes user ID of type int as input, returns struct of single user
-func QueryDBForSingleUserInfo(db *sql.DB, uid int) data.User {
+//QuerySingleUserInfo , Query the database for the info of a single user. Takes user ID of type int as input, returns struct of single user
+func QuerySingleUserInfo(db *sql.DB, uid int) data.User {
 
 	rows, err := db.Query("select * from user where user_id=?", uid)
 	checkErr(err)
@@ -62,8 +62,8 @@ func QueryDBForSingleUserInfo(db *sql.DB, uid int) data.User {
 	return m
 }
 
-//QueryDBForLastCustomerUID , input *sql.DB and returns the highest uid number, and line count of rows in DB
-func QueryDBForLastCustomerUID(db *sql.DB) (int, int) {
+//QueryForLastUID , input *sql.DB and returns the highest uid number, and line count of rows in DB
+func QueryForLastUID(db *sql.DB) (int, int) {
 	rows, err := db.Query("select user_id from user")
 	checkErr(err)
 	defer rows.Close()
@@ -93,8 +93,8 @@ func QueryDBForLastCustomerUID(db *sql.DB) (int, int) {
 	return highestNr, countLines
 }
 
-//UpdateUserInDB , Update user in Database, takes pointer to db and type User struct as input
-func UpdateUserInDB(db *sql.DB, u data.User) {
+//UpdateUser , Update user in Database, takes pointer to db and type User struct as input
+func UpdateUser(db *sql.DB, u data.User) {
 	tx, err := db.Begin()
 	checkErr(err)
 
@@ -112,8 +112,8 @@ func UpdateUserInDB(db *sql.DB, u data.User) {
 
 }
 
-//AddUserToDB , Adds user to Database. takes pointer to DB, and type User struct as input
-func AddUserToDB(db *sql.DB, u data.User) {
+//AddUser , Adds user to Database. takes pointer to DB, and type User struct as input
+func AddUser(db *sql.DB, u data.User) {
 	//start db session
 	tx, err := db.Begin()
 	checkErr(err)
@@ -134,9 +134,9 @@ func AddUserToDB(db *sql.DB, u data.User) {
 
 //************************** BILL SECTION ***********************************
 
-//QueryDBForBillLinesInfo , Query the database all the bill lines for a specific bill nr. Takes bill_id of type int as input,
+//QueryBillLines , Query the database all the bill lines for a specific bill nr. Takes bill_id of type int as input,
 //returns a slice of struct type BillLines
-func QueryDBForBillLinesInfo(db *sql.DB, billID int) []data.BillLines {
+func QueryBillLines(db *sql.DB, billID int) []data.BillLines {
 
 	rows, err := db.Query("select * from bill_lines where bill_id=?", billID)
 	checkErr(err)
@@ -171,9 +171,9 @@ func QueryDBForBillLinesInfo(db *sql.DB, billID int) []data.BillLines {
 	return m
 }
 
-//QueryDBForBillsForUser , Query the database all the bills for a specific user_id. Takes user_id of type int as input,
+//QueryBillsForUser , Query the database all the bills for a specific user_id. Takes user_id of type int as input,
 //returns a slice of struct type Bill
-func QueryDBForBillsForUser(db *sql.DB, userID int) []data.Bill {
+func QueryBillsForUser(db *sql.DB, userID int) []data.Bill {
 
 	rows, err := db.Query("select * from bills where user_id=?", userID)
 	if err != nil {
@@ -208,8 +208,8 @@ func QueryDBForBillsForUser(db *sql.DB, userID int) []data.Bill {
 
 //------------
 
-//QueryDBForLastBillID , input *sql.DB and returns the highest bill number, and line count of rows in DB
-func QueryDBForLastBillID(db *sql.DB) (int, int) {
+//QueryLastBillID , input *sql.DB and returns the highest bill number, and line count of rows in DB
+func QueryLastBillID(db *sql.DB) (int, int) {
 	rows, err := db.Query("SELECT bill_id FROM bills")
 	checkErr(err)
 	defer rows.Close()
@@ -241,8 +241,8 @@ func QueryDBForLastBillID(db *sql.DB) (int, int) {
 	return highestNr, countLines
 }
 
-//AddBillToDB , Adds new bill to Database. takes pointer to DB, and type bill struct as input. Returns bill ID of type int
-func AddBillToDB(db *sql.DB, b data.Bill) int {
+//AddBill , Adds new bill to Database. takes pointer to DB, and type bill struct as input. Returns bill ID of type int
+func AddBill(db *sql.DB, b data.Bill) int {
 	//start db session
 	tx, err := db.Begin()
 	if err != nil {
@@ -270,9 +270,9 @@ func AddBillToDB(db *sql.DB, b data.Bill) int {
 	return b.BillID
 }
 
-//AddBillLineToDB , Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
+//AddBillLine , Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
 //Create a function to keep track of the next available indx number in database
-func AddBillLineToDB(db *sql.DB, b data.BillLines) {
+func AddBillLine(db *sql.DB, b data.BillLines) {
 	//start db session
 	tx, err := db.Begin()
 	if err != nil {
@@ -289,7 +289,7 @@ func AddBillLineToDB(db *sql.DB, b data.BillLines) {
 
 	//get last used index number in indx row,
 	// and increment it by one to prepare for the next record
-	indx, _ := QueryDBForLastBillLineIndx(db)
+	indx, _ := QueryForLastBillLineIndx(db)
 	indx++
 
 	//execute the statement on the DB
@@ -305,8 +305,8 @@ func AddBillLineToDB(db *sql.DB, b data.BillLines) {
 
 }
 
-//QueryDBForLastBillLineIndx , query db for the last used Bill Line Index. Returns last used indx, and lineCount
-func QueryDBForLastBillLineIndx(db *sql.DB) (int, int) {
+//QueryForLastBillLineIndx , query db for the last used Bill Line Index. Returns last used indx, and lineCount
+func QueryForLastBillLineIndx(db *sql.DB) (int, int) {
 	rows, err := db.Query("SELECT indx FROM bill_lines")
 	checkErr(err)
 	defer rows.Close()
@@ -338,9 +338,10 @@ func QueryDBForLastBillLineIndx(db *sql.DB) (int, int) {
 	return highestNr, countLines
 }
 
-//QueryDBForLastBillLine , query db for the last used Bill Line for specific bill.
+/*
+//QueryForLastBillLine , query db for the last used Bill Line for specific bill.
 //Input: *sql.DBReturns, and billID. Returns: last used bill line, and lineCount
-func QueryDBForLastBillLine(db *sql.DB, billID int) (int, int) {
+func QueryForLastBillLine(db *sql.DB, billID int) (int, int) {
 	rows, err := db.Query("SELECT line_id FROM bill_lines WHERE bill_id=?", billID)
 	checkErr(err)
 	defer rows.Close()
@@ -371,9 +372,10 @@ func QueryDBForLastBillLine(db *sql.DB, billID int) (int, int) {
 	log.Println("queryDBForLastBillLineIndx: countLines = ", countLines)
 	return highestNr, countLines
 }
+*/
 
-//CreateDB , **************************  creates the database  ********************************
-func CreateDB() *sql.DB {
+//Create , **************************  creates the database  ********************************
+func Create() *sql.DB {
 	//1. Open connection
 
 	db, err := sql.Open("sqlite3", "./fakt.db") //return types = *DB, error
@@ -427,8 +429,8 @@ func checkErr(err error, args ...string) {
 	}
 }
 
-//DeleteUserInDB , Delete a row in user DB, takes pointer to db, and index number uid which corresponds to column 1 in DB for input
-func DeleteUserInDB(db *sql.DB, number int) {
+//DeleteUser , Delete a row in user DB, takes pointer to db, and index number uid which corresponds to column 1 in DB for input
+func DeleteUser(db *sql.DB, number int) {
 	tx, err := db.Begin()
 	checkErr(err)
 	log.Println("deleteUserInDB: The index number of the person to delete is = ", number)

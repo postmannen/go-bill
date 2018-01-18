@@ -33,7 +33,7 @@ func main() {
 
 	//create DB and store pointer in pDB
 	data := webData{}
-	data.PDB = db.CreateDB()
+	data.PDB = db.Create()
 	defer data.PDB.Close()
 
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
