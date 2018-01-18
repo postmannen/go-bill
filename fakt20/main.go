@@ -58,10 +58,7 @@ type webData struct {
 	indexNR       int //to store the index nr. in slice where the chosen user is stored
 }
 
-//var pDB *sql.DB                        //The pointer to use with the Database
 var tmpl map[string]*template.Template //map to hold all templates
-//var indexNR int                        //to store the index nr. in slice where chosen person is stored
-//var data webData
 
 func init() {
 	//initate the templates
