@@ -25,7 +25,7 @@ var tmpl map[string]*template.Template //map to hold all templates
 func init() {
 	//initate the templates
 	tmpl = make(map[string]*template.Template)
-	tmpl["init.html"] = template.Must(template.ParseFiles("static/templates.html"))
+	tmpl["init.html"] = template.Must(template.ParseFiles("public/templates.html"))
 }
 
 func main() {
@@ -44,7 +44,7 @@ func main() {
 	http.HandleFunc("/du", wData.deleteUserWeb)
 	http.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
 	http.HandleFunc("/editBill", wData.webBillLines)
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 	http.ListenAndServe(":7000", nil)
 
 }

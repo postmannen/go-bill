@@ -376,7 +376,7 @@ func QueryForLastBillLine(db *sql.DB, billID int) (int, int) {
 func Create() *sql.DB {
 	//1. Open connection
 
-	db, err := sql.Open("sqlite3", "./fakt.db") //return types = *DB, error
+	db, err := sql.Open("sqlite3", "./data/fakt.db") //return types = *DB, error
 	checkErr(err)
 	//2. fail-fast if can't connect to DB
 	checkErr(db.Ping())
