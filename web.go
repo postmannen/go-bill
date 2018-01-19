@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/postmannen/fakt/fakt21/data"
+	"github.com/postmannen/fakt/data"
 )
 
 //The default handler for the / main page

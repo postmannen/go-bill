@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/postmannen/fakt/fakt21/data"
+	"github.com/postmannen/fakt/data"
 )
 
 //webData struct, used to feed data to the web templates
