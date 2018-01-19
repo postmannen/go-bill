@@ -1,20 +1,18 @@
-package db
+package data
 
 import (
 	"database/sql"
 	"fmt"
 	"log"
-
-	"github.com/postmannen/fakt/fakt20/data"
 )
 
 //************************ USER SECTION ************************
 
 //QueryAllUserInfo , Query the database for all users, and return a slice of struct with all users
-func QueryAllUserInfo(pDB *sql.DB) []data.User {
+func QueryAllUserInfo(pDB *sql.DB) []User {
 	//get total rows in database
 	lastUserID, countLines := QueryForLastUID(pDB)
-	p := []data.User{}
+	p := []User{}
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo highestNR ER = ", lastUserID)
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo countlines = ", countLines)
 
@@ -30,7 +28,7 @@ func QueryAllUserInfo(pDB *sql.DB) []data.User {
 }
 
 //QuerySingleUserInfo , Query the database for the info of a single user. Takes user ID of type int as input, returns struct of single user
-func QuerySingleUserInfo(db *sql.DB, uid int) data.User {
+func QuerySingleUserInfo(db *sql.DB, uid int) User {
 
 	rows, err := db.Query("select * from user where user_id=?", uid)
 	checkErr(err)
@@ -47,7 +45,7 @@ func QuerySingleUserInfo(db *sql.DB, uid int) data.User {
 		rows.Scan(&pid, &firstname, &lastname, &mail, &address, &postnrandplace, &phonenr, &orgnr, &countryID)
 
 	}
-	m := data.User{}
+	m := User{}
 	m.Number = pid
 	m.FirstName = firstname
 	m.LastName = lastname
@@ -94,7 +92,7 @@ func QueryForLastUID(db *sql.DB) (int, int) {
 }
 
 //UpdateUser , Update user in Database, takes pointer to db and type User struct as input
-func UpdateUser(db *sql.DB, u data.User) {
+func UpdateUser(db *sql.DB, u User) {
 	tx, err := db.Begin()
 	checkErr(err)
 
@@ -113,7 +111,7 @@ func UpdateUser(db *sql.DB, u data.User) {
 }
 
 //AddUser , Adds user to Database. takes pointer to DB, and type User struct as input
-func AddUser(db *sql.DB, u data.User) {
+func AddUser(db *sql.DB, u User) {
 	//start db session
 	tx, err := db.Begin()
 	checkErr(err)
@@ -136,7 +134,7 @@ func AddUser(db *sql.DB, u data.User) {
 
 //QueryBillLines , Query the database all the bill lines for a specific bill nr. Takes bill_id of type int as input,
 //returns a slice of struct type BillLines
-func QueryBillLines(db *sql.DB, billID int) []data.BillLines {
+func QueryBillLines(db *sql.DB, billID int) []BillLines {
 
 	rows, err := db.Query("select * from bill_lines where bill_id=?", billID)
 	checkErr(err)
@@ -149,10 +147,10 @@ func QueryBillLines(db *sql.DB, billID int) []data.BillLines {
 	var PriceExVat float64*/
 
 	//used to store the single row values read from DB
-	mm := data.BillLines{}
+	mm := BillLines{}
 
 	//used to store a slice of all the values from mm
-	m := []data.BillLines{}
+	m := []BillLines{}
 
 	//Next prepares the next result row for reading with the Scan method. It returns true on success,
 	//or false if there is no next result row or an error happened while preparing it.
@@ -173,7 +171,7 @@ func QueryBillLines(db *sql.DB, billID int) []data.BillLines {
 
 //QueryBillsForUser , Query the database all the bills for a specific user_id. Takes user_id of type int as input,
 //returns a slice of struct type Bill
-func QueryBillsForUser(db *sql.DB, userID int) []data.Bill {
+func QueryBillsForUser(db *sql.DB, userID int) []Bill {
 
 	rows, err := db.Query("select * from bills where user_id=?", userID)
 	if err != nil {
@@ -182,10 +180,10 @@ func QueryBillsForUser(db *sql.DB, userID int) []data.Bill {
 	log.Println("INFO: queryDBForBillsForUser: userID =", userID)
 
 	//used to store the single row values read from DB
-	mm := data.Bill{}
+	mm := Bill{}
 
 	//used to store a slice of all the values from mm
-	m := []data.Bill{}
+	m := []Bill{}
 
 	//Next prepares the next result row for reading with the Scan method. It returns true on success,
 	//or false if there is no next result row or an error happened while preparing it.
@@ -242,7 +240,7 @@ func QueryLastBillID(db *sql.DB) (int, int) {
 }
 
 //AddBill , Adds new bill to Database. takes pointer to DB, and type bill struct as input. Returns bill ID of type int
-func AddBill(db *sql.DB, b data.Bill) int {
+func AddBill(db *sql.DB, b Bill) int {
 	//start db session
 	tx, err := db.Begin()
 	if err != nil {
@@ -272,7 +270,7 @@ func AddBill(db *sql.DB, b data.Bill) int {
 
 //AddBillLine , Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
 //Create a function to keep track of the next available indx number in database
-func AddBillLine(db *sql.DB, b data.BillLines) {
+func AddBillLine(db *sql.DB, b BillLines) {
 	//start db session
 	tx, err := db.Begin()
 	if err != nil {

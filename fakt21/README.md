@@ -54,6 +54,8 @@
 	Renaming of a whole lot of variables
 19. Making the 'data' variable used for webPages parsing of data global. Not sure if that is a smart
     idea, but time will show
+20. Moved DB into package, and renamed the functions in db with better naming
+21. Moved the content of db package into data package
 
 ## TODO
 * Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number

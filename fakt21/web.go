@@ -8,8 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/postmannen/fakt/fakt20/data"
-	"github.com/postmannen/fakt/fakt20/db"
+	"github.com/postmannen/fakt/fakt21/data"
 )
 
 //The default handler for the / main page
@@ -40,13 +39,13 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	u.CountryID = "0"
 
 	if u.FirstName != "" {
-		pid, _ := db.QueryForLastUID(d.PDB)
+		pid, _ := data.QueryForLastUID(d.PDB)
 		//increment the user index nr by one for the new used to add
 		pid++
 		fmt.Println("------pid ---------- = ", pid)
 		println("addUsersWeb: UID = ", pid)
 		u.Number = pid
-		db.AddUser(d.PDB, u)
+		data.AddUser(d.PDB, u)
 	}
 }
 
@@ -54,7 +53,7 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	ip := r.RemoteAddr
 	//query the userDB for all users and put the returning slice with result in p
-	p := db.QueryAllUserInfo(d.PDB)
+	p := data.QueryAllUserInfo(d.PDB)
 
 	//Execute the web for modify users, range over p to make the select user drop down menu
 	err := tmpl["init.html"].ExecuteTemplate(w, "modifyUserCompletePage", p)
@@ -139,13 +138,13 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//if any of the values was changed....update information into database
 	if changed {
-		db.UpdateUser(d.PDB, p[d.indexNR])
+		data.UpdateUser(d.PDB, p[d.indexNR])
 	}
 }
 
 //The web handler to show and print out all registered users in the database
 func (d *webData) showUsersWeb(w http.ResponseWriter, r *http.Request) {
-	p := db.QueryAllUserInfo(d.PDB)
+	p := data.QueryAllUserInfo(d.PDB)
 	err := tmpl["init.html"].ExecuteTemplate(w, "showUserCompletePage", p)
 	if err != nil {
 		log.Println("showUsersWeb: template execution error = ", err)
@@ -155,7 +154,7 @@ func (d *webData) showUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 //The web handler to delete a person
 func (d *webData) deleteUserWeb(w http.ResponseWriter, r *http.Request) {
-	p := db.QueryAllUserInfo(d.PDB)
+	p := data.QueryAllUserInfo(d.PDB)
 	err := tmpl["init.html"].ExecuteTemplate(w, "deleteUserCompletePage", p)
 	if err != nil {
 		log.Println("showUsersWeb: template execution error = ", err)
@@ -164,14 +163,14 @@ func (d *webData) deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 	//parse the html form and get all the data
 	r.ParseForm()
 	fn, _ := strconv.Atoi(r.FormValue("users"))
-	db.DeleteUser(d.PDB, fn)
+	data.DeleteUser(d.PDB, fn)
 }
 
 //************************* CREATE BILLS *******************************
 
 //The web handler to the user selection in create bills
 func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
-	d.Users = db.QueryAllUserInfo(d.PDB)
+	d.Users = data.QueryAllUserInfo(d.PDB)
 	ip := r.RemoteAddr
 
 	//creates the header and the select box from templates
@@ -208,7 +207,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Get the last used bill_id from DB
-	highestBillNR, totalLineCount := db.QueryLastBillID(d.PDB)
+	highestBillNR, totalLineCount := data.QueryLastBillID(d.PDB)
 	log.Println(ip, "billCreateWeb: highestBillNR = ", highestBillNR, ", and totaltLineCount = ", totalLineCount)
 
 	//Check which of the two input buttons where pushed. They both have name=userActionButton,
@@ -230,7 +229,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(buttonAction, "pressed")
 
 		//get the last used bill id
-		highestBillNR, totalLineCount := db.QueryLastBillID(d.PDB)
+		highestBillNR, totalLineCount := data.QueryLastBillID(d.PDB)
 		log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", totaltLineCount = ", totalLineCount)
 
 		newBill := data.Bill{}
@@ -239,7 +238,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		t := time.Now()
 		newBill.CreatedDate = fmt.Sprint(t.Format("2006-01-02 15:04:05"))
 		//create a new bill and return the new billID to use later
-		d.CurrentBillID = db.AddBill(d.PDB, newBill)
+		d.CurrentBillID = data.AddBill(d.PDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", d.CurrentBillID)
 
 		billLine := data.BillLines{}
@@ -247,13 +246,13 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		billLine.LineID = 1
 		billLine.Description = "noe tekst"
 
-		db.AddBillLine(d.PDB, billLine)
+		data.AddBillLine(d.PDB, billLine)
 	}
 }
 
 func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
-	BillsForUser := db.QueryBillsForUser(d.PDB, d.ActiveUserID)
+	BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
 	fmt.Println("INFO: webBillLines: BillsForUser = ", BillsForUser)
 
 	//Sort the bills so the last bill_id is first in the slice, and then shown on top of the listing
@@ -287,7 +286,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("--------HER SKAL DEN HENTE DATA FOR BILL LINES OG SKRIVE UT BILL LINES")
 	fmt.Println("data.CurrentBillID inneholder = ", d.CurrentBillID)
-	billLines := db.QueryBillLines(d.PDB, d.CurrentBillID)
+	billLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 	fmt.Println("webBillLines: queryDBForBillLinesInfo: billLines = ", billLines)
 
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", billLines)
@@ -306,7 +305,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		rand.Seed(time.Now().UnixNano())
 		billLine.LineID = rand.Intn(10000)
 		billLine.Description = "noe tekst"
-		db.AddBillLine(d.PDB, billLine)
+		data.AddBillLine(d.PDB, billLine)
 		//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
 		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {

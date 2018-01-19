@@ -6,8 +6,7 @@ import (
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/postmannen/fakt/fakt20/data"
-	"github.com/postmannen/fakt/fakt20/db"
+	"github.com/postmannen/fakt/fakt21/data"
 )
 
 //webData struct, used to feed data to the web templates
@@ -32,19 +31,19 @@ func init() {
 func main() {
 
 	//create DB and store pointer in pDB
-	data := webData{}
-	data.PDB = db.Create()
-	defer data.PDB.Close()
+	wData := webData{}
+	wData.PDB = data.Create()
+	defer wData.PDB.Close()
 
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
 	//and pointer to Request function as second parameter
-	http.HandleFunc("/sp", data.showUsersWeb)
-	http.HandleFunc("/ap", data.addUsersWeb)
-	http.HandleFunc("/mp", data.modifyUsersWeb)
-	http.HandleFunc("/", data.mainPage)
-	http.HandleFunc("/du", data.deleteUserWeb)
-	http.HandleFunc("/createBillSelectUser", data.webBillSelectUser)
-	http.HandleFunc("/editBill", data.webBillLines)
+	http.HandleFunc("/sp", wData.showUsersWeb)
+	http.HandleFunc("/ap", wData.addUsersWeb)
+	http.HandleFunc("/mp", wData.modifyUsersWeb)
+	http.HandleFunc("/", wData.mainPage)
+	http.HandleFunc("/du", wData.deleteUserWeb)
+	http.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
+	http.HandleFunc("/editBill", wData.webBillLines)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe(":7000", nil)
 
