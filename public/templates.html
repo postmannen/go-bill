@@ -231,8 +231,25 @@
 {{end}}
 
 {{define "createBillLinesNew"}}
-<form action="" id="createBillLines">
-
+<style>
+    div.billLines .billIDInput {
+        display: block;
+        background-color: green;
+    }
+</style>
+<form id="createBillLines">
+    <div id="billLines" class="billLines">
+        {{range .}}
+        <script>
+            var input = document.createElement("input")
+            input.setAttribute("value","{{.LineID}}")
+            input.setAttribute("type","text")
+            input.className = "billIDInput"
+            var div = document.getElementById("billLines")
+            div.appendChild(input)
+        </script>
+        {{end}}
+    </div>
 </form>
 {{end}}
 

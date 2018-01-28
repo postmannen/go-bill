@@ -287,7 +287,14 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("data.CurrentBillID inneholder = ", d.CurrentBillID)
 	billLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 	fmt.Println("webBillLines: queryDBForBillLinesInfo: billLines = ", billLines)
+
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLinesNew", billLines)
+	if err != nil {
+		log.Println("createBillUserSelection: createBillLinesNew: template execution error = ", err)
+	}
 }
+
+//JOBBER OVER HER
 
 func (d *webData) webBillLinesOld(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
