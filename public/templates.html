@@ -289,19 +289,28 @@
 
             var button = document.createElement("button")
             button.textContent = "Add"
-            button.id ="buttonAdd{{.LineID}}"
+            button.setAttribute("onClick","pushedAddLine()")
+            button.id ="add{{.LineID}}"
             div.appendChild(button)
 
             var button = document.createElement("button")
             button.textContent = "Delete"
-            button.id = "buttonDelete{{.LineID}}"
+            button.setAttribute("onClick","pushedDelLine()")
+            button.id = "del{{.LineID}}"
             div.appendChild(button)
         </script>
         
     </div>
     {{end}}
     <script>
-        button.onclick = window.alert("Trykket på en knapp med id" + this.id)
+        //button.onclick = window.alert("Trykket på en knapp med id" + this.id)
+        function pushedAddLine() {
+            window.alert("Add button pushed with id = " + event.srcElement.id)
+        }
+
+        function pushedDelLine() {
+            window.alert("Delete button pushed with id = " + event.srcElement.id)
+        }
     </script>
 </form>
 {{end}}
