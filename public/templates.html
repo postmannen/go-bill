@@ -232,24 +232,74 @@
 
 {{define "createBillLinesNew"}}
 <style>
-    div.billLines .billIDInput {
-        display: block;
+    div.billLines {
         background-color: green;
+    }
+    div.billLines .billLine {
+        display: inline-block;
+        background-color: yellow;
     }
 </style>
 <form id="createBillLines">
-    <div id="billLines" class="billLines">
-        {{range .}}
+    {{range .}}
+    <div id="billLines{{.LineID}}" class="billLines">
+        
         <script>
             var input = document.createElement("input")
             input.setAttribute("value","{{.LineID}}")
             input.setAttribute("type","text")
-            input.className = "billIDInput"
-            var div = document.getElementById("billLines")
+            input.className = "billLine"
+            var div = document.getElementById("billLines{{.LineID}}")
             div.appendChild(input)
+
+            var input = document.createElement("input")
+            input.value = "{{.Description}}"
+            input.type = "text"
+            input.className = "billLine"
+            var div = document.getElementById("billLines{{.LineID}}")
+            div.appendChild(input)
+
+            var input = document.createElement("input")
+            input.value = "{{.Quantity}}"
+            input.type = "text"
+            input.className = "billLine"
+            var div = document.getElementById("billLines{{.LineID}}")
+            div.appendChild(input)
+
+            var input = document.createElement("input")
+            input.value = "{{.DiscountPercentage}}"
+            input.type = "text"
+            input.className = "billLine"
+            var div = document.getElementById("billLines{{.LineID}}")
+            div.appendChild(input)
+
+            var input = document.createElement("input")
+            input.value = "{{.VatUsed}}"
+            input.type = "text"
+            input.className = "billLine"
+            var div = document.getElementById("billLines{{.LineID}}")
+            div.appendChild(input)
+
+            var input = document.createElement("input")
+            input.value = "{{.PriceExVat}}"
+            input.type = "text"
+            input.className = "billLine"
+            var div = document.getElementById("billLines{{.LineID}}")
+            div.appendChild(input)
+
+            var button = document.createElement("button")
+            button.textContent = "Add"
+            button.id ="buttonAdd{{.LineID}}"
+            div.appendChild(button)
+
+            var button = document.createElement("button")
+            button.textContent = "Delete"
+            button.id = "buttonDelete{{.LineID}}"
+            div.appendChild(button)
         </script>
-        {{end}}
+        
     </div>
+    {{end}}
 </form>
 {{end}}
 
