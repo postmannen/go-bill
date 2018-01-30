@@ -222,8 +222,8 @@
                 </div>
                 <div class="billLineButtons{{.LineID}}">
                     <input type="submit" name="billLineAddButton{{.LineID}}" value="add">
-                    <input type="submit" name="billLineModifyButton" value="modify">
-                    <input type="submit" name="billLineDeleteButton" value="delete">
+                    <input type="submit" name="billLineModifyButton{{.LineID}}" value="modify">
+                    <input type="submit" name="billLineDeleteButton{{.LineID}}" value="delete">
                 </div>
                {{end}} 
         </div>

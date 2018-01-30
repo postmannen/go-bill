@@ -313,6 +313,14 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			buttonName = k
 			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
 		}
+		if buttonLetters == "billLineDeleteButton" {
+			buttonName = k
+			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+		}
+		if buttonLetters == "billLineModifyButton" {
+			buttonName = k
+			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+		}
 	}
 
 	if r.FormValue(buttonName) == "add" {
