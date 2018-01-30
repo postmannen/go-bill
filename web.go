@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -299,7 +300,22 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fmt.Println("data.CurrentBillID inneholder =", d.CurrentBillID)
 
-	if r.FormValue("billLineActionButton") == "add line" {
+	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters from the map of r.Form
+	var buttonNumbers string
+	var buttonName string
+	for k, v := range r.Form {
+		fmt.Println("---VERDIER ---- ", k, " : ", v)
+		re := regexp.MustCompile("[a-zA-Z]+")
+		buttonLetters := re.FindString(k)
+		re = regexp.MustCompile("[0-9]+")
+		buttonNumbers = re.FindString(k)
+		if buttonLetters == "billLineAddButton" {
+			buttonName = k
+			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+		}
+	}
+
+	if r.FormValue(buttonName) == "add" {
 		billLine := data.BillLines{}
 		billLine.BillID = d.CurrentBillID
 		fmt.Println("#######billid some benyttes er =", d.CurrentBillID)
@@ -317,10 +333,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("------Finnished with the add line 'if' sentence")
 	}
 
-	if r.FormValue("billLineActionButton") == "delete line" {
+	if r.FormValue("billLineDeleteButton") == "delete" {
 		fmt.Println("--------", r.Form)
 	}
 	fmt.Println("-------Finnished with the bill lines function")
+
 }
 
 //TODO: Move select bill dropdown to select user window
