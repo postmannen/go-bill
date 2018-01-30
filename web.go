@@ -342,6 +342,8 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.FormValue("billLineDeleteButton") == "delete" {
+		//create a billLine delete functions which takes BILL_ID and LINE_ID as input, and put it here
+		//also might need to run a refresh
 		fmt.Println("--------", r.Form)
 	}
 	fmt.Println("-------Finnished with the bill lines function")
