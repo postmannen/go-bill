@@ -250,53 +250,9 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
-	//get all the bills for the chosen user
-	BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
-	fmt.Println("INFO: webBillLines: BillsForUser = ", BillsForUser)
-
-	//Sort the bills so the last bill_id is first in the slice, and then shown on top of the listing
-	for i := 0; i < len(BillsForUser); i++ {
-		for ii := 0; ii < len(BillsForUser); ii++ {
-			if BillsForUser[i].BillID > BillsForUser[ii].BillID {
-				tmp := BillsForUser[ii]
-				BillsForUser[ii] = BillsForUser[i]
-				BillsForUser[i] = tmp
-			}
-		}
-	}
-
-	err := tmpl["init.html"].ExecuteTemplate(w, "billLinesComplete", BillsForUser)
-	if err != nil {
-		log.Println("webBillLines: template execution error = ", err)
-	}
-
-	r.ParseForm()
-	fmt.Println("r.Form = ", r.Form)
-
-	if r.FormValue("userActionButton") == "choose bill" {
-		billID, _ := strconv.Atoi(r.FormValue("billID"))
-		log.Println("INFO: webBillLines: billID =", billID)
-		fmt.Println("billID = ", billID)
-		d.CurrentBillID = billID
-
-	}
-
-	//get all the bill lines for the current billID
-	fmt.Println("data.CurrentBillID inneholder = ", d.CurrentBillID)
-	billLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
-	fmt.Println("webBillLines: queryDBForBillLinesInfo: billLines = ", billLines)
-
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLinesNew", billLines)
-	if err != nil {
-		log.Println("createBillUserSelection: createBillLinesNew: template execution error = ", err)
-	}
-}
-
 //JOBBER OVER HER
 
-func (d *webData) webBillLinesOld(w http.ResponseWriter, r *http.Request) {
+func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
 	BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
 	fmt.Println("INFO: webBillLines: BillsForUser = ", BillsForUser)

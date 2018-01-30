@@ -174,7 +174,7 @@ div.ShowUserSingleContainer div.UserSingleInputs input{
 
 ul { /*styling the upp menu within this block, the ul items*/
     color: white;
-    margin: 10px; /*zero border around element*/
+    margin: 0px; /*zero border around element*/
     padding: 0px; /*zero border inside element*/
     list-style: none; /*Removed the bullets infront of the list name*/
     display: inline-block;
