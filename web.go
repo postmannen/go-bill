@@ -250,7 +250,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//JOBBER OVER HER
+//JOBBER UNDER HER
 
 func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
@@ -315,6 +315,10 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Println("------Finnished with the add line 'if' sentence")
+	}
+
+	if r.FormValue("billLineActionButton") == "delete line" {
+		fmt.Println("--------", r.Form)
 	}
 	fmt.Println("-------Finnished with the bill lines function")
 }
