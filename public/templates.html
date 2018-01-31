@@ -214,11 +214,11 @@
                 <div class="billLineInputs{{.LineID}}">
                     <input type="text" name="billLineID" value="Lnr:{{.LineID}}">
                     <!--<textarea cols="20" rows="1" name="billLineDescription" value="{{.Description}}"></textarea>-->
-                    <input type="text" name="billLineDescription" value="{{.Description}}">
-                    <input type="text" name="billLineQuantity" value="{{.Quantity}}">
-                    <input type="text" name="billLineDiscountPercentage" value="{{.DiscountPercentage}}">
-                    <input type="text" name="billLineVatUsed" value="{{.VatUsed}}">
-                    <input type="text" name="billLinePriceExVat" value="{{.PriceExVat}}">
+                    <input type="text" name="billLineDescription{{.LineID}}" value="{{.Description}}">
+                    <input type="text" name="billLineQuantity{{.LineID}}" value="{{.Quantity}}">
+                    <input type="text" name="billLineDiscountPercentage{{.LineID}}" value="{{.DiscountPercentage}}">
+                    <input type="text" name="billLineVatUsed{{.LineID}}" value="{{.VatUsed}}">
+                    <input type="text" name="billLinePriceExVat{{.LineID}}" value="{{.PriceExVat}}">
                     <input type="submit" name="billLineAddButton{{.LineID}}" value="add">
                     <input type="submit" name="billLineModifyButton{{.LineID}}" value="modify">
                     <input type="submit" name="billLineDeleteButton{{.LineID}}" value="delete">

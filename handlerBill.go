@@ -94,8 +94,6 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//JOBBER UNDER HER
-
 func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
 	BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
@@ -112,13 +110,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Println("--------skal execute template")
 	err := tmpl["init.html"].ExecuteTemplate(w, "billLinesComplete", BillsForUser)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
 	}
 
-	fmt.Println("--------Har executed template og skal parse form")
 	r.ParseForm()
 	fmt.Println("r.Form = ", r.Form)
 
@@ -130,57 +126,43 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	fmt.Println("--------HER SKAL DEN HENTE DATA FOR BILL LINES OG SKRIVE UT BILL LINES")
-	fmt.Println("data.CurrentBillID inneholder = ", d.CurrentBillID)
+	//get all the billLines for current billID
 	billLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
-	fmt.Println("webBillLines: queryDBForBillLinesInfo: billLines = ", billLines)
 
+	//create all the billLines on the screen
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", billLines)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}
 
 	r.ParseForm()
-	fmt.Println("data.CurrentBillID inneholder =", d.CurrentBillID)
 
 	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters from the map of r.Form
+	//to get the ID of which LineID the button belonged to
 	var buttonNumbers string
-	//var buttonName string
 	var buttonValue string
 	for k, v := range r.Form {
 		fmt.Println("---VERDIER ---- ", k, " : ", v)
 		re := regexp.MustCompile("[a-zA-Z]+")
 		buttonLetters := re.FindString(k)
 		re = regexp.MustCompile("[0-9]+")
-		//buttonNumbers = re.FindString(k)
 		if buttonLetters == "billLineAddButton" {
-			//buttonName := k
 			buttonValue = v[0]
 			buttonNumbers = re.FindString(k)
-			fmt.Println("---FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
-			fmt.Printf("buttonNumbers er av type = %T, og buttonValue = %v\n", buttonNumbers, buttonValue)
-			fmt.Println("----Setter button numbers til = ", buttonNumbers)
 		}
 		if buttonLetters == "billLineDeleteButton" {
-			//buttonName := k
 			buttonValue = v[0]
 			buttonNumbers = re.FindString(k)
-			fmt.Println("---FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
-			fmt.Printf("buttonNumbers er av type = %T, og buttonValue = %v\n", buttonNumbers, buttonValue)
-			fmt.Println("----Setter button numbers til = ", buttonNumbers)
 		}
 		if buttonLetters == "billLineModifyButton" {
-			//buttonName := k
-			buttonValue = v[0]
+			buttonValue = v[0] //value is a slice of strings, get the first value
 			buttonNumbers = re.FindString(k)
-			fmt.Println("---FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
-			fmt.Printf("buttonNumbers er av type = %T, og buttonValue = %v\n", buttonNumbers, buttonValue)
-			fmt.Println("----Setter button numbers til = ", buttonNumbers)
 		}
 	}
 
 	//using the buttonValue instead of r.FormValue since r.FormValue initiates a new parseform and
 	//replaces the values from the last r.ParseForm
+	//add a new billLine to db, and redraw window
 	if buttonValue == "add" {
 		billLine := data.BillLines{}
 		billLine.BillID = d.CurrentBillID
@@ -196,20 +178,14 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 
-		fmt.Println("------Finnished with the add line 'if' sentence")
 	}
 
+	//delete a billLine and redraw window
 	if buttonValue == "delete" {
-		//create a billLine delete functions which takes BILL_ID and LINE_ID as input, and put it here
-		//also might need to run a refresh
-		fmt.Println("Printing r.Form values inside if=buttonValue ", r.Form)
-		fmt.Println("-------- inside the if for deleting line")
-		fmt.Printf("inside if, the content of buttonNumbers = %v\n", buttonNumbers)
 		num, err := strconv.Atoi(buttonNumbers)
 		if err != nil {
 			fmt.Printf("ERROR strconv.Atoi : %v\n", err)
 		}
-		fmt.Println("calling the DB delete function with the data", d.CurrentBillID, num)
 		data.DeleteBillLine(d.PDB, d.CurrentBillID, num)
 
 		//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
@@ -218,6 +194,5 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 	}
-	fmt.Println("-------Finnished with the bill lines function")
 
 }
