@@ -139,26 +139,29 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters from the map of r.Form
 	//to get the ID of which LineID the button belonged to
-	var buttonNumbers string
-	var buttonValue string
-	for k, v := range r.Form {
-		fmt.Println("---VERDIER ---- ", k, " : ", v)
-		re := regexp.MustCompile("[a-zA-Z]+")
-		buttonLetters := re.FindString(k)
-		re = regexp.MustCompile("[0-9]+")
-		if buttonLetters == "billLineAddButton" {
-			buttonValue = v[0]
-			buttonNumbers = re.FindString(k)
+
+	buttonValue, buttonNumbers := separateStrNum(r)
+
+	/*
+		for k, v := range r.Form {
+			fmt.Println("---VERDIER ---- ", k, " : ", v)
+			re := regexp.MustCompile("[a-zA-Z]+")
+			buttonLetters := re.FindString(k)
+			re = regexp.MustCompile("[0-9]+")
+			if buttonLetters == "billLineAddButton" {
+				buttonValue = v[0]
+				buttonNumbers = re.FindString(k)
+			}
+			if buttonLetters == "billLineDeleteButton" {
+				buttonValue = v[0]
+				buttonNumbers = re.FindString(k)
+			}
+			if buttonLetters == "billLineModifyButton" {
+				buttonValue = v[0] //value is a slice of strings, get the first value
+				buttonNumbers = re.FindString(k)
+			}
 		}
-		if buttonLetters == "billLineDeleteButton" {
-			buttonValue = v[0]
-			buttonNumbers = re.FindString(k)
-		}
-		if buttonLetters == "billLineModifyButton" {
-			buttonValue = v[0] //value is a slice of strings, get the first value
-			buttonNumbers = re.FindString(k)
-		}
-	}
+	*/
 
 	//using the buttonValue instead of r.FormValue since r.FormValue initiates a new parseform and
 	//replaces the values from the last r.ParseForm
@@ -182,11 +185,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//delete a billLine and redraw window
 	if buttonValue == "delete" {
-		num, err := strconv.Atoi(buttonNumbers)
+		//num, err := strconv.Atoi(buttonNumbers)
 		if err != nil {
 			fmt.Printf("ERROR strconv.Atoi : %v\n", err)
 		}
-		data.DeleteBillLine(d.PDB, d.CurrentBillID, num)
+		data.DeleteBillLine(d.PDB, d.CurrentBillID, buttonNumbers)
 
 		//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
 		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
@@ -195,4 +198,44 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+}
+
+//separateStrNum , takes *http.Request as input, and returns string and int
+func separateStrNum(r *http.Request) (string, int) {
+	var buttonNumbers string
+	var buttonValue string
+	var num int
+	var err error
+	for k, v := range r.Form {
+		//fmt.Println("---VERDIER ---- ", k, " : ", v)
+		re := regexp.MustCompile("[a-zA-Z]+")
+		buttonLetters := re.FindString(k)
+		re = regexp.MustCompile("[0-9]+")
+		if buttonLetters == "billLineAddButton" {
+			buttonValue = v[0]
+			buttonNumbers = re.FindString(k)
+			num, err = strconv.Atoi(buttonNumbers)
+			if err != nil {
+				log.Printf("ERROR: strconv.Atoi : %v", err)
+			}
+		}
+		if buttonLetters == "billLineDeleteButton" {
+			buttonValue = v[0]
+			buttonNumbers = re.FindString(k)
+			num, err = strconv.Atoi(buttonNumbers)
+			if err != nil {
+				log.Printf("ERROR: strconv.Atoi : %v", err)
+			}
+		}
+		if buttonLetters == "billLineModifyButton" {
+			buttonValue = v[0] //value is a slice of strings, get the first value
+			buttonNumbers = re.FindString(k)
+			num, err = strconv.Atoi(buttonNumbers)
+			if err != nil {
+				log.Printf("ERROR: strconv.Atoi : %v", err)
+			}
+		}
+	}
+
+	return buttonValue, num
 }
