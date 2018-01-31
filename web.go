@@ -302,31 +302,43 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters from the map of r.Form
 	var buttonNumbers string
-	var buttonName string
+	//var buttonName string
+	var buttonValue string
 	for k, v := range r.Form {
 		fmt.Println("---VERDIER ---- ", k, " : ", v)
 		re := regexp.MustCompile("[a-zA-Z]+")
 		buttonLetters := re.FindString(k)
 		re = regexp.MustCompile("[0-9]+")
-		buttonNumbers = re.FindString(k)
+		//buttonNumbers = re.FindString(k)
 		if buttonLetters == "billLineAddButton" {
-			buttonName = k
-			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
-			fmt.Printf("buttonNumbers er av type = %T\n", buttonNumbers)
+			//buttonName := k
+			buttonValue = v[0]
+			buttonNumbers = re.FindString(k)
+			fmt.Println("---FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+			fmt.Printf("buttonNumbers er av type = %T, og buttonValue = %v\n", buttonNumbers, buttonValue)
+			fmt.Println("----Setter button numbers til = ", buttonNumbers)
 		}
 		if buttonLetters == "billLineDeleteButton" {
-			buttonName = k
-			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
-			fmt.Printf("buttonNumbers er av type = %T\n", buttonNumbers)
+			//buttonName := k
+			buttonValue = v[0]
+			buttonNumbers = re.FindString(k)
+			fmt.Println("---FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+			fmt.Printf("buttonNumbers er av type = %T, og buttonValue = %v\n", buttonNumbers, buttonValue)
+			fmt.Println("----Setter button numbers til = ", buttonNumbers)
 		}
 		if buttonLetters == "billLineModifyButton" {
-			buttonName = k
-			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
-			fmt.Printf("buttonNumbers er av type = %T\n", buttonNumbers)
+			//buttonName := k
+			buttonValue = v[0]
+			buttonNumbers = re.FindString(k)
+			fmt.Println("---FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+			fmt.Printf("buttonNumbers er av type = %T, og buttonValue = %v\n", buttonNumbers, buttonValue)
+			fmt.Println("----Setter button numbers til = ", buttonNumbers)
 		}
 	}
 
-	if r.FormValue(buttonName) == "add" {
+	//using the buttonValue instead of r.FormValue since r.FormValue initiates a new parseform and
+	//replaces the values from the last r.ParseForm
+	if buttonValue == "add" {
 		billLine := data.BillLines{}
 		billLine.BillID = d.CurrentBillID
 		fmt.Println("#######billid some benyttes er =", d.CurrentBillID)
@@ -344,17 +356,24 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("------Finnished with the add line 'if' sentence")
 	}
 
-	if r.FormValue(buttonName) == "delete" {
+	if buttonValue == "delete" {
 		//create a billLine delete functions which takes BILL_ID and LINE_ID as input, and put it here
 		//also might need to run a refresh
-		fmt.Println("-------- ", r.Form)
+		fmt.Println("Printing r.Form values inside if=buttonValue ", r.Form)
 		fmt.Println("-------- inside the if for deleting line")
 		fmt.Printf("inside if, the content of buttonNumbers = %v\n", buttonNumbers)
 		num, err := strconv.Atoi(buttonNumbers)
 		if err != nil {
 			fmt.Printf("ERROR strconv.Atoi : %v\n", err)
 		}
+		fmt.Println("calling the DB delete function with the data", d.CurrentBillID, num)
 		data.DeleteBillLine(d.PDB, d.CurrentBillID, num)
+
+		//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
+		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+		if err != nil {
+			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+		}
 	}
 	fmt.Println("-------Finnished with the bill lines function")
 
