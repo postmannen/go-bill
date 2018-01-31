@@ -142,27 +142,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	buttonValue, buttonNumbers := separateStrNum(r)
 
-	/*
-		for k, v := range r.Form {
-			fmt.Println("---VERDIER ---- ", k, " : ", v)
-			re := regexp.MustCompile("[a-zA-Z]+")
-			buttonLetters := re.FindString(k)
-			re = regexp.MustCompile("[0-9]+")
-			if buttonLetters == "billLineAddButton" {
-				buttonValue = v[0]
-				buttonNumbers = re.FindString(k)
-			}
-			if buttonLetters == "billLineDeleteButton" {
-				buttonValue = v[0]
-				buttonNumbers = re.FindString(k)
-			}
-			if buttonLetters == "billLineModifyButton" {
-				buttonValue = v[0] //value is a slice of strings, get the first value
-				buttonNumbers = re.FindString(k)
-			}
-		}
-	*/
-
 	//using the buttonValue instead of r.FormValue since r.FormValue initiates a new parseform and
 	//replaces the values from the last r.ParseForm
 	//add a new billLine to db, and redraw window
