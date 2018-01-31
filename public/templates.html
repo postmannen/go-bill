@@ -219,11 +219,12 @@
                     <input type="text" name="billLineDiscountPercentage" value="{{.DiscountPercentage}}">
                     <input type="text" name="billLineVatUsed" value="{{.VatUsed}}">
                     <input type="text" name="billLinePriceExVat" value="{{.PriceExVat}}">
-                </div>
-                <div class="billLineButtons{{.LineID}}">
                     <input type="submit" name="billLineAddButton{{.LineID}}" value="add">
                     <input type="submit" name="billLineModifyButton{{.LineID}}" value="modify">
                     <input type="submit" name="billLineDeleteButton{{.LineID}}" value="delete">
+                </div>
+                <div class="billLineButtons{{.LineID}}">
+                    
                 </div>
                {{end}} 
         </div>
