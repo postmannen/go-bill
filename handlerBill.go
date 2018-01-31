@@ -270,16 +270,43 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-		//add the tmp struct to the slice of Structs.
-		//going to compare this slice with the original values from DB, to know what to update
 		TMPbillLines = append(TMPbillLines, TMPlines)
 	}
 	fmt.Println("-*- TMPbillLines : ", TMPbillLines)
 	fmt.Println("-*-    billLines : ", billLines)
 
-	//Check if fields are changed.
-	//Get all the current input fields of form, and they're values
-	//
+	//going to compare this slice with the original values from DB, to know what to update
+	//range over the numbers slice to do the comparison
+	for _, num := range numbers {
+		for _, line := range billLines {
+			if line.LineID == num {
+				for _, line2 := range TMPbillLines {
+					if line2.LineID == num {
+						if line.LineID != line2.LineID {
+							fmt.Printf("LineID for Line %v have changed to %v\n", num, line2.LineID)
+						}
+						if line.Description != line2.Description {
+							fmt.Printf("Description for Line %v have changed to %v\n", num, line2.Description)
+						}
+						if line.Quantity != line2.Quantity {
+							fmt.Printf("Quantity for Line %v have changed to %v\n", num, line2.Quantity)
+						}
+						if line.DiscountPercentage != line2.DiscountPercentage {
+							fmt.Printf("DiscountPercentage for Line %v have changed to %v\n", num, line2.DiscountPercentage)
+						}
+						if line.VatUsed != line2.VatUsed {
+							fmt.Printf("VatUsed for Line %v have changed to %v\n", num, line2.VatUsed)
+						}
+						if line.PriceExVat != line2.PriceExVat {
+							fmt.Printf("PriceExVat for Line %v have changed to %v\n", num, line2.PriceExVat)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//Create a DB function with query to update the changed field
 }
 
 //separateStrNumForButton , takes *http.Request as input, and returns string and int

@@ -354,6 +354,21 @@ func DeleteBillLine(db *sql.DB, billID int, billLine int) {
 
 }
 
+//UpdateBillLine , Update bill line in Database, takes pointer to db and type User struct as input
+func UpdateBillLine(db *sql.DB, b BillLines) {
+	tx, err := db.Begin()
+	checkErr(err)
+
+	stmt, err := tx.Prepare("UPDATE user SET user_id=?,first_name=?,last_name=?,mail=?,address=?,post_nr_place=?,phone_nr=?,org_nr=?,country_id=? WHERE user_id=?")
+	checkErr(err)
+	defer stmt.Close()
+	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number)
+
+	tx.Commit()
+	checkErr(err)
+
+}
+
 /*
 //QueryForLastBillLine , query db for the last used Bill Line for specific bill.
 //Input: *sql.DBReturns, and billID. Returns: last used bill line, and lineCount
