@@ -187,7 +187,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("--- iterating original values : ", v.BillID, v.LineID, v.Description)
 	}
 
-	//var TMPbillLines []data.BillLines
 	r.ParseForm()
 	var numbers []int
 	//find the all the unique billLine numbers in the form, and store them in numbers[]
@@ -214,6 +213,69 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	fmt.Println("numbers = ", numbers)
+
+	//fill a tmp slice of data.BillLines struct with the values from the http request
+	var TMPlines data.BillLines
+	var TMPbillLines []data.BillLines
+	for _, num := range numbers {
+		for k, v := range r.Form {
+			fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
+			reL := regexp.MustCompile("[a-zA-Z]+")
+			reN := regexp.MustCompile("[0-9]+")
+			letter := reL.FindString(k)
+			numberStr := reN.FindString(k)
+			number, _ := strconv.Atoi(numberStr)
+			//compare all the unique line numbers in the numbers[] slice with all the numbers
+			//postfixed at the end of the http Request input name parameters.
+			//if found add value to the tmp struct of type data.BillLines
+			if num == number {
+				TMPlines.BillID = d.CurrentBillID
+				if letter == "billLineID" {
+					myVal, err := strconv.Atoi(v[0])
+					if err != nil {
+						fmt.Println("ERROR: strconv billLineID : ", err)
+					}
+					TMPlines.LineID = myVal
+				}
+				if letter == "billLineDescription" {
+					TMPlines.Description = v[0]
+				}
+				if letter == "billLineQuantity" {
+					myVal, err := strconv.Atoi(v[0])
+					if err != nil {
+						fmt.Println("ERROR: strconv billLineQuantity : ", err)
+					}
+					TMPlines.Quantity = myVal
+				}
+				if letter == "billLineDiscountPercentage" {
+					myVal, err := strconv.Atoi(v[0])
+					if err != nil {
+						fmt.Println("ERROR: strconv billLinePercentage : ", err)
+					}
+					TMPlines.DiscountPercentage = myVal
+				}
+				if letter == "billLineVatUsed" {
+					myVal, err := strconv.Atoi(v[0])
+					if err != nil {
+						fmt.Println("ERROR: strconv billLineVatUsed : ", err)
+					}
+					TMPlines.VatUsed = myVal
+				}
+				if letter == "billLinePriceExVat" {
+					myVal, err := strconv.ParseFloat(v[0], 64)
+					if err != nil {
+						fmt.Println("ERROR: strconv billLinePriceExVat : ", err)
+					}
+					TMPlines.PriceExVat = myVal
+				}
+			}
+		}
+		//add the tmp struct to the slice of Structs.
+		//going to compare this slice with the original values from DB, to know what to update
+		TMPbillLines = append(TMPbillLines, TMPlines)
+	}
+	fmt.Println("-*- TMPbillLines : ", TMPbillLines)
+	fmt.Println("-*-    billLines : ", billLines)
 
 	//Check if fields are changed.
 	//Get all the current input fields of form, and they're values
