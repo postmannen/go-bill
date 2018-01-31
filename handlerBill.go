@@ -94,6 +94,8 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//**********************************************************
+
 func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
 	BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
@@ -110,6 +112,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//draw the bill select box in the window
 	err := tmpl["init.html"].ExecuteTemplate(w, "billLinesComplete", BillsForUser)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
@@ -140,7 +143,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters from the map of r.Form
 	//to get the ID of which LineID the button belonged to
 
-	buttonValue, buttonNumbers := separateStrNum(r)
+	buttonValue, buttonNumbers := separateStrNumForButton(r)
 
 	//using the buttonValue instead of r.FormValue since r.FormValue initiates a new parseform and
 	//replaces the values from the last r.ParseForm
@@ -177,10 +180,48 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//WORKING BELOW HERE
+	fmt.Println("\n---Current FORM VALUES", r.Form)
+
+	for _, v := range billLines {
+		fmt.Println("--- iterating original values : ", v.BillID, v.LineID, v.Description)
+	}
+
+	//var TMPbillLines []data.BillLines
+	r.ParseForm()
+	var numbers []int
+	//find the all the unique billLine numbers in the form, and store them in numbers[]
+	for k, v := range r.Form {
+		fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
+		reL := regexp.MustCompile("[a-zA-Z]+")
+		reN := regexp.MustCompile("[0-9]+")
+		letter := reL.FindString(k)
+		numberStr := reN.FindString(k)
+		number, _ := strconv.Atoi(numberStr)
+		fmt.Printf("-----letter = %v, and number = %v\n", letter, number)
+
+		found := false
+		//check if number is allready in the numbers slice, if NOT.....add it
+		for _, vv := range numbers {
+			fmt.Printf("***trying to compare vv=%v and number=%v \n", vv, number)
+			if number == vv {
+				found = true
+				fmt.Println("The numbers are equal")
+			}
+		}
+		if !found {
+			numbers = append(numbers, number)
+		}
+	}
+	fmt.Println("numbers = ", numbers)
+
+	//Check if fields are changed.
+	//Get all the current input fields of form, and they're values
+	//
 }
 
-//separateStrNum , takes *http.Request as input, and returns string and int
-func separateStrNum(r *http.Request) (string, int) {
+//separateStrNumForButton , takes *http.Request as input, and returns string and int
+func separateStrNumForButton(r *http.Request) (string, int) {
 	var buttonNumbers string
 	var buttonValue string
 	var num int
