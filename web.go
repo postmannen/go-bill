@@ -312,14 +312,17 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		if buttonLetters == "billLineAddButton" {
 			buttonName = k
 			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+			fmt.Printf("buttonNumbers er av type = %T\n", buttonNumbers)
 		}
 		if buttonLetters == "billLineDeleteButton" {
 			buttonName = k
 			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+			fmt.Printf("buttonNumbers er av type = %T\n", buttonNumbers)
 		}
 		if buttonLetters == "billLineModifyButton" {
 			buttonName = k
 			fmt.Println("!!!!!!!!!!FANT KNAPPEN ", buttonLetters, "og nummeret er verdien = ", buttonNumbers)
+			fmt.Printf("buttonNumbers er av type = %T\n", buttonNumbers)
 		}
 	}
 
@@ -341,10 +344,17 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("------Finnished with the add line 'if' sentence")
 	}
 
-	if r.FormValue("billLineDeleteButton") == "delete" {
+	if r.FormValue(buttonName) == "delete" {
 		//create a billLine delete functions which takes BILL_ID and LINE_ID as input, and put it here
 		//also might need to run a refresh
-		fmt.Println("--------", r.Form)
+		fmt.Println("-------- ", r.Form)
+		fmt.Println("-------- inside the if for deleting line")
+		fmt.Printf("inside if, the content of buttonNumbers = %v\n", buttonNumbers)
+		num, err := strconv.Atoi(buttonNumbers)
+		if err != nil {
+			fmt.Printf("ERROR strconv.Atoi : %v\n", err)
+		}
+		data.DeleteBillLine(d.PDB, d.CurrentBillID, num)
 	}
 	fmt.Println("-------Finnished with the bill lines function")
 

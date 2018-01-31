@@ -336,6 +336,24 @@ func QueryForLastBillLineIndx(db *sql.DB) (int, int) {
 	return highestNr, countLines
 }
 
+//DeleteBillLine , Delete a row in user DB, takes pointer to db, and index number uid which corresponds to column 1 in DB for input
+func DeleteBillLine(db *sql.DB, billID int, billLine int) {
+	tx, err := db.Begin()
+	checkErr(err)
+	log.Printf("DeleteBillLine: The billID=%v, and the billLine=%v\n", billID, billLine)
+
+	//Make the sql statement to execute
+	stmt, err := tx.Prepare("DELETE FROM bill_lines WHERE bill_id=? AND line_id=?")
+	checkErr(err)
+
+	defer stmt.Close()
+	//prepare the statement with a value for the "?"
+	_, err = stmt.Exec(billID, billLine)
+	tx.Commit()
+	checkErr(err)
+
+}
+
 /*
 //QueryForLastBillLine , query db for the last used Bill Line for specific bill.
 //Input: *sql.DBReturns, and billID. Returns: last used bill line, and lineCount
