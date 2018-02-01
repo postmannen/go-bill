@@ -288,11 +288,22 @@
 
 {{define "showBills"}}
 <form>
-    <select name="bills">
-        <option value="test1">test1</option>
-        <option value="test2">test2</option>
-    </select>    
-    <input type="submit" name="Choose bill">
+    <label class="infobox1" for="BillID">Bill ID</label>
+    <input class="infoBox2" type="text" name="BillID" placeholder="{{.BillID}}">
+    <label class="infobox1" for="UserID">User ID</label>
+    <input class="infoBox2" type="text" name="UserID" placeholder="{{.UserID}}">
+    <label class="infobox1" for="CreatedDate">Created Date</label>
+    <input class="infoBox2" type="text" name="CreatedDate" placeholder="{{.CreatedDate}}">
+    <label class="infobox1" for="DueDate">Due Date</label>
+    <input class="infoBox2" type="text" name="DueDate" placeholder="{{.DueDate}}">
+    <label class="infobox1" for="Comment">Comment</label>
+    <input class="infoBox2" type="text" name="Comment" placeholder="{{.Comment}}">
+    <label class="infobox1" for="TotalExVat">Total Ex Vat</label>
+    <input class="infoBox2" type="text" name="TotalExVat" placeholder="{{.TotalExVat}}">
+    <label class="infobox1" for="TotalIncVat">Total Inc Vat</label>
+    <input class="infoBox2" type="text" name="TotalIncVat" placeholder="{{.TotalIncVat}}">
+    <label class="infobox1" for="Paid">Paid</label>
+    <input class="infoBox2" type="text" name="Paid" placeholder="{{.Paid}}">
 </form>
 {{end}}
 
