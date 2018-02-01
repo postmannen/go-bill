@@ -56,6 +56,10 @@
     idea, but time will show
 20. Moved DB into package, and renamed the functions in db with better naming
 21. Moved the content of db package into data package
+	Fixed bill lines view
+	Removed the global data variable, and replaced with using recievers on handler functions
+	Split handlers into several files
+22. Looking into minimalizing the code with switch statements etc.
 
 ## TODO
 * Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number

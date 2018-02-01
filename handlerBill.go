@@ -222,7 +222,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//fill a tmp slice of data.BillLines struct with the values from the http request
 	var TMPlines data.BillLines
 	var TMPbillLines []data.BillLines
+	//itarate the unique bill line numbers
 	for _, num := range numbers {
+		//iterate all the data in form
 		for k, v := range r.Form {
 			fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
 			reL := regexp.MustCompile("[a-zA-Z]+")
