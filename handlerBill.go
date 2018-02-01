@@ -197,10 +197,10 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//find the all the unique billLine numbers in the form, and store them in numbers[]
 	for k, v := range r.Form {
 		fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
-		reL := regexp.MustCompile("[a-zA-Z]+")
-		reN := regexp.MustCompile("[0-9]+")
-		letter := reL.FindString(k)
-		numberStr := reN.FindString(k)
+		reLetters := regexp.MustCompile("[a-zA-Z]+")
+		reNum := regexp.MustCompile("[0-9]+")
+		letter := reLetters.FindString(k)
+		numberStr := reNum.FindString(k)
 		number, _ := strconv.Atoi(numberStr)
 		fmt.Printf("-----letter = %v, and number = %v\n", letter, number)
 
@@ -219,6 +219,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("numbers = ", numbers)
 
+	//-------Edit the bill lines------------
 	//fill a tmp slice of data.BillLines struct with the values from the http request
 	var TMPlines data.BillLines
 	var TMPbillLines []data.BillLines
@@ -227,46 +228,42 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		//iterate all the data in form
 		for k, v := range r.Form {
 			fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
-			reL := regexp.MustCompile("[a-zA-Z]+")
-			reN := regexp.MustCompile("[0-9]+")
-			letter := reL.FindString(k)
-			numberStr := reN.FindString(k)
+			reLetters := regexp.MustCompile("[a-zA-Z]+")
+			reNum := regexp.MustCompile("[0-9]+")
+			letter := reLetters.FindString(k)
+			numberStr := reNum.FindString(k)
 			number, _ := strconv.Atoi(numberStr)
+			reNumOnly := regexp.MustCompile("^[0-9]+$")
+
+			//convert the string read from the r.Form into v to v1 of int which is used in struct
+			var v1 int
+			//check if the string only contains numbers
+			if reNumOnly.Match([]byte(v[0])) {
+				v1, err = strconv.Atoi(v[0])
+				if err != nil {
+					fmt.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
+				}
+				fmt.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n\n", v1, v1, v[0], v[0])
+			}
 			//compare all the unique line numbers in the numbers[] slice with all the numbers
 			//postfixed at the end of the http Request input name parameters.
 			//if found add value to the tmp struct of type data.BillLines
 			if num == number {
 				TMPlines.BillID = d.CurrentBillID
 				if letter == "billLineID" {
-					myVal, err := strconv.Atoi(v[0])
-					if err != nil {
-						fmt.Println("ERROR: strconv billLineID : ", err)
-					}
-					TMPlines.LineID = myVal
+					TMPlines.LineID = v1
 				}
 				if letter == "billLineDescription" {
 					TMPlines.Description = v[0]
 				}
 				if letter == "billLineQuantity" {
-					myVal, err := strconv.Atoi(v[0])
-					if err != nil {
-						fmt.Println("ERROR: strconv billLineQuantity : ", err)
-					}
-					TMPlines.Quantity = myVal
+					TMPlines.Quantity = v1
 				}
 				if letter == "billLineDiscountPercentage" {
-					myVal, err := strconv.Atoi(v[0])
-					if err != nil {
-						fmt.Println("ERROR: strconv billLinePercentage : ", err)
-					}
-					TMPlines.DiscountPercentage = myVal
+					TMPlines.DiscountPercentage = v1
 				}
 				if letter == "billLineVatUsed" {
-					myVal, err := strconv.Atoi(v[0])
-					if err != nil {
-						fmt.Println("ERROR: strconv billLineVatUsed : ", err)
-					}
-					TMPlines.VatUsed = myVal
+					TMPlines.VatUsed = v1
 				}
 				if letter == "billLinePriceExVat" {
 					myVal, err := strconv.ParseFloat(v[0], 64)
@@ -283,7 +280,8 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("-*-    billLines : ", billLines)
 
 	//going to compare this slice with the original values from DB, to know what to update
-	//range over the numbers slice to do the comparison
+	//range over the numbers slice to get all the unique line numbers
+	//then range billLines, and range TMPbillLines to compare billLines.X with TMPbillLines.X
 	changed := false
 	for _, num := range numbers {
 		for _, line := range billLines {
