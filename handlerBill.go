@@ -129,6 +129,22 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	//WORKING BELOW HERE *********************
+	//Find all the data on the current bill
+	var CurrentBill data.Bill
+	for i, v := range BillsForUser {
+		if v.BillID == d.CurrentBillID {
+			CurrentBill = BillsForUser[i]
+
+		}
+	}
+	//draw the bill select box in the window
+	err = tmpl["init.html"].ExecuteTemplate(w, "showBills", CurrentBill)
+	if err != nil {
+		log.Println("webBillLines: template execution error = ", err)
+	}
+	//WORKING ABOVE HERE *********************
+
 	//get all the billLines for current billID
 	billLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 

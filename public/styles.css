@@ -121,25 +121,7 @@ input[type=inputUserText] {
     display: inline-block;
     width: 25%;
 }
-/********************BILL PAGES**************************/
-div.createBillLineContainer  {
-    display: block;
-    width: 100%;
-    background-color: inherit;
-}
-div.createBillLineContainer .createBillLine {
-    background-color: inherit;
-    font-size: 20px;
-}
 
-div.createBillLineContainer div.createBillLine div.billLines {
-    background-color: inherit;
-    /*display: inline-flex;*/
-}
-
-div.createBillLineContainer div.createBillLine div.billLines input[type="text"] {
-    border: black solid thin;
-}
 
 /****The individual fields of the bill lines*/
 div.createBillLineContainer div.createBillLine div.billLines input[name*="billLineNR"] {
@@ -157,6 +139,55 @@ div.createBillLineContainer div.createBillLine div.billLines input[name="billLin
 div.createBillLineContainer div.createBillLine div.billLines input[name="billLineVatUsed"] {
     width: 30px;
 }
+/********************The styling for the bill Lines**************************/
+.showBillLinesContainer {
+    display: block;
+    width: 80%;
+    border-style: solid;
+    border-width: 5px;
+
+}
+.inplabCol5 {
+    display: block;
+    background-color: red;
+    
+}
+.inplabCol6 {
+    display: inline-block;
+    
+}
+.inplab2 {
+    display: inline-block;
+}
+.infoBox5 {
+    display: flex;
+}
+
+/****The show single bill info, used in the billLines window  */
+div.showBillSingleContainer {
+    display: inline-block;
+    width: 80%;
+}
+.inplabCol1 {
+    display: inline-block;
+}
+.inplabCol2 {
+display: inline-block;
+}
+div.showBillSingleContainer .infoBox3 {
+    display: flex;
+    align-content: center stretch;
+    font-size: 12px;
+    background-color: lightgray;
+}
+div.showBillSingleContainer .infoBox4{
+    font-size: 12px;
+}
+.inplab {
+    display: inline-block;
+}
+
+
 /****The show user part*/
 div.ShowUserSingleContainer div.UserSingleInputs {
     display: inline-block;
