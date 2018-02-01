@@ -163,11 +163,3 @@ func (d *webData) deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 	fn, _ := strconv.Atoi(r.FormValue("users"))
 	data.DeleteUser(d.PDB, fn)
 }
-
-//TODO: Move select bill dropdown to select user window
-//Sjekk ut : Lage en template som bare tegner en bill line, og så kan man heller kjøre den templaten flere ganger
-//	med forskjellige data fra slice som input. Da blir det kanskje mulig å oppdatere siden fortløpende ???
-
-//ERROR: Den viser bill linjene hvis user bare har 1 bill. Har den 2 så viser den ikke lenger.
-//			Prøv å legg alle variablene over i global og se om det kan være noe den mangler når den
-//			prøver å tegne opp alle bill linjene.......evt. sjekk logger først.
