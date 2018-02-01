@@ -369,42 +369,6 @@ func UpdateBillLine(db *sql.DB, b BillLines) {
 
 }
 
-/*
-//QueryForLastBillLine , query db for the last used Bill Line for specific bill.
-//Input: *sql.DBReturns, and billID. Returns: last used bill line, and lineCount
-func QueryForLastBillLine(db *sql.DB, billID int) (int, int) {
-	rows, err := db.Query("SELECT line_id FROM bill_lines WHERE bill_id=?", billID)
-	checkErr(err)
-	defer rows.Close()
-
-	//Prepare the slice to store numbers read from DB
-	var num []int
-
-	for rows.Next() {
-		var readValue int
-		//The number of values below must be the same amount
-		//as the number of rows in the DB
-		err := rows.Scan(&readValue) //reads data from db and puts it into the address of the variable
-		checkErr(err)
-		num = append(num, readValue)
-	}
-
-	highestNr := 0
-	countLines := 0
-	//iterate the slice, and find the highest number, and number of lines.
-	for i := range num {
-		if highestNr < num[i] {
-			highestNr = num[i]
-			//log.Println("queryDBForLastBillLineIndx : highestNr = ", highestNr)
-			countLines++
-		}
-	}
-	log.Println("queryDBForLastBillLineIndx: highestNr = ", highestNr)
-	log.Println("queryDBForLastBillLineIndx: countLines = ", countLines)
-	return highestNr, countLines
-}
-*/
-
 //Create , **************************  creates the database  ********************************
 func Create() *sql.DB {
 	//1. Open connection
