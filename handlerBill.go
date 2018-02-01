@@ -283,7 +283,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//going to compare this slice with the original values from DB, to know what to update
 	//range over the numbers slice to do the comparison
 	changed := false
-
 	for _, num := range numbers {
 		for _, line := range billLines {
 			if line.LineID == num {
