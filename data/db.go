@@ -355,17 +355,17 @@ func DeleteBillLine(db *sql.DB, billID int, billLine int) {
 }
 
 //UpdateBillLine , Update bill line in Database, takes pointer to db and type User struct as input
-func UpdateBillLine(db *sql.DB, b BillLines) {
-	tx, err := db.Begin()
-	checkErr(err)
-
-	stmt, err := tx.Prepare("UPDATE user SET user_id=?,first_name=?,last_name=?,mail=?,address=?,post_nr_place=?,phone_nr=?,org_nr=?,country_id=? WHERE user_id=?")
-	checkErr(err)
-	defer stmt.Close()
-	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number)
-
-	tx.Commit()
-	checkErr(err)
+func UpdateBillLine(db *sql.DB, b []BillLines) {
+	for _, v := range b {
+		tx, err := db.Begin()
+		checkErr(err)
+		stmt, err := tx.Prepare("UPDATE bill_lines SET item_id=?,description=?,quantity=?,discount_percentage=?,vat_used=?,price_ex_vat=? WHERE bill_id=? and line_id=?")
+		checkErr(err)
+		_, err = stmt.Exec(v.ItemID, v.Description, v.Quantity, v.DiscountPercentage, v.VatUsed, v.PriceExVat, v.BillID, v.LineID)
+		tx.Commit()
+		checkErr(err)
+		stmt.Close()
+	}
 
 }
 

@@ -180,6 +180,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	modifyButtonPushed := false
+	if buttonValue == "modify" {
+		modifyButtonPushed = true
+	}
+
 	//WORKING BELOW HERE
 	fmt.Println("\n---Current FORM VALUES", r.Form)
 
@@ -277,6 +282,8 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//going to compare this slice with the original values from DB, to know what to update
 	//range over the numbers slice to do the comparison
+	changed := false
+
 	for _, num := range numbers {
 		for _, line := range billLines {
 			if line.LineID == num {
@@ -284,25 +291,39 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 					if line2.LineID == num {
 						if line.LineID != line2.LineID {
 							fmt.Printf("LineID for Line %v have changed to %v\n", num, line2.LineID)
+							changed = true
 						}
 						if line.Description != line2.Description {
 							fmt.Printf("Description for Line %v have changed to %v\n", num, line2.Description)
+							changed = true
 						}
 						if line.Quantity != line2.Quantity {
 							fmt.Printf("Quantity for Line %v have changed to %v\n", num, line2.Quantity)
+							changed = true
 						}
 						if line.DiscountPercentage != line2.DiscountPercentage {
 							fmt.Printf("DiscountPercentage for Line %v have changed to %v\n", num, line2.DiscountPercentage)
+							changed = true
 						}
 						if line.VatUsed != line2.VatUsed {
 							fmt.Printf("VatUsed for Line %v have changed to %v\n", num, line2.VatUsed)
+							changed = true
 						}
 						if line.PriceExVat != line2.PriceExVat {
 							fmt.Printf("PriceExVat for Line %v have changed to %v\n", num, line2.PriceExVat)
+							changed = true
 						}
 					}
 				}
 			}
+		}
+	}
+	if changed && modifyButtonPushed {
+		data.UpdateBillLine(d.PDB, TMPbillLines)
+
+		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+		if err != nil {
+			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 	}
 
