@@ -80,7 +80,8 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		newBill.BillID = highestBillNR + 1
 		newBill.UserID = d.ActiveUserID
 		t := time.Now()
-		newBill.CreatedDate = fmt.Sprint(t.Format("2006-01-02 15:04:05"))
+		//										   yyyy-mm-dd
+		newBill.CreatedDate = fmt.Sprint(t.Format("2006-01-02"))
 		//create a new bill and return the new billID to use later
 		d.CurrentBillID = data.AddBill(d.PDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", d.CurrentBillID)
@@ -135,13 +136,82 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	for i, v := range BillsForUser {
 		if v.BillID == d.CurrentBillID {
 			CurrentBill = BillsForUser[i]
-
 		}
 	}
 	//draw the bill select box in the window
 	err = tmpl["init.html"].ExecuteTemplate(w, "showBills", CurrentBill)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
+	}
+
+	r.ParseForm()
+
+	//check all the data in r.Form,
+	//create tmpBill of type data.Bill to hold all the bill data in r.Form
+	var tmpBill data.Bill
+	for k, v := range r.Form {
+		fmt.Printf("\n--**-- k=%v of type=%T--**-- v=%v of type=%T\n", k, k, v, v)
+
+		reNumOnly := regexp.MustCompile("^[0-9]+$")
+
+		//convert the string read from the r.Form into v to v1 of int which is used in struct
+		var v1 int
+		//check if the string only contains numbers
+		if reNumOnly.Match([]byte(v[0])) {
+			v1, err = strconv.Atoi(v[0])
+			if err != nil {
+				log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
+			}
+			log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n\n", v1, v1, v[0], v[0])
+		}
+		if k == "CreatedDate" {
+			tmpBill.CreatedDate = v[0]
+		}
+		if k == "DueDate" {
+			tmpBill.DueDate = v[0]
+		}
+		if k == "Comment" {
+			tmpBill.Comment = v[0]
+		}
+		if k == "Paid" {
+			tmpBill.Paid = v1
+		}
+	}
+
+	//compare the values of the bill struct from DB and the tmp struct from r.Form
+	//to decide if to update DB with new values from the form
+
+	changed := false
+	if CurrentBill.Comment != tmpBill.Comment {
+		changed = true
+		CurrentBill.Comment = tmpBill.Comment
+	}
+	if CurrentBill.CreatedDate != tmpBill.CreatedDate {
+		changed = true
+		CurrentBill.CreatedDate = tmpBill.CreatedDate
+	}
+	if CurrentBill.DueDate != tmpBill.DueDate {
+		changed = true
+		CurrentBill.DueDate = tmpBill.DueDate
+	}
+	if CurrentBill.Paid != tmpBill.Paid {
+		changed = true
+		CurrentBill.Paid = tmpBill.Paid
+	}
+
+	if r.FormValue("billModifyButton") == "modify" {
+		if changed {
+			fmt.Printf("\n-----******------- Changed = %v\n\n", changed)
+			fmt.Printf("-*-Orig  bill lines = %v\n", CurrentBill)
+			fmt.Printf("-*- Tmp  bill lines = %v\n\n", tmpBill)
+			data.UpdateBill(d.PDB, CurrentBill)
+
+			//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
+			err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+			if err != nil {
+				log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
+			}
+		}
 	}
 	//WORKING ABOVE HERE *********************
 
@@ -201,12 +271,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		modifyButtonPushed = true
 	}
 
-	//WORKING BELOW HERE
-	fmt.Println("\n---Current FORM VALUES", r.Form)
-
-	for _, v := range billLines {
-		fmt.Println("--- iterating original values : ", v.BillID, v.LineID, v.Description)
-	}
+	//for _, v := range billLines {
+	//	fmt.Println("--- iterating original values : ", v.BillID, v.LineID, v.Description)
+	//}
 
 	r.ParseForm()
 	var numbers []int
@@ -218,12 +285,12 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		letter := reLetters.FindString(k)
 		numberStr := reNum.FindString(k)
 		number, _ := strconv.Atoi(numberStr)
-		fmt.Printf("-----letter = %v, and number = %v\n", letter, number)
+		log.Printf("-----letter = %v, and number = %v\n", letter, number)
 
 		found := false
 		//check if number is allready in the numbers slice, if NOT.....add it
 		for _, vv := range numbers {
-			fmt.Printf("***trying to compare vv=%v and number=%v \n", vv, number)
+			//fmt.Printf("***trying to compare vv=%v and number=%v \n", vv, number)
 			if number == vv {
 				found = true
 				fmt.Println("The numbers are equal")
@@ -233,7 +300,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			numbers = append(numbers, number)
 		}
 	}
-	fmt.Println("numbers = ", numbers)
 
 	//-------Edit the bill lines------------
 	//fill a tmp slice of data.BillLines struct with the values from the http request
@@ -243,7 +309,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	for _, num := range numbers {
 		//iterate all the data in form
 		for k, v := range r.Form {
-			fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
 			reLetters := regexp.MustCompile("[a-zA-Z]+")
 			reNum := regexp.MustCompile("[0-9]+")
 			letter := reLetters.FindString(k)
@@ -257,9 +322,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			if reNumOnly.Match([]byte(v[0])) {
 				v1, err = strconv.Atoi(v[0])
 				if err != nil {
-					fmt.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
+					log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
 				}
-				fmt.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n\n", v1, v1, v[0], v[0])
+				log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n\n", v1, v1, v[0], v[0])
 			}
 			//compare all the unique line numbers in the numbers[] slice with all the numbers
 			//postfixed at the end of the http Request input name parameters.
@@ -284,7 +349,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 				if letter == "billLinePriceExVat" {
 					myVal, err := strconv.ParseFloat(v[0], 64)
 					if err != nil {
-						fmt.Println("ERROR: strconv billLinePriceExVat : ", err)
+						log.Println("ERROR: strconv billLinePriceExVat : ", err)
 					}
 					TMPlines.PriceExVat = myVal
 				}
@@ -292,40 +357,40 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 		TMPbillLines = append(TMPbillLines, TMPlines)
 	}
-	fmt.Println("-*- TMPbillLines : ", TMPbillLines)
-	fmt.Println("-*-    billLines : ", billLines)
+	log.Println("-*- TMPbillLines : ", TMPbillLines)
+	log.Println("-*-    billLines : ", billLines)
 
 	//going to compare this slice with the original values from DB, to know what to update
 	//range over the numbers slice to get all the unique line numbers
 	//then range billLines, and range TMPbillLines to compare billLines.X with TMPbillLines.X
-	changed := false
+	changed = false
 	for _, num := range numbers {
 		for _, line := range billLines {
 			if line.LineID == num {
 				for _, line2 := range TMPbillLines {
 					if line2.LineID == num {
 						if line.LineID != line2.LineID {
-							fmt.Printf("LineID for Line %v have changed to %v\n", num, line2.LineID)
+							log.Printf("LineID for Line %v have changed to %v\n", num, line2.LineID)
 							changed = true
 						}
 						if line.Description != line2.Description {
-							fmt.Printf("Description for Line %v have changed to %v\n", num, line2.Description)
+							log.Printf("Description for Line %v have changed to %v\n", num, line2.Description)
 							changed = true
 						}
 						if line.Quantity != line2.Quantity {
-							fmt.Printf("Quantity for Line %v have changed to %v\n", num, line2.Quantity)
+							log.Printf("Quantity for Line %v have changed to %v\n", num, line2.Quantity)
 							changed = true
 						}
 						if line.DiscountPercentage != line2.DiscountPercentage {
-							fmt.Printf("DiscountPercentage for Line %v have changed to %v\n", num, line2.DiscountPercentage)
+							log.Printf("DiscountPercentage for Line %v have changed to %v\n", num, line2.DiscountPercentage)
 							changed = true
 						}
 						if line.VatUsed != line2.VatUsed {
-							fmt.Printf("VatUsed for Line %v have changed to %v\n", num, line2.VatUsed)
+							log.Printf("VatUsed for Line %v have changed to %v\n", num, line2.VatUsed)
 							changed = true
 						}
 						if line.PriceExVat != line2.PriceExVat {
-							fmt.Printf("PriceExVat for Line %v have changed to %v\n", num, line2.PriceExVat)
+							log.Printf("PriceExVat for Line %v have changed to %v\n", num, line2.PriceExVat)
 							changed = true
 						}
 					}

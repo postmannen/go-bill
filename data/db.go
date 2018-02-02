@@ -268,6 +268,33 @@ func AddBill(db *sql.DB, b Bill) int {
 	return b.BillID
 }
 
+//UpdateBill , updates bill to Database. takes pointer to DB, and type bill struct as input. Returns bill ID of type int
+func UpdateBill(db *sql.DB, b Bill) {
+	//start db session
+	tx, err := db.Begin()
+	if err != nil {
+		log.Println("ERROR: db UpdateBill: ", err)
+	}
+
+	//create statement to insert values to DB
+	stmt, err := tx.Prepare("UPDATE bills SET create_date=?,due_date=?,comment=?,paid=? where bill_id=?")
+	if err != nil {
+		log.Println("ERROR: UpdateBill: statement problem = ", err)
+	}
+	//At the end of function close the DB
+	defer stmt.Close()
+
+	log.Println("UpdateBill: The struct b of type Bill contains = ", b)
+
+	//execute the statement on the DB
+	_, err = stmt.Exec(b.CreatedDate, b.DueDate, b.Comment, b.Paid, b.BillID)
+	//commit to DB
+	err = tx.Commit()
+	if err != nil {
+		log.Println("ERROR: UpdateBill: stmt.Exec problem = ", err)
+	}
+}
+
 //AddBillLine , Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
 //Create a function to keep track of the next available indx number in database
 func AddBillLine(db *sql.DB, b BillLines) {
