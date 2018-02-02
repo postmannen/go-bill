@@ -130,6 +130,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	//get all the billLines for current billID
+	billLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
+
 	//WORKING BELOW HERE *********************
 	//Find all the data on the current bill
 	var CurrentBill data.Bill
@@ -214,9 +217,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	//WORKING ABOVE HERE *********************
-
-	//get all the billLines for current billID
-	billLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 
 	//create all the billLines on the screen
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", billLines)
