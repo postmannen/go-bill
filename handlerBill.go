@@ -103,15 +103,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: webBillLines: BillsForUser = ", BillsForUser)
 
 	//Sort the bills so the last bill_id is first in the slice, and then shown on top of the listing
-	for i := 0; i < len(BillsForUser); i++ {
-		for ii := 0; ii < len(BillsForUser); ii++ {
-			if BillsForUser[i].BillID > BillsForUser[ii].BillID {
-				tmp := BillsForUser[ii]
-				BillsForUser[ii] = BillsForUser[i]
-				BillsForUser[i] = tmp
-			}
-		}
-	}
+	BillsForUser = sortBills(BillsForUser)
 
 	//draw the bill select box in the window
 	err := tmpl["init.html"].ExecuteTemplate(w, "billLinesComplete", BillsForUser)
@@ -462,4 +454,18 @@ func separateStrNumForButton(r *http.Request) (string, int) {
 	}
 
 	return buttonValue, num
+}
+
+//sortBills sorts the bills so the last bill_id is first in the slice
+func sortBills(bills []data.Bill) []data.Bill {
+	for i := 0; i < len(bills); i++ {
+		for ii := 0; ii < len(bills); ii++ {
+			if bills[i].BillID > bills[ii].BillID {
+				tmp := bills[ii]
+				bills[ii] = bills[i]
+				bills[i] = tmp
+			}
+		}
+	}
+	return bills
 }
