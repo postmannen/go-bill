@@ -115,18 +115,13 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("r.Form = ", r.Form)
 
 	if r.FormValue("userActionButton") == "choose bill" {
-		billID, _ := strconv.Atoi(r.FormValue("billID"))
-		log.Println("INFO: webBillLines: billID =", billID)
-		fmt.Println("billID = ", billID)
-		d.CurrentBillID = billID
-
+		d.CurrentBillID, _ = strconv.Atoi(r.FormValue("billID"))
 	}
 
-	//get all the billLines for current billID
-	billLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
+	//get all the billLines for current billID from db
+	currentBillsLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 
-	//WORKING BELOW HERE *********************
-	//Find all the data on the current bill
+	//Find all the data on the current bill id
 	var CurrentBill data.Bill
 	for i, v := range BillsForUser {
 		if v.BillID == d.CurrentBillID {
@@ -136,14 +131,12 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//get the total sum ex vat of all the bill lines
 	CurrentBill.TotalExVat = 0
-	for _, v := range billLines {
+	for _, v := range currentBillsLines {
 		CurrentBill.TotalExVat += v.PriceExVat
 	}
 
-	//TODO: Add a function to add the TotalExVat to db here
+	//add the TotalExVat to db here
 	if CurrentBill.TotalExVat != 0 {
-		fmt.Println("-*- d.PDB = ", d.PDB)
-		fmt.Printf("-*- TotalExVat = %v of type %T, and BillID%v of type %T \n", CurrentBill.TotalExVat, CurrentBill.TotalExVat, CurrentBill.BillID, CurrentBill.BillID)
 		data.UpdateBillPriceExVat(d.PDB, CurrentBill.TotalExVat, CurrentBill.BillID)
 	}
 
@@ -159,8 +152,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//create tmpBill of type data.Bill to hold all the bill data in r.Form
 	var tmpBill data.Bill
 	for k, v := range r.Form {
-		fmt.Printf("\n--**-- k=%v of type=%T--**-- v=%v of type=%T\n", k, k, v, v)
-
 		reNumOnly := regexp.MustCompile("^[0-9]+$")
 
 		//convert the string read from the r.Form into v to v1 of int which is used in struct
@@ -225,7 +216,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//WORKING ABOVE HERE *********************
 
 	//create all the billLines on the screen
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", billLines)
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", currentBillsLines)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}
@@ -364,14 +355,14 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		TMPbillLines = append(TMPbillLines, TMPlines)
 	}
 	log.Println("-*- TMPbillLines : ", TMPbillLines)
-	log.Println("-*-    billLines : ", billLines)
+	log.Println("-*-    billLines : ", currentBillsLines)
 
 	//going to compare this slice with the original values from DB, to know what to update
 	//range over the numbers slice to get all the unique line numbers
 	//then range billLines, and range TMPbillLines to compare billLines.X with TMPbillLines.X
 	changed = false
 	for _, num := range numbers {
-		for _, line := range billLines {
+		for _, line := range currentBillsLines {
 			if line.LineID == num {
 				for _, line2 := range TMPbillLines {
 					if line2.LineID == num {
