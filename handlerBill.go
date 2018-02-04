@@ -143,10 +143,17 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get the total sum ex vat of all the bill lines
+	CurrentBill.TotalExVat = 0
 	for _, v := range billLines {
 		CurrentBill.TotalExVat += v.PriceExVat
 	}
+
 	//TODO: Add a function to add the TotalExVat to db here
+	if CurrentBill.TotalExVat != 0 {
+		fmt.Println("-*- d.PDB = ", d.PDB)
+		fmt.Printf("-*- TotalExVat = %v of type %T, and BillID%v of type %T \n", CurrentBill.TotalExVat, CurrentBill.TotalExVat, CurrentBill.BillID, CurrentBill.BillID)
+		data.UpdateBillPriceExVat(d.PDB, CurrentBill.TotalExVat, CurrentBill.BillID)
+	}
 
 	//draw the bill select box in the window
 	err = tmpl["init.html"].ExecuteTemplate(w, "showBills", CurrentBill)

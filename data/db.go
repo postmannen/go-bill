@@ -268,7 +268,7 @@ func AddBill(db *sql.DB, b Bill) int {
 	return b.BillID
 }
 
-//UpdateBill , updates bill to Database. takes pointer to DB, and type bill struct as input. Returns bill ID of type int
+//UpdateBill , updates bill to Database. takes pointer to DB, and type bill struct as input.
 func UpdateBill(db *sql.DB, b Bill) {
 	//start db session
 	tx, err := db.Begin()
@@ -293,6 +293,35 @@ func UpdateBill(db *sql.DB, b Bill) {
 	if err != nil {
 		log.Println("ERROR: UpdateBill: stmt.Exec problem = ", err)
 	}
+}
+
+//UpdateBillPriceExVat , takes pointer to db, and type Bill as input
+func UpdateBillPriceExVat(db *sql.DB, sum float64, billID int) {
+	fmt.Println("-@- Entering UddateBillPriceExVat function")
+	tx, err := db.Begin()
+	if err != nil {
+		log.Println("ERROR: db UpdateBillTotalExVat db.begin: ", err)
+	}
+
+	fmt.Println("-@- Preparing the stmt")
+	//create statememnt of what to do in DB
+	stmt, err := tx.Prepare("UPDATE bills SET total_ex_vat=? WHERE bill_id=?")
+	defer stmt.Close()
+
+	//exexute the statement
+	fmt.Println("-@- Exec the statement, Content of sum=", sum, "Content of billID=", billID)
+	_, err = stmt.Exec(sum, billID)
+	if err != nil {
+		log.Println("ERROR: db UpdateBillTotalExVat stmt.exec: ", err)
+	}
+	//commit to DB
+	fmt.Println("-@- Commit")
+	err = tx.Commit()
+	if err != nil {
+		log.Println("ERROR: db UpdateBillTotalExVat commit: ", err)
+	}
+	fmt.Println("-@- Finnished with Func")
+
 }
 
 //AddBillLine , Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
