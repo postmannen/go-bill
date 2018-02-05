@@ -280,7 +280,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//fill a tmp slice of data.BillLines struct with the values from the http request
 	//will later be compared with the values in db to check if user changed a value
 	var tempLines data.BillLines
-	var FormBillLines []data.BillLines
+	var formBillLines []data.BillLines
 	//itarate the unique bill line numbers
 
 	for _, num := range lineNumbers {
@@ -332,19 +332,20 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-		FormBillLines = append(FormBillLines, tempLines)
+		formBillLines = append(formBillLines, tempLines)
 	}
-	log.Println("-*- FormBillLines : ", FormBillLines)
+
+	log.Println("-*- formBillLines : ", formBillLines)
 	log.Println("-*-    billLines : ", storedBillLines)
 
 	//going to compare this slice with the original values from DB, to know what to update
 	//range over the numbers slice to get all the unique line numbers
-	//then range StoredBillLines, and range FormBillLines to compare if any values are changed.
+	//then range StoredBillLines, and range formBillLines to compare if any values are changed.
 	changed = false
-	changed = checkIfBillLineChanged(lineNumbers, storedBillLines, FormBillLines)
+	changed = checkIfBillLineChanged(lineNumbers, storedBillLines, formBillLines)
 
 	if changed && modifyButtonPushed {
-		data.UpdateBillLine(d.PDB, FormBillLines)
+		data.UpdateBillLine(d.PDB, formBillLines)
 
 		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
@@ -435,7 +436,7 @@ func findBillLineNumbersInForm(r *http.Request) (numbers []int) {
 	return numbers
 }
 
-//range billLines to compare storedLines.X with FormBillLines.X to see if any values have changed. Return changed = true if changed
+//range billLines to compare storedLines.X with formBillLines.X to see if any values have changed. Return changed = true if changed
 func checkIfBillLineChanged(lineNRs []int, storedLines []data.BillLines, formLines []data.BillLines) (changed bool) {
 	for _, num := range lineNRs {
 		for _, line := range storedLines {
@@ -473,6 +474,7 @@ func some(r *http.Request, lineNumbers []int, billID int) (formBillLines []data.
 	//itarate the unique bill line numbers
 	for _, num := range lineNumbers {
 		//iterate all the data in form
+		fmt.Println("-@- Content of form", r.Form)
 		for k, v := range r.Form {
 			reLetters := regexp.MustCompile("[a-zA-Z]+")
 			reNum := regexp.MustCompile("[0-9]+")
