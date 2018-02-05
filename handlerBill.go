@@ -282,6 +282,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	var TMPlines data.BillLines
 	var FormBillLines []data.BillLines
 	//itarate the unique bill line numbers
+
 	for _, num := range lineNumbers {
 		//iterate all the data in form
 		for k, v := range r.Form {
@@ -338,9 +339,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//going to compare this slice with the original values from DB, to know what to update
 	//range over the numbers slice to get all the unique line numbers
-	//then range billLines, and range FormBillLines to compare billLines.X with FormBillLines.X
+	//then range StoredBillLines, and range FormBillLines to compare if any values are changed.
 	changed = false
-	changed = checkIfBillLineUpdated(lineNumbers, storedBillLines, FormBillLines)
+	changed = checkIfBillLineChanged(lineNumbers, storedBillLines, FormBillLines)
 
 	if changed && modifyButtonPushed {
 		data.UpdateBillLine(d.PDB, FormBillLines)
@@ -350,8 +351,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 	}
-
-	//Create a DB function with query to update the changed field
 }
 
 //separateStrNumForButton , takes *http.Request as input, and returns string and int
@@ -437,7 +436,7 @@ func findBillLineNumbersInForm(r *http.Request) (numbers []int) {
 }
 
 //range billLines to compare storedLines.X with FormBillLines.X to see if any values have changed. Return changed = true if changed
-func checkIfBillLineUpdated(lineNRs []int, storedLines []data.BillLines, formLines []data.BillLines) (changed bool) {
+func checkIfBillLineChanged(lineNRs []int, storedLines []data.BillLines, formLines []data.BillLines) (changed bool) {
 	for _, num := range lineNRs {
 		for _, line := range storedLines {
 			if line.LineID == num {
@@ -467,4 +466,61 @@ func checkIfBillLineUpdated(lineNRs []int, storedLines []data.BillLines, formLin
 		}
 	}
 	return changed
+}
+
+func some(r *http.Request, lineNumbers []int, billID int) (formBillLines []data.BillLines) {
+	var tmpLines data.BillLines
+	//itarate the unique bill line numbers
+	for _, num := range lineNumbers {
+		//iterate all the data in form
+		for k, v := range r.Form {
+			reLetters := regexp.MustCompile("[a-zA-Z]+")
+			reNum := regexp.MustCompile("[0-9]+")
+			letter := reLetters.FindString(k)
+			numberStr := reNum.FindString(k)
+			number, _ := strconv.Atoi(numberStr)
+
+			//convert the string read from the r.Form into v to v1 of int which is used in struct
+			var v1 int
+			//check if the string only contains numbers, of so convert the number string to int.
+			reNumOnly := regexp.MustCompile("^[0-9]+$")
+			if reNumOnly.Match([]byte(v[0])) {
+				v1, err := strconv.Atoi(v[0])
+				if err != nil {
+					log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
+				}
+				log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n\n", v1, v1, v[0], v[0])
+			}
+			//compare all the unique line numbers in the numbers[] slice with all the numbers
+			//postfixed at the end of the http Request input name parameters.
+			//if found add value to the tmp struct of type data.BillLines
+			if num == number {
+				tmpLines.BillID = billID
+				if letter == "billLineID" {
+					tmpLines.LineID = v1
+				}
+				if letter == "billLineDescription" {
+					tmpLines.Description = v[0]
+				}
+				if letter == "billLineQuantity" {
+					tmpLines.Quantity = v1
+				}
+				if letter == "billLineDiscountPercentage" {
+					tmpLines.DiscountPercentage = v1
+				}
+				if letter == "billLineVatUsed" {
+					tmpLines.VatUsed = v1
+				}
+				if letter == "billLinePriceExVat" {
+					myVal, err := strconv.ParseFloat(v[0], 64)
+					if err != nil {
+						log.Println("ERROR: strconv billLinePriceExVat : ", err)
+					}
+					tmpLines.PriceExVat = myVal
+				}
+			}
+		}
+		formBillLines = append(formBillLines, tmpLines)
+	}
+	return formBillLines
 }
