@@ -274,7 +274,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	//var numbers []int
 	//find the all the unique billLine numbers in the form, and store them in []int
-	lineNumbers := findBillLineNumbersInForm(r)
+	lineNumbers := findBillLineNumbersInForm(r) //slice of all linenumbers in bill
 
 	//-------Edit the bill lines------------
 	//fill a tmp slice of data.BillLines struct with the values from the http request
