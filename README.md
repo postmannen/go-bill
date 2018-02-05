@@ -60,6 +60,7 @@
 	Removed the global data variable, and replaced with using recievers on handler functions
 	Split handlers into several files
 22. Looking into minimalizing the code with switch statements etc.
+    Started splitting up the big functions into smaller functions
 
 ## TODO
 * Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number
