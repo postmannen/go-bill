@@ -469,7 +469,7 @@ func checkIfBillLineChanged(lineNRs []int, storedLines []data.BillLines, formLin
 }
 
 func some(r *http.Request, lineNumbers []int, billID int) (formBillLines []data.BillLines) {
-	var tempLines data.BillLines
+	var tmpLines data.BillLines
 	//itarate the unique bill line numbers
 	for _, num := range lineNumbers {
 		//iterate all the data in form
@@ -495,32 +495,32 @@ func some(r *http.Request, lineNumbers []int, billID int) (formBillLines []data.
 			//postfixed at the end of the http Request input name parameters.
 			//if found add value to the tmp struct of type data.BillLines
 			if num == number {
-				tempLines.BillID = billID
+				tmpLines.BillID = billID
 				if letter == "billLineID" {
-					tempLines.LineID = v1
+					tmpLines.LineID = v1
 				}
 				if letter == "billLineDescription" {
-					tempLines.Description = v[0]
+					tmpLines.Description = v[0]
 				}
 				if letter == "billLineQuantity" {
-					tempLines.Quantity = v1
+					tmpLines.Quantity = v1
 				}
 				if letter == "billLineDiscountPercentage" {
-					tempLines.DiscountPercentage = v1
+					tmpLines.DiscountPercentage = v1
 				}
 				if letter == "billLineVatUsed" {
-					tempLines.VatUsed = v1
+					tmpLines.VatUsed = v1
 				}
 				if letter == "billLinePriceExVat" {
 					myVal, err := strconv.ParseFloat(v[0], 64)
 					if err != nil {
 						log.Println("ERROR: strconv billLinePriceExVat : ", err)
 					}
-					tempLines.PriceExVat = myVal
+					tmpLines.PriceExVat = myVal
 				}
 			}
 		}
-		formBillLines = append(formBillLines, tempLines)
+		formBillLines = append(formBillLines, tmpLines)
 	}
 	return formBillLines
 }
