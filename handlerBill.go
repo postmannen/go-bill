@@ -119,7 +119,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get all the billLines for current billID from db
-	currentBillsLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
+	storedBillLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 
 	//Find all the data on the current bill id
 	var CurrentBill data.Bill
@@ -131,7 +131,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//get the total sum ex vat of all the bill lines
 	CurrentBill.TotalExVat = 0
-	for _, v := range currentBillsLines {
+	for _, v := range storedBillLines {
 		CurrentBill.TotalExVat += v.PriceExVat
 	}
 
@@ -216,7 +216,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//WORKING ABOVE HERE *********************
 
 	//create all the billLines on the screen
-	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", currentBillsLines)
+	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", storedBillLines)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}
@@ -280,7 +280,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//fill a tmp slice of data.BillLines struct with the values from the http request
 	//will later be compared with the values in db to check if user changed a value
 	var TMPlines data.BillLines
-	var TMPbillLines []data.BillLines
+	var FormBillLines []data.BillLines
 	//itarate the unique bill line numbers
 	for _, num := range lineNumbers {
 		//iterate all the data in form
@@ -331,45 +331,19 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-		TMPbillLines = append(TMPbillLines, TMPlines)
+		FormBillLines = append(FormBillLines, TMPlines)
 	}
-	log.Println("-*- TMPbillLines : ", TMPbillLines)
-	log.Println("-*-    billLines : ", currentBillsLines)
+	log.Println("-*- FormBillLines : ", FormBillLines)
+	log.Println("-*-    billLines : ", storedBillLines)
 
 	//going to compare this slice with the original values from DB, to know what to update
 	//range over the numbers slice to get all the unique line numbers
-	//then range billLines, and range TMPbillLines to compare billLines.X with TMPbillLines.X
+	//then range billLines, and range FormBillLines to compare billLines.X with FormBillLines.X
 	changed = false
-	for _, num := range lineNumbers {
-		for _, line := range currentBillsLines {
-			if line.LineID == num {
-				for _, line2 := range TMPbillLines {
-					if line2.LineID == num {
-						if line.LineID != line2.LineID {
-							changed = true
-						}
-						if line.Description != line2.Description {
-							changed = true
-						}
-						if line.Quantity != line2.Quantity {
-							changed = true
-						}
-						if line.DiscountPercentage != line2.DiscountPercentage {
-							changed = true
-						}
-						if line.VatUsed != line2.VatUsed {
-							changed = true
-						}
-						if line.PriceExVat != line2.PriceExVat {
-							changed = true
-						}
-					}
-				}
-			}
-		}
-	}
+	changed = checkIfBillLineUpdated(lineNumbers, storedBillLines, FormBillLines)
+
 	if changed && modifyButtonPushed {
-		data.UpdateBillLine(d.PDB, TMPbillLines)
+		data.UpdateBillLine(d.PDB, FormBillLines)
 
 		err = tmpl["init.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
@@ -460,4 +434,37 @@ func findBillLineNumbersInForm(r *http.Request) (numbers []int) {
 		}
 	}
 	return numbers
+}
+
+//range billLines to compare storedLines.X with FormBillLines.X to see if any values have changed. Return changed = true if changed
+func checkIfBillLineUpdated(lineNRs []int, storedLines []data.BillLines, formLines []data.BillLines) (changed bool) {
+	for _, num := range lineNRs {
+		for _, line := range storedLines {
+			if line.LineID == num {
+				for _, line2 := range formLines {
+					if line2.LineID == num {
+						if line.LineID != line2.LineID {
+							changed = true
+						}
+						if line.Description != line2.Description {
+							changed = true
+						}
+						if line.Quantity != line2.Quantity {
+							changed = true
+						}
+						if line.DiscountPercentage != line2.DiscountPercentage {
+							changed = true
+						}
+						if line.VatUsed != line2.VatUsed {
+							changed = true
+						}
+						if line.PriceExVat != line2.PriceExVat {
+							changed = true
+						}
+					}
+				}
+			}
+		}
+	}
+	return changed
 }
