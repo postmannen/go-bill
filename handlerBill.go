@@ -274,15 +274,16 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 	//var numbers []int
-	//find the all the unique billLine numbers in the form, and store them in numbers[]
-	numbers := findBillLinesInForm(r)
+	//find the all the unique billLine numbers in the form, and store them in []int
+	lineNumbers := findBillLineNumbersInForm(r)
 
 	//-------Edit the bill lines------------
 	//fill a tmp slice of data.BillLines struct with the values from the http request
+	//will later be compared with the values in db to check if user changed a value
 	var TMPlines data.BillLines
 	var TMPbillLines []data.BillLines
 	//itarate the unique bill line numbers
-	for _, num := range numbers {
+	for _, num := range lineNumbers {
 		//iterate all the data in form
 		for k, v := range r.Form {
 			reLetters := regexp.MustCompile("[a-zA-Z]+")
@@ -340,7 +341,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//range over the numbers slice to get all the unique line numbers
 	//then range billLines, and range TMPbillLines to compare billLines.X with TMPbillLines.X
 	changed = false
-	for _, num := range numbers {
+	for _, num := range lineNumbers {
 		for _, line := range currentBillsLines {
 			if line.LineID == num {
 				for _, line2 := range TMPbillLines {
@@ -442,7 +443,7 @@ func sortBills(bills []data.Bill) []data.Bill {
 
 //Finds all the numbers used in html names in form
 //used to get all the unique bill lines
-func findBillLinesInForm(r *http.Request) (numbers []int) {
+func findBillLineNumbersInForm(r *http.Request) (numbers []int) {
 	for k, v := range r.Form {
 		fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
 		reLetters := regexp.MustCompile("[a-zA-Z]+")
