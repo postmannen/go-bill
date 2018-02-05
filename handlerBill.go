@@ -225,7 +225,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters from the map of r.Form
 	//to get the ID of which LineID the button belonged to
-
 	buttonValue, buttonNumbers := separateStrNumForButton(r)
 
 	//using the buttonValue instead of r.FormValue since r.FormValue initiates a new parseform and
@@ -291,11 +290,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			letter := reLetters.FindString(k)
 			numberStr := reNum.FindString(k)
 			number, _ := strconv.Atoi(numberStr)
-			reNumOnly := regexp.MustCompile("^[0-9]+$")
 
 			//convert the string read from the r.Form into v to v1 of int which is used in struct
 			var v1 int
-			//check if the string only contains numbers
+			//check if the string only contains numbers, of so convert the number string to int.
+			reNumOnly := regexp.MustCompile("^[0-9]+$")
 			if reNumOnly.Match([]byte(v[0])) {
 				v1, err = strconv.Atoi(v[0])
 				if err != nil {
@@ -347,27 +346,21 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 				for _, line2 := range TMPbillLines {
 					if line2.LineID == num {
 						if line.LineID != line2.LineID {
-							log.Printf("LineID for Line %v have changed to %v\n", num, line2.LineID)
 							changed = true
 						}
 						if line.Description != line2.Description {
-							log.Printf("Description for Line %v have changed to %v\n", num, line2.Description)
 							changed = true
 						}
 						if line.Quantity != line2.Quantity {
-							log.Printf("Quantity for Line %v have changed to %v\n", num, line2.Quantity)
 							changed = true
 						}
 						if line.DiscountPercentage != line2.DiscountPercentage {
-							log.Printf("DiscountPercentage for Line %v have changed to %v\n", num, line2.DiscountPercentage)
 							changed = true
 						}
 						if line.VatUsed != line2.VatUsed {
-							log.Printf("VatUsed for Line %v have changed to %v\n", num, line2.VatUsed)
 							changed = true
 						}
 						if line.PriceExVat != line2.PriceExVat {
-							log.Printf("PriceExVat for Line %v have changed to %v\n", num, line2.PriceExVat)
 							changed = true
 						}
 					}
