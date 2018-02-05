@@ -273,30 +273,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//}
 
 	r.ParseForm()
-	var numbers []int
+	//var numbers []int
 	//find the all the unique billLine numbers in the form, and store them in numbers[]
-	for k, v := range r.Form {
-		fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
-		reLetters := regexp.MustCompile("[a-zA-Z]+")
-		reNum := regexp.MustCompile("[0-9]+")
-		letter := reLetters.FindString(k)
-		numberStr := reNum.FindString(k)
-		number, _ := strconv.Atoi(numberStr)
-		log.Printf("-----letter = %v, and number = %v\n", letter, number)
-
-		found := false
-		//check if number is allready in the numbers slice, if NOT.....add it
-		for _, vv := range numbers {
-			//fmt.Printf("***trying to compare vv=%v and number=%v \n", vv, number)
-			if number == vv {
-				found = true
-				fmt.Println("The numbers are equal")
-			}
-		}
-		if !found {
-			numbers = append(numbers, number)
-		}
-	}
+	numbers := findBillLinesInForm(r)
 
 	//-------Edit the bill lines------------
 	//fill a tmp slice of data.BillLines struct with the values from the http request
@@ -459,4 +438,32 @@ func sortBills(bills []data.Bill) []data.Bill {
 		}
 	}
 	return bills
+}
+
+//Finds all the numbers used in html names in form
+//used to get all the unique bill lines
+func findBillLinesInForm(r *http.Request) (numbers []int) {
+	for k, v := range r.Form {
+		fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
+		reLetters := regexp.MustCompile("[a-zA-Z]+")
+		reNum := regexp.MustCompile("[0-9]+")
+		letter := reLetters.FindString(k)
+		numberStr := reNum.FindString(k)
+		number, _ := strconv.Atoi(numberStr)
+		log.Printf("-----letter = %v, and number = %v\n", letter, number)
+
+		found := false
+		//check if number is allready in the numbers slice, if NOT.....add it
+		for _, vv := range numbers {
+			//fmt.Printf("***trying to compare vv=%v and number=%v \n", vv, number)
+			if number == vv {
+				found = true
+				fmt.Println("The numbers are equal")
+			}
+		}
+		if !found {
+			numbers = append(numbers, number)
+		}
+	}
+	return numbers
 }
