@@ -279,62 +279,12 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//-------Edit the bill lines------------
 	//fill a tmp slice of data.BillLines struct with the values from the http request
 	//will later be compared with the values in db to check if user changed a value
-	var tempLines data.BillLines
-	var formBillLines []data.BillLines
-	//itarate the unique bill line numbers
 
-	for _, num := range lineNumbers {
-		//iterate all the data in form
-		for k, v := range r.Form {
-			reLetters := regexp.MustCompile("[a-zA-Z]+")
-			reNum := regexp.MustCompile("[0-9]+")
-			letter := reLetters.FindString(k)
-			numberStr := reNum.FindString(k)
-			number, _ := strconv.Atoi(numberStr)
+	//START
 
-			//convert the string read from the r.Form into v to v1 of int which is used in struct
-			var v1 int
-			//check if the string only contains numbers, of so convert the number string to int.
-			reNumOnly := regexp.MustCompile("^[0-9]+$")
-			if reNumOnly.Match([]byte(v[0])) {
-				v1, err = strconv.Atoi(v[0])
-				if err != nil {
-					log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
-				}
-				log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n\n", v1, v1, v[0], v[0])
-			}
-			//compare all the unique line numbers in the numbers[] slice with all the numbers
-			//postfixed at the end of the http Request input name parameters.
-			//if found add value to the tmp struct of type data.BillLines
-			if num == number {
-				tempLines.BillID = d.CurrentBillID
-				if letter == "billLineID" {
-					tempLines.LineID = v1
-				}
-				if letter == "billLineDescription" {
-					tempLines.Description = v[0]
-				}
-				if letter == "billLineQuantity" {
-					tempLines.Quantity = v1
-				}
-				if letter == "billLineDiscountPercentage" {
-					tempLines.DiscountPercentage = v1
-				}
-				if letter == "billLineVatUsed" {
-					tempLines.VatUsed = v1
-				}
-				if letter == "billLinePriceExVat" {
-					myVal, err := strconv.ParseFloat(v[0], 64)
-					if err != nil {
-						log.Println("ERROR: strconv billLinePriceExVat : ", err)
-					}
-					tempLines.PriceExVat = myVal
-				}
-			}
-		}
-		formBillLines = append(formBillLines, tempLines)
-	}
+	//STOP
 
+	formBillLines := getBillLineFormValues(lineNumbers, r, d.CurrentBillID)
 	log.Println("-*- formBillLines : ", formBillLines)
 	log.Println("-*-    billLines : ", storedBillLines)
 
@@ -467,4 +417,67 @@ func checkIfBillLineChanged(lineNRs []int, storedLines []data.BillLines, formLin
 		}
 	}
 	return changed
+}
+
+func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (formBillLines []data.BillLines) {
+	var tempLines data.BillLines
+	//var formBillLines []data.BillLines
+	//itarate the unique bill line numbers
+
+	for _, num := range lineNumbers {
+		fmt.Println("-$- Outerloop, num of lineNumbers = ", num)
+		//iterate all the data in form
+		for k, v := range r.Form {
+
+			reLetters := regexp.MustCompile("[a-zA-Z]+")
+			reNum := regexp.MustCompile("[0-9]+")
+			letter := reLetters.FindString(k)
+			numberStr := reNum.FindString(k)
+			number, _ := strconv.Atoi(numberStr)
+
+			fmt.Println("-$- regexp, letter = ", letter, " and number = ", numberStr)
+
+			//convert the string read from the r.Form into v to v1 of int which is used in struct
+			var v1 int
+			//check if the string only contains numbers, of so convert the number string to int.
+			reNumOnly := regexp.MustCompile("^[0-9]+$")
+			if reNumOnly.Match([]byte(v[0])) {
+				v1, err := strconv.Atoi(v[0])
+				if err != nil {
+					log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
+				}
+				log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n", v1, v1, v[0], v[0])
+			}
+			//compare all the unique line numbers in the numbers[] slice with all the numbers
+			//postfixed at the end of the http Request input name parameters.
+			//if found add value to the tmp struct of type data.BillLines
+			if num == number {
+				tempLines.BillID = billID
+				if letter == "billLineID" {
+					tempLines.LineID = v1
+				}
+				if letter == "billLineDescription" {
+					tempLines.Description = v[0]
+				}
+				if letter == "billLineQuantity" {
+					tempLines.Quantity = v1
+				}
+				if letter == "billLineDiscountPercentage" {
+					tempLines.DiscountPercentage = v1
+				}
+				if letter == "billLineVatUsed" {
+					tempLines.VatUsed = v1
+				}
+				if letter == "billLinePriceExVat" {
+					myVal, err := strconv.ParseFloat(v[0], 64)
+					if err != nil {
+						log.Println("ERROR: strconv billLinePriceExVat : ", err)
+					}
+					tempLines.PriceExVat = myVal
+				}
+			}
+		}
+		formBillLines = append(formBillLines, tempLines)
+	}
+	return
 }
