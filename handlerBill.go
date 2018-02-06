@@ -431,42 +431,69 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 
 			reLetters := regexp.MustCompile("[a-zA-Z]+")
 			reNum := regexp.MustCompile("[0-9]+")
-			letter := reLetters.FindString(k)
-			numberStr := reNum.FindString(k)
-			number, _ := strconv.Atoi(numberStr)
+			letter := reLetters.FindString(k)    //hent ut navnet "billLineModifyButton"
+			numberStr := reNum.FindString(k)     //hent ut linje nummeret som knappen hørte til
+			number, _ := strconv.Atoi(numberStr) //gjør om nummeret på knappen til int
 
 			fmt.Println("-$- regexp, letter = ", letter, " and number = ", numberStr)
 
 			//convert the string read from the r.Form into v to v1 of int which is used in struct
-			var v1 int
+			//var v1 int
 			//check if the string only contains numbers, of so convert the number string to int.
-			reNumOnly := regexp.MustCompile("^[0-9]+$")
-			if reNumOnly.Match([]byte(v[0])) {
-				v1, err := strconv.Atoi(v[0])
-				if err != nil {
-					log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
-				}
-				log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n", v1, v1, v[0], v[0])
-			}
+			/*
+				reNumOnly := regexp.MustCompile("^[0-9]+$")
+					if reNumOnly.Match([]byte(v[0])) {
+						stringValue := v[0]
+						fmt.Printf("--- before conversion : stringValue = %v of type = %T\n ", stringValue, stringValue)
+						v1, err := strconv.Atoi(stringValue)
+						fmt.Printf("after conversion : v1 = %v of type = %T\n", v1, v1)
+						if err != nil {
+							log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
+						}
+						log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n", v1, v1, v[0], v[0])
+					}
+			*/
 			//compare all the unique line numbers in the numbers[] slice with all the numbers
 			//postfixed at the end of the http Request input name parameters.
 			//if found add value to the tmp struct of type data.BillLines
 			if num == number {
 				tempLines.BillID = billID
 				if letter == "billLineID" {
-					tempLines.LineID = v1
+					myVal, err := strconv.Atoi(v[0])
+					if err != nil {
+						log.Println("ERROR: strconv billLineID : ", err)
+					}
+					tempLines.LineID = myVal
+					fmt.Printf("--- templLines.BillID er satt til %v\n", tempLines.BillID)
 				}
 				if letter == "billLineDescription" {
+
 					tempLines.Description = v[0]
+					fmt.Printf("--- templLines.Description er satt til %v\n", v[0])
 				}
 				if letter == "billLineQuantity" {
-					tempLines.Quantity = v1
+					myVal, err := strconv.Atoi(v[0])
+					if err != nil {
+						log.Println("ERROR: strconv billLineQuantity : ", err)
+					}
+					tempLines.Quantity = myVal
+					fmt.Printf("--- templLines.Quantity er satt til %v\n", tempLines.Quantity)
 				}
 				if letter == "billLineDiscountPercentage" {
-					tempLines.DiscountPercentage = v1
+					myVal, err := strconv.Atoi(v[0])
+					if err != nil {
+						log.Println("ERROR: strconv billLineDiscountPercentage : ", err)
+					}
+					tempLines.DiscountPercentage = myVal
+					fmt.Printf("--- templLines.DiscountPercentage er satt til %v\n", tempLines.DiscountPercentage)
 				}
 				if letter == "billLineVatUsed" {
-					tempLines.VatUsed = v1
+					myVal, err := strconv.Atoi(v[0])
+					if err != nil {
+						log.Println("ERROR: strconv billLineVatUsed : ", err)
+					}
+					tempLines.VatUsed = myVal
+					fmt.Printf("--- templLines.VatUsed er satt til %v\n", tempLines.VatUsed)
 				}
 				if letter == "billLinePriceExVat" {
 					myVal, err := strconv.ParseFloat(v[0], 64)
