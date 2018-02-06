@@ -435,7 +435,7 @@ func Create() *sql.DB {
 	checkErr(db.Ping())
 	//3. create table
 	_, err = db.Exec(`
-		CREATE TABLE user (
+		CREATE TABLE IF NOT EXISTS user (
 		user_id integer PRIMARY KEY,
 		first_name string not null,
 		last_name string,
@@ -455,7 +455,7 @@ func Create() *sql.DB {
 	checkErr(err)
 
 	_, err = db.Exec(`
-		CREATE TABLE bill_lines (
+		CREATE TABLE IF NOT EXISTS bill_lines (
 			indx int PRIMARY KEY,
 			bill_id int,
 			line_id int,
