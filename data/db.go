@@ -277,7 +277,7 @@ func UpdateBill(db *sql.DB, b Bill) {
 	}
 
 	//create statement to insert values to DB
-	stmt, err := tx.Prepare("UPDATE bills SET create_date=?,due_date=?,comment=?,paid=? where bill_id=?")
+	stmt, err := tx.Prepare("UPDATE bills SET create_date=?,due_date=?,comment=?,paid=?,total_ex_vat=?,total_inc_vat=? where bill_id=?")
 	if err != nil {
 		log.Println("ERROR: UpdateBill: statement problem = ", err)
 	}
@@ -287,7 +287,7 @@ func UpdateBill(db *sql.DB, b Bill) {
 	log.Println("UpdateBill: The struct b of type Bill contains = ", b)
 
 	//execute the statement on the DB
-	_, err = stmt.Exec(b.CreatedDate, b.DueDate, b.Comment, b.Paid, b.BillID)
+	_, err = stmt.Exec(b.CreatedDate, b.DueDate, b.Comment, b.Paid, b.TotalExVat, b.TotalIncVat, b.BillID)
 	//commit to DB
 	err = tx.Commit()
 	if err != nil {

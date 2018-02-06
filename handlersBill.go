@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
@@ -128,7 +127,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	updateBillTotalExVat(&CurrentBill, d.CurrentBillID, storedBillLines, d.PDB)
+	updateBillTotalExVat(&CurrentBill, d.CurrentBillID, storedBillLines)
+	updateBillTotalIncVat(&CurrentBill, storedBillLines)
+	data.UpdateBill(d.PDB, CurrentBill)
 
 	err = tmpl["init.html"].ExecuteTemplate(w, "showBills", CurrentBill)
 	if err != nil {
@@ -469,30 +470,31 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 
 //updateBillTotalExVat updates the bill field total price ex vat,
 //also writes the update info to correct field in db
-func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLines, pDB *sql.DB) {
+func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLines) {
 	bill.TotalExVat = 0
 	for _, v := range billLines {
 		bill.TotalExVat += v.PriceExVat
 	}
 
+	/* NOTE : Removing db db write, will put in a write for all fields when all data is processed
 	//add the TotalExVat to db here
 	if bill.TotalExVat != 0 {
 		data.UpdateBillPriceExVat(pDB, bill.TotalExVat, bill.BillID)
 	}
-
+	*/
 }
 
 //updateBillTotalIncVat updates the bill field total price ex vat,
 //also writes the update info to correct field in db
-func updateBillTotalIncVat(bill *data.Bill, billID int, billLines []data.BillLines, pDB *sql.DB) {
-	bill.TotalExVat = 0
+func updateBillTotalIncVat(bill *data.Bill, billLines []data.BillLines) {
+	var lineIncVat float64
+	bill.TotalIncVat = 0
 	for _, v := range billLines {
-		bill.TotalExVat += v.PriceExVat
+		if v.VatUsed == 0 {
+			lineIncVat = v.PriceExVat
+		} else {
+			lineIncVat = v.PriceExVat + (v.PriceExVat / 100.0 * float64(v.VatUsed))
+		}
+		bill.TotalIncVat += lineIncVat
 	}
-
-	//add the TotalExVat to db here
-	if bill.TotalExVat != 0 {
-		data.UpdateBillPriceExVat(pDB, bill.TotalExVat, bill.BillID)
-	}
-
 }
