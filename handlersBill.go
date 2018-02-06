@@ -96,8 +96,6 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//**********************************************************
-
 func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
 	BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
@@ -472,6 +470,21 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 //updateBillTotalExVat updates the bill field total price ex vat,
 //also writes the update info to correct field in db
 func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLines, pDB *sql.DB) {
+	bill.TotalExVat = 0
+	for _, v := range billLines {
+		bill.TotalExVat += v.PriceExVat
+	}
+
+	//add the TotalExVat to db here
+	if bill.TotalExVat != 0 {
+		data.UpdateBillPriceExVat(pDB, bill.TotalExVat, bill.BillID)
+	}
+
+}
+
+//updateBillTotalIncVat updates the bill field total price ex vat,
+//also writes the update info to correct field in db
+func updateBillTotalIncVat(bill *data.Bill, billID int, billLines []data.BillLines, pDB *sql.DB) {
 	bill.TotalExVat = 0
 	for _, v := range billLines {
 		bill.TotalExVat += v.PriceExVat
