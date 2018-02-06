@@ -158,7 +158,7 @@ func QueryBillLines(db *sql.DB, billID int) []BillLines {
 	for rows.Next() {
 		//Scan copies the columns in the current row into the values pointed at by dest.
 		//The number of values in dest must be the same as the number of columns in Rows of database.
-		rows.Scan(&indx, &mm.BillID, &mm.LineID, &mm.ItemID, &mm.Description, &mm.Quantity, &mm.DiscountPercentage, &mm.VatUsed, &mm.PriceExVat)
+		rows.Scan(&indx, &mm.BillID, &mm.LineID, &mm.ItemID, &mm.Description, &mm.Quantity, &mm.DiscountPercentage, &mm.VatUsed, &mm.PriceExVat, &mm.PriceExVatTotal)
 
 		//DO THIS WORK ?????????????? trying to append a struct into a slice of structs of the same type
 		m = append(m, mm)
@@ -334,7 +334,7 @@ func AddBillLine(db *sql.DB, b BillLines) {
 	}
 
 	//create statement to insert values to DB
-	stmt, err := tx.Prepare("insert into bill_lines(indx,bill_id,line_id,item_id,description,quantity,discount_percentage,vat_used,price_ex_vat) values(?,?,?,?,?,?,?,?,?)")
+	stmt, err := tx.Prepare("insert into bill_lines(indx,bill_id,line_id,item_id,description,quantity,discount_percentage,vat_used,price_ex_vat,price_ex_vat_total) values(?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		log.Println("ERROR: addBillLineToDB: stmt error = ", err)
 	}
@@ -347,7 +347,7 @@ func AddBillLine(db *sql.DB, b BillLines) {
 	indx++
 
 	//execute the statement on the DB
-	_, err = stmt.Exec(indx, b.BillID, b.LineID, b.ItemID, b.Description, b.Quantity, b.DiscountPercentage, b.VatUsed, b.PriceExVat)
+	_, err = stmt.Exec(indx, b.BillID, b.LineID, b.ItemID, b.Description, b.Quantity, b.DiscountPercentage, b.VatUsed, b.PriceExVat, b.PriceExVatTotal)
 	if err != nil {
 		log.Println("ERROR: addBillLineToDB: stmt.Execute error = ", err)
 	}
@@ -415,9 +415,9 @@ func UpdateBillLine(db *sql.DB, b []BillLines) {
 	for _, v := range b {
 		tx, err := db.Begin()
 		checkErr(err)
-		stmt, err := tx.Prepare("UPDATE bill_lines SET item_id=?,description=?,quantity=?,discount_percentage=?,vat_used=?,price_ex_vat=? WHERE bill_id=? and line_id=?")
+		stmt, err := tx.Prepare("UPDATE bill_lines SET item_id=?,description=?,quantity=?,discount_percentage=?,vat_used=?,price_ex_vat=?,price_ex_vat_total=? WHERE bill_id=? and line_id=?")
 		checkErr(err)
-		_, err = stmt.Exec(v.ItemID, v.Description, v.Quantity, v.DiscountPercentage, v.VatUsed, v.PriceExVat, v.BillID, v.LineID)
+		_, err = stmt.Exec(v.ItemID, v.Description, v.Quantity, v.DiscountPercentage, v.VatUsed, v.PriceExVat, v.PriceExVatTotal, v.BillID, v.LineID)
 		tx.Commit()
 		checkErr(err)
 		stmt.Close()
@@ -434,40 +434,52 @@ func Create() *sql.DB {
 	//2. fail-fast if can't connect to DB
 	checkErr(db.Ping())
 	//3. create table
-	_, err = db.Exec(`create table if not exists user (
-						pid integer PRIMARY KEY, 
-						firstname string not null,
-						lastname string,
-						mail string,
-						address string,
-						postnrandplace string,
-						phonenr string,
-						orgnr string)
-					;`)
+	_, err = db.Exec(`
+		CREATE TABLE user (
+		user_id integer PRIMARY KEY,
+		first_name string not null,
+		last_name string,
+		mail string, 
+		address string,
+		post_nr_place string,
+		phone_nr string,
+		org_nr string,
+		country_id string);
+			INSERT INTO user VALUES(1,'Donald','Duck','donald@andeby.com','Ducksvei 1','1 Andeby',333,'333.333.333',0);
+			INSERT INTO user VALUES(2,'Dolly','Duck','dolly@andeby.com','Ducksvei 2','1 Andeby',222,'null',0);
+			INSERT INTO user VALUES(3,'Doffen','Duck','doffen@andeby.com','Ducksvei 1','1 Andeby',333,'null',0);
+			INSERT INTO user VALUES(4,'Skrue','McDuck','skrue@andeby.com','Pengebingen','1 Andeby',99999999,'999.999.999',0);
+			INSERT INTO user VALUES(5,'Mikke','Mus','mikke@andeby.com','1 Musveien','1 Andeby',1432,'null',0);
+			INSERT INTO user VALUES(7,'Kit','Walker','kit@fantomet.com','Hodeskallegrotten','De dype skoger','Apepost','null',0);
+		`)
 	checkErr(err)
 
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS bill_lines (
-						indx int PRIMARY KEY,
-						bill_id int,
-						line_id int,
-						item_id int,
-						description string,
-						quantity int,
-						discount_percentage int,
-						vat_used int,
-						price_ex_vat real)
-					;`)
+	_, err = db.Exec(`
+		CREATE TABLE bill_lines (
+			indx int PRIMARY KEY,
+			bill_id int,
+			line_id int,
+			item_id int,
+			description string,
+			quantity int,
+			discount_percentage int,
+			vat_used int,
+			price_ex_vat real,
+			price_ex_vat_total real
+		);
+					`)
 	checkErr(err)
 
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS bills (
-						bill_id int PRIMARY KEY,
-						user_id int,
-						create_date text,
-						due_date text,
-						comment string,
-						total_ex_vat real,
-						total_inc_vat real,
-						paid integer)
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS bills (
+			bill_id int PRIMARY KEY,
+			user_id int,
+			create_date text,
+			due_date text,
+			comment string,
+			total_ex_vat real,
+			total_inc_vat real,
+			paid integer)
 					;`)
 
 	return db

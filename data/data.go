@@ -36,5 +36,6 @@ type BillLines struct {
 	DiscountPercentage int
 	VatUsed            int
 	PriceExVat         float64
+	PriceExVatTotal    float64
 	//just create some linenumbers for testing
 }
