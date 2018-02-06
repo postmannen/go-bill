@@ -119,6 +119,15 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//get all the billLines for current billID from db
 	storedBillLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 
+	//TODO: add a default nr.1 bill line if none exist
+	if storedBillLines == nil {
+		billLine := data.BillLines{
+			BillID: d.CurrentBillID,
+			LineID: 1,
+		}
+		data.AddBillLine(d.PDB, billLine)
+	}
+
 	//Find all the data on the current bill id
 	var CurrentBill data.Bill
 	for i, v := range BillsForUser {
