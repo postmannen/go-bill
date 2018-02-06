@@ -29,13 +29,13 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	//'if' sentence to keep the chosen user ID. Reason is that it resets to 0 when the page is redrawn after "choose" is pushed
 	//put the value in chooseUserButton which is a global variable
 	if r.FormValue("chooseUserButton") == "choose" {
-		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
+		//Get the value (numberPart) of the chosen user from form dropdown menu <select name="users">
 		d.ActiveUserID, _ = strconv.Atoi(r.FormValue("users"))
 		//reset data.CurrentBillID so a new user dont inherit the last bill used for another user.
 		d.CurrentBillID = 0
 	}
 
-	log.Println("billCreateWeb: The number chosen in the user select box:data.activeUserID = ", d.ActiveUserID)
+	log.Println("billCreateWeb: The numberPart chosen in the user select box:data.activeUserID = ", d.ActiveUserID)
 
 	//Iterate the slice of struct for all the users found in db to find the data for the user selected
 	for i := range d.Users {
@@ -234,7 +234,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		billLine := data.BillLines{}
 		billLine.BillID = d.CurrentBillID
 		fmt.Println("#######billid some benyttes er =", d.CurrentBillID)
-		//create a random number for the bill line....for now....
+		//create a random numberPart for the bill line....for now....
 		rand.Seed(time.Now().UnixNano())
 		billLine.LineID = rand.Intn(10000)
 		billLine.Description = "noe tekst"
@@ -365,22 +365,22 @@ func findBillLineNumbersInForm(r *http.Request) (numbers []int) {
 		fmt.Printf("--- k = %v of type %T , and v = %v of type %T\n", k, k, v, v)
 		reLetters := regexp.MustCompile("[a-zA-Z]+")
 		reNum := regexp.MustCompile("[0-9]+")
-		letter := reLetters.FindString(k)
+		letterPart := reLetters.FindString(k)
 		numberStr := reNum.FindString(k)
-		number, _ := strconv.Atoi(numberStr)
-		log.Printf("-----letter = %v, and number = %v\n", letter, number)
+		numberPart, _ := strconv.Atoi(numberStr)
+		log.Printf("-----letterPart = %v, and numberPart = %v\n", letterPart, numberPart)
 
 		found := false
-		//check if number is allready in the numbers slice, if NOT.....add it
+		//check if numberPart is allready in the numbers slice, if NOT.....add it
 		for _, vv := range numbers {
-			//fmt.Printf("***trying to compare vv=%v and number=%v \n", vv, number)
-			if number == vv {
+			//fmt.Printf("***trying to compare vv=%v and numberPart=%v \n", vv, numberPart)
+			if numberPart == vv {
 				found = true
 				fmt.Println("The numbers are equal")
 			}
 		}
 		if !found {
-			numbers = append(numbers, number)
+			numbers = append(numbers, numberPart)
 		}
 	}
 	return numbers
@@ -419,46 +419,28 @@ func checkIfBillLineChanged(lineNRs []int, storedLines []data.BillLines, formLin
 	return changed
 }
 
+//getBillLineFormValues parses all the data in the form, compares them with the current billID, and returns
+//a slice with all the values entered in the form.
+//all fields and buttons in the form have name values postfixed with the {{.LineID}}, so this function
+//separates the first part of the name and the {{.LineID}} to know what fields to update
 func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (formBillLines []data.BillLines) {
 	var tempLines data.BillLines
-	//var formBillLines []data.BillLines
-	//itarate the unique bill line numbers
 
 	for _, num := range lineNumbers {
 		fmt.Println("-$- Outerloop, num of lineNumbers = ", num)
 		//iterate all the data in form
 		for k, v := range r.Form {
 
+			//split out the letter and number part of button name
 			reLetters := regexp.MustCompile("[a-zA-Z]+")
 			reNum := regexp.MustCompile("[0-9]+")
-			letter := reLetters.FindString(k)    //hent ut navnet "billLineModifyButton"
-			numberStr := reNum.FindString(k)     //hent ut linje nummeret som knappen hørte til
-			number, _ := strconv.Atoi(numberStr) //gjør om nummeret på knappen til int
+			letterPart := reLetters.FindString(k)    //get name "billLineModifyButton"
+			numberStr := reNum.FindString(k)         //get the line nr.that the button belonged to. Nr is postfixed in the name
+			numberPart, _ := strconv.Atoi(numberStr) //convert the nr got`en from form to int, so it can be used later
 
-			fmt.Println("-$- regexp, letter = ", letter, " and number = ", numberStr)
-
-			//convert the string read from the r.Form into v to v1 of int which is used in struct
-			//var v1 int
-			//check if the string only contains numbers, of so convert the number string to int.
-			/*
-				reNumOnly := regexp.MustCompile("^[0-9]+$")
-					if reNumOnly.Match([]byte(v[0])) {
-						stringValue := v[0]
-						fmt.Printf("--- before conversion : stringValue = %v of type = %T\n ", stringValue, stringValue)
-						v1, err := strconv.Atoi(stringValue)
-						fmt.Printf("after conversion : v1 = %v of type = %T\n", v1, v1)
-						if err != nil {
-							log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
-						}
-						log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n", v1, v1, v[0], v[0])
-					}
-			*/
-			//compare all the unique line numbers in the numbers[] slice with all the numbers
-			//postfixed at the end of the http Request input name parameters.
-			//if found add value to the tmp struct of type data.BillLines
-			if num == number {
+			if num == numberPart {
 				tempLines.BillID = billID
-				if letter == "billLineID" {
+				if letterPart == "billLineID" {
 					myVal, err := strconv.Atoi(v[0])
 					if err != nil {
 						log.Println("ERROR: strconv billLineID : ", err)
@@ -466,12 +448,12 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 					tempLines.LineID = myVal
 					fmt.Printf("--- templLines.BillID er satt til %v\n", tempLines.BillID)
 				}
-				if letter == "billLineDescription" {
+				if letterPart == "billLineDescription" {
 
 					tempLines.Description = v[0]
 					fmt.Printf("--- templLines.Description er satt til %v\n", v[0])
 				}
-				if letter == "billLineQuantity" {
+				if letterPart == "billLineQuantity" {
 					myVal, err := strconv.Atoi(v[0])
 					if err != nil {
 						log.Println("ERROR: strconv billLineQuantity : ", err)
@@ -479,7 +461,7 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 					tempLines.Quantity = myVal
 					fmt.Printf("--- templLines.Quantity er satt til %v\n", tempLines.Quantity)
 				}
-				if letter == "billLineDiscountPercentage" {
+				if letterPart == "billLineDiscountPercentage" {
 					myVal, err := strconv.Atoi(v[0])
 					if err != nil {
 						log.Println("ERROR: strconv billLineDiscountPercentage : ", err)
@@ -487,7 +469,7 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 					tempLines.DiscountPercentage = myVal
 					fmt.Printf("--- templLines.DiscountPercentage er satt til %v\n", tempLines.DiscountPercentage)
 				}
-				if letter == "billLineVatUsed" {
+				if letterPart == "billLineVatUsed" {
 					myVal, err := strconv.Atoi(v[0])
 					if err != nil {
 						log.Println("ERROR: strconv billLineVatUsed : ", err)
@@ -495,7 +477,7 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 					tempLines.VatUsed = myVal
 					fmt.Printf("--- templLines.VatUsed er satt til %v\n", tempLines.VatUsed)
 				}
-				if letter == "billLinePriceExVat" {
+				if letterPart == "billLinePriceExVat" {
 					myVal, err := strconv.ParseFloat(v[0], 64)
 					if err != nil {
 						log.Println("ERROR: strconv billLinePriceExVat : ", err)
