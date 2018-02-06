@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
@@ -129,18 +130,8 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//get the total sum ex vat of all the bill lines
-	CurrentBill.TotalExVat = 0
-	for _, v := range storedBillLines {
-		CurrentBill.TotalExVat += v.PriceExVat
-	}
+	updateBillTotalExVat(&CurrentBill, d.CurrentBillID, storedBillLines, d.PDB)
 
-	//add the TotalExVat to db here
-	if CurrentBill.TotalExVat != 0 {
-		data.UpdateBillPriceExVat(d.PDB, CurrentBill.TotalExVat, CurrentBill.BillID)
-	}
-
-	//draw the bill select box in the window
 	err = tmpl["init.html"].ExecuteTemplate(w, "showBills", CurrentBill)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
@@ -213,7 +204,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	//WORKING ABOVE HERE *********************
 
 	//create all the billLines on the screen
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", storedBillLines)
@@ -267,22 +257,10 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		modifyButtonPushed = true
 	}
 
-	//for _, v := range billLines {
-	//	fmt.Println("--- iterating original values : ", v.BillID, v.LineID, v.Description)
-	//}
-
 	r.ParseForm()
-	//var numbers []int
+
 	//find the all the unique billLine numbers in the form, and store them in []int
 	lineNumbers := findBillLineNumbersInForm(r) //slice of all linenumbers in bill
-
-	//-------Edit the bill lines------------
-	//fill a tmp slice of data.BillLines struct with the values from the http request
-	//will later be compared with the values in db to check if user changed a value
-
-	//START
-
-	//STOP
 
 	formBillLines := getBillLineFormValues(lineNumbers, r, d.CurrentBillID)
 	log.Println("-*- formBillLines : ", formBillLines)
@@ -489,4 +467,19 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 		formBillLines = append(formBillLines, tempLines)
 	}
 	return
+}
+
+//updateBillTotalExVat updates the bill field total price ex vat,
+//also writes the update info to correct field in db
+func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLines, pDB *sql.DB) {
+	bill.TotalExVat = 0
+	for _, v := range billLines {
+		bill.TotalExVat += v.PriceExVat
+	}
+
+	//add the TotalExVat to db here
+	if bill.TotalExVat != 0 {
+		data.UpdateBillPriceExVat(pDB, bill.TotalExVat, bill.BillID)
+	}
+
 }
