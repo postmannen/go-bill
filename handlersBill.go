@@ -86,12 +86,14 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		d.CurrentBillID = data.AddBill(d.PDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", d.CurrentBillID)
 
-		billLine := data.BillLines{}
-		billLine.BillID = d.CurrentBillID
-		billLine.LineID = 1
-		billLine.Description = "noe tekst"
+		/*	Add a default nr. 1 bill line on new bills have been moved to billLines handler
+			billLine := data.BillLines{}
+			billLine.BillID = d.CurrentBillID
+			billLine.LineID = 1
+			billLine.Description = "noe tekst"
 
-		data.AddBillLine(d.PDB, billLine)
+			data.AddBillLine(d.PDB, billLine)
+		*/
 	}
 }
 
@@ -119,8 +121,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//get all the billLines for current billID from db
 	storedBillLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 
-	//TODO: add a default nr.1 bill line if none exist
-	if storedBillLines == nil {
+	//add a default nr.1 bill line if none exist
+	if len(storedBillLines) == 0 {
+		fmt.Fprintf(w, "Len was 0, value = %v\n", len(storedBillLines))
 		billLine := data.BillLines{
 			BillID: d.CurrentBillID,
 			LineID: 1,
