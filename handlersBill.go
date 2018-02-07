@@ -106,7 +106,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	BillsForUser = sortBills(BillsForUser)
 
 	//draw the bill select box in the window
-	err := tmpl["init.html"].ExecuteTemplate(w, "billLinesComplete", BillsForUser)
+	err := tmpl["init.html"].ExecuteTemplate(w, "billSelectBox", BillsForUser)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
 	}
