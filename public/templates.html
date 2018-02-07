@@ -241,6 +241,10 @@
                                 <label class="infoBox5" for="billLinePriceExVat{{.LineID}}">Price Ex Vat</label>
                                 <input type="text" title="Price Ex Vat" name="billLinePriceExVat{{.LineID}}" value="{{.PriceExVat}}" maxlength="64">
                             </div>
+                            <div class="inplab2">
+                                <label class="infoBox5" for="billLinePriceExVatTotal{{.LineID}}">Price Ex Vat Total</label>
+                                <input type="text" title="Price Ex Vat" name="billLinePriceExVatTotal{{.LineID}}" value="{{.PriceExVatTotal}}" maxlength="64">
+                            </div>
                         </div>
                                 <input type="submit" name="billLineModifyButton{{.LineID}}" value="modify">
                                 <input type="submit" name="billLineAddButton{{.LineID}}" value="add">

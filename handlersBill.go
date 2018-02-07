@@ -122,7 +122,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	storedBillLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
 
 	//add a default nr.1 bill line if none exist
-	if len(storedBillLines) == 0 {
+	if len(storedBillLines) == 0 && d.CurrentBillID != 0 {
 		fmt.Fprintf(w, "Len was 0, value = %v\n", len(storedBillLines))
 		billLine := data.BillLines{
 			BillID: d.CurrentBillID,
@@ -217,6 +217,10 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+
+	updateLineExVatTotal(storedBillLines)
+	//store all the bill lines in bill_lines db, to get ex vat total written to db
+	data.UpdateBillLine(d.PDB, storedBillLines)
 
 	//create all the billLines on the screen
 	err = tmpl["init.html"].ExecuteTemplate(w, "createBillLines", storedBillLines)
@@ -488,6 +492,7 @@ func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLine
 	bill.TotalExVat = 0
 	for _, v := range billLines {
 		v.PriceExVat *= float64(v.Quantity)
+		v.PriceExVat -= v.PriceExVat / 100 * float64(v.DiscountPercentage)
 		bill.TotalExVat += v.PriceExVat
 	}
 
@@ -507,11 +512,22 @@ func updateBillTotalIncVat(bill *data.Bill, billLines []data.BillLines) {
 	for _, v := range billLines {
 		if v.VatUsed == 0 {
 			lineIncVat = v.PriceExVat
+			lineIncVat -= lineIncVat / 100 * float64(v.DiscountPercentage)
 		} else {
 			lineIncVat = v.PriceExVat + (v.PriceExVat / 100.0 * float64(v.VatUsed))
+			lineIncVat -= lineIncVat / 100 * float64(v.DiscountPercentage)
 		}
 		lineIncVat *= float64(v.Quantity)
 		bill.TotalIncVat += lineIncVat
 
+	}
+}
+
+//updateLineExVatTotal updates the struct data for the total ex vat pr. line
+func updateLineExVatTotal(b []data.BillLines) {
+	for i := 0; i < len(b); i++ {
+		sum := b[i].PriceExVat * float64(b[i].Quantity)
+		sum = sum - (sum / 100 * float64(b[i].DiscountPercentage))
+		b[i].PriceExVatTotal = sum
 	}
 }
