@@ -129,6 +129,8 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			LineID: 1,
 		}
 		data.AddBillLine(d.PDB, billLine)
+		//rerun gathering av bill line data for selected bill to get new data
+		storedBillLines = data.QueryBillLines(d.PDB, d.CurrentBillID)
 	}
 
 	//Find all the data on the current bill id
