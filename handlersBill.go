@@ -489,6 +489,7 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 //updateBillTotalExVat updates the bill field total price ex vat,
 //also writes the update info to correct field in db
 func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLines) {
+	//TODO: Fix so the total values are made from line total to avoid doing the same calculations in several functions
 	bill.TotalExVat = 0
 	for _, v := range billLines {
 		v.PriceExVat *= float64(v.Quantity)
@@ -507,6 +508,7 @@ func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLine
 //updateBillTotalIncVat updates the bill field total price ex vat,
 //also writes the update info to correct field in db
 func updateBillTotalIncVat(bill *data.Bill, billLines []data.BillLines) {
+	//TODO: Fix so the total values are made from line total to avoid doing the same calculations in several functions
 	var lineIncVat float64
 	bill.TotalIncVat = 0
 	for _, v := range billLines {
