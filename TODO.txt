@@ -5,3 +5,6 @@
 //ERROR: Den viser bill linjene hvis user bare har 1 bill. Har den 2 så viser den ikke lenger.
 //			Prøv å legg alle variablene over i global og se om det kan være noe den mangler når den
 //			prøver å tegne opp alle bill linjene.......evt. sjekk logger først.
+
+//TODO: The inc vat and ex vat sums in the chosen bill view should be based on the billLine sum field,
+//      not based on the price * quantity - discount as it is now.

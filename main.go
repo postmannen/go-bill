@@ -25,7 +25,8 @@ var tmpl map[string]*template.Template //map to hold all templates
 func init() {
 	//initate the templates
 	tmpl = make(map[string]*template.Template)
-	tmpl["init.html"] = template.Must(template.ParseFiles("public/templates.html"))
+	tmpl["user.html"] = template.Must(template.ParseFiles("public/userTemplates.html"))
+	tmpl["bill.html"] = template.Must(template.ParseFiles("public/billTemplates.html"))
 }
 
 func main() {
