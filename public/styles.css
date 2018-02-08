@@ -1,10 +1,58 @@
-div {
-    display: inline-block;
-    margin-bottom: 10px;
+div.topMenuContainer {
+   
 }
+
+body {
+    /*grid-template-columns: 50%;*/
+}
+
+div.container {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin-bottom: 5px;
+}
+
+
+div.editBillSelectBox {
+
+}
+
+div.showBillSingleContainer {
+    display: flex;
+    border: solid black;
+    background-color: lightgrey;
+    border-width: 1px;
+    border-radius: 5px;
+}
+div.inplab {
+    display: inline-flex;
+}
+
+div.createBillLine {
+    display: grid;
+    grid-template-columns: auto;
+}
+
+div.showBillLinesContainer {
+    display: inline-block;
+    grid-template-columns: auto;
+    border: solid lightgray;
+    background-color: rgb(214, 214, 118);
+    border-width: 1px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+div.labelInput {
+    display: inline-block;
+    width: fit-content;
+}
+div.labelInput label {display: block;}
+div.labelInput input {display: inline-block;}
+
+
 
 /********************TOP MENU**************************/
 .topMenuContainer {
+
     margin-bottom: 30px;
 }
 
