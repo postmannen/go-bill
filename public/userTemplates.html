@@ -59,10 +59,6 @@
 {{end}}
 
 
-
-{{define "header"}}
-{{end}} 
-
 {{define "index"}}
     Nothing here yet
 {{end}} 
@@ -112,11 +108,6 @@
             {{end}}
         </select>
         <input type="submit" name="submitDeleteButton" value="Delete selected">
-        <!--<div class="modifyUserSingleConfirm">
-                Mark to confirm changes before you press Apply
-                <input type="checkbox" name="sure" value="ok">
-                <input type="submit" name="Modify" value="Apply">
-        </div>-->
     </form>
 </div>
 {{end}} 
@@ -151,21 +142,21 @@
     <div class="modifyUserSingleContainer">
         <div class="modifyUserSingleInputs">
             <!-- <input title="The customer nr" type="text" name="number" placeholder={{.Number}}> -->
-            <label for="Firstname">Firstname</label>
+            <label for="firstname">Firstname</label>
             <input title="The name" type="inputUserText" name="firstName" value="{{.FirstName}}" maxlength="64">
-            <label for="Lastname">Lastname</label>
+            <label for="lastname">Lastname</label>
             <input title="The lastname" type="inputUserText" name="lastName" value="{{.LastName}}" maxlength="64">
-            <label for="Mail">Mail</label>
+            <label for="mail">Mail</label>
             <input title="The mail address" type="inputUserText" name="mail" value="{{.Mail}}" maxlength="64">
-            <label for="Address">Address</label>
+            <label for="address">Address</label>
             <input title="The address" type="inputUserText" name="address" value="{{.Address}}" maxlength="64">
-            <label for="PostNrAndPlace">PostNrAndPlace</label>
+            <label for="poAddr">PostNrAndPlace</label>
             <input title="The Post nr and place" type="inputUserText" name="poAddr" value="{{.PostNrAndPlace}}" maxlength="64">
-            <label for="Phone">Phone</label>
+            <label for="phone">Phone</label>
             <input title="The phone number" type="inputUserText" name="phone" value="{{.PhoneNr}}" maxlength="64">
-            <label for="Org">Org Nr</label>
+            <label for="orgNr">Org Nr</label>
             <input title="The Org nr" type="inputUserText" name="orgNr" value="{{.OrgNr}}" maxlength="64">
-            <label for="country">Country</label>
+            <label for="countryId">Country</label>
             <input title="The country ID" type="inputUserText" name="countryId" value="{{.CountryID}}" maxlength="64">
         </div>
         <div class="modifyUserSingleConfirm">
