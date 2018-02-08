@@ -1,0 +1,268 @@
+h1 {
+    background-color: orange;
+    margin: 0;
+}
+body {
+    /*background-image: url("/static/joker.jpg");
+    background-size: cover;*/
+    font-family: Arial;
+}
+/*form {
+   background-color:    grey
+}*/
+
+
+/**************Show Single User******************/
+
+.showUserSingleConfirm {
+    margin-top: auto;
+}
+input[type=inputUserText] {
+    display: block; /*Define block gives all buttons and text below each other */
+}
+/*********** Show All Users ***********/
+.showUsersMultipleContainer {
+    display: inline-block;
+    font-size: 12px;
+}
+.showUsersMultipleContainer table {
+    margin-top: 5px;
+}
+.showUsersMultipleContainer table td {
+    color: black;
+    background-color: white;
+    opacity: .9;
+    border: 1px;
+    border-style: solid;
+}
+.showUsersMultipleContainer table td a {
+    text-decoration: none;
+    color: black;
+}
+.showUsersMultipleContainer table td:hover {
+    background-color: greenyellow;
+}
+/***********MODIFY USER************/
+.modifyUserSelectionContainer {
+    display: inline-block;
+    width: 25%;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+.modifyUserSelectionContainer select  {
+    font-size: 12px;
+    border: 1px solid;
+    background-color:white;
+}
+.modifyUserSingleContainer label {
+    border: 1px solid;
+    background-color: lightgray;
+}
+.modifyUserSingleContainer .modifyUserSingleInputs {
+    margin-bottom: 10px;
+}
+.modifyUserSingleContainer .modifyUserSingleInputs input {
+    margin-bottom: 2px;
+}
+.modifyUserSelectionContainer input {
+    font-size: 15px;
+    border: 1px solid;
+    background-color:white;
+}
+.modifyUserSingleContainer{
+    margin: 5px;
+}
+.modifyUserSingleContainer .modifyUserSingleInputs {
+    display: table;
+}
+.modifyUserSingleContainer .modifyUserSingleInputs input {
+    font-size: 12px;
+    border: 1px solid;
+    background-color:white;
+}
+.modifyUserSingleContainer .modifyUserSingleConfirm {
+    background-color: lightgray;
+    
+}
+
+/*****************DELETE USER*****************/
+.deleteUserSelectionContainer {
+    display: inline-block;
+    width: 25%;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+.deleteUserSelectionContainer select  {
+    font-size: 20px;
+    border: 1px solid;
+    background-color:white;
+}
+.deleteUserSelectionContainer form input[type="submit"] {
+    display: inline-block;
+    border: 1px solid;
+    font-size: 12px;
+    background-color: white;
+}
+/*****************ADD USER********************/
+.addUserContainer input[type="text"] {
+    color: black;
+    font-style: initial;
+    border: 1px solid crimson;
+    font: outline;
+    border-color: black;
+    size: 50%;
+}
+.addUserContainer input {
+    display: inline-flex;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+.addUserContainer {
+    display: inline-block;
+    width: 25%;
+}
+
+
+/****The individual fields of the bill lines*/
+div.createBillLineContainer div.createBillLine div.billLines input[name*="billLineNR"] {
+    width: 30px;
+}
+div.createBillLineContainer div.createBillLine div.billLines input[name*="Description"] {
+    width: 200px;
+}
+div.createBillLineContainer div.createBillLine div.billLines input[name="billLineQuantity"] {
+    width: 40px;
+}
+div.createBillLineContainer div.createBillLine div.billLines input[name="billLineDiscountPercentage"] {
+    width: 30px;
+}
+div.createBillLineContainer div.createBillLine div.billLines input[name="billLineVatUsed"] {
+    width: 30px;
+}
+/********************The styling for the bill Lines**************************/
+.showBillLinesContainer {
+    display: block;
+    width: 90%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgrey;
+    border-radius: 5px;
+    margin-bottom: 10px;
+
+}
+.inplabCol5 {
+    display: block;
+}
+.inplabCol6 {
+    display: inline-block;
+    
+}
+.inplab2 {
+    display: inline-block;
+}
+.infoBox5 {
+    display: flex;
+}
+
+/****The show single bill info, used in the billLines window  */
+div.showBillSingleContainer {
+    display: inline-block;
+    width: 80%;
+}
+.inplabCol1 {
+    display: inline-block;
+}
+.inplabCol2 {
+display: inline-block;
+}
+div.showBillSingleContainer .infoBox3 {
+    display: flex;
+    align-content: center stretch;
+    font-size: 12px;
+    background-color: lightgray;
+}
+div.showBillSingleContainer .infoBox4{
+    font-size: 12px;
+}
+.inplab {
+    display: inline-block;
+}
+
+
+/****The show user part*/
+div.ShowUserSingleContainer div.UserSingleInputs {
+    display: inline-block;
+}
+div.ShowUserSingleContainer div.UserSingleInputs label[class="infoBox1"] {
+    min-width: 130px;
+    float: left;
+}
+div.ShowUserSingleContainer div.UserSingleInputs input{
+    background-color: lightgray;
+}
+
+
+/********************TOP MENU**************************/
+.topMenuContainer {
+    margin-bottom: 10px;
+}
+
+ul { /*styling the upp menu within this block, the ul items*/
+    color: white;
+    margin: 0px; /*zero border around element*/
+    padding: 0px; /*zero border inside element*/
+    list-style: none; /*Removed the bullets infront of the list name*/
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    z-index: 100;
+}
+ul li { /*styling the sub menus within this block, the li items*/
+    color: white;
+    float: left; /*Makes all the li elements aligned to the left*/
+    width: 70px;
+    height: 35px;
+    background-color: black;
+    opacity: .8;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    margin-right: 2px;
+    margin-bottom: 1px;
+    border-radius: 5px;
+    transition: all 0.3s linear;
+    transform-origin: 10 0;
+    transform: perspective(800px) rotateY(10deg);
+}
+ul li a {   /*styling the menu link within this block*/
+    z-index: 1;
+    text-decoration: none;  /*Removed underline and things like that under the links*/
+    color: white; /*if the color is not set here the links that are pressed will have a different color*/
+    display: block;
+}
+ul li a:hover {
+    background-color: green;
+    border-radius: 5px;
+    /*transition makes the color fade of the item*/
+    transition: all 0.3s linear;
+    /*rotate the item*/
+    -webkit-transform:rotate(-3deg);
+    -o-transform:rotate(-3deg);
+    -moz-transform:rotate(-3deg);
+    transform:rotate(-3deg);
+    /*scale*/
+    -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
+    -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+    box-shadow:10px 10px 7px rgba(0,0,0,.7);
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    position:relative;
+    z-index:5;
+}
+ul li ul li {
+    display: none;
+}
+ul li:hover ul li { /*When we hover the ul li then do something with that ul li*/
+    display: block;
+}
