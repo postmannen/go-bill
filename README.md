@@ -63,6 +63,7 @@
     Splitting up the big functions into smaller functions
     Fixed the sum fields in bill view, also writes the data to db
     Split the functions used in handlers into separate to easyer get an overview
+	
 
 ## TODO
 * Keep the number 0 in the deleted user row, incase the last user is deleted then a new used added will get that number
