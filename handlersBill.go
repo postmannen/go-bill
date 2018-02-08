@@ -141,6 +141,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//update the total sums in main bill, and write it to db
 	updateBillTotalExVat(&CurrentBill, d.CurrentBillID, storedBillLines)
 	updateBillTotalIncVat(&CurrentBill, storedBillLines)
 	data.UpdateBill(d.PDB, CurrentBill)
@@ -184,7 +185,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//compare the values of the bill struct from DB and the tmp struct from r.Form
 	//to decide if to update DB with new values from the form
-
 	changed := false
 	if CurrentBill.Comment != tmpBill.Comment {
 		changed = true
