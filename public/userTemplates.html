@@ -125,7 +125,7 @@
         <form>
             <table>    
                 <tr>
-                    <td>Nr</td><td>Name</td><td>LastName</td><td>Mail</td><td>Address</td><td>Postnr and place</td><td>Phone</td><td>Org nr</td><br>
+                    <td>Nr</td><td>Name</td><td>LastName</td><td>Mail</td><!--<td>Address</td><td>Postnr and place</td><td>Phone</td><td>Org nr</td>--><br>
                 </tr>
                 {{range .}}
                     <tr>
@@ -133,10 +133,10 @@
                         <td><a href="mp?users={{.Number}}">{{.FirstName}}</a></td>
                         <td><a href="mp?users={{.Number}}">{{.LastName}}</a></td>
                         <td><a href="mp?users={{.Number}}">{{.Mail}}</a></td>
-                        <td><a href="mp?users={{.Number}}">{{.Address}}</a></td>
+                        <!--<td><a href="mp?users={{.Number}}">{{.Address}}</a></td>
                         <td><a href="mp?users={{.Number}}">{{.PostNrAndPlace}}</a></td>
                         <td><a href="mp?users={{.Number}}">{{.PhoneNr}}</a></td>
-                        <td><a href="mp?users={{.Number}}">{{.OrgNr}}</a></td>
+                        <td><a href="mp?users={{.Number}}">{{.OrgNr}}</a></td>-->
                     </tr>
                 {{end}}
             </table>

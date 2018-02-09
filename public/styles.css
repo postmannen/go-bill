@@ -50,7 +50,8 @@ div.UserSingleInputs {
 }
 
 div.showBillInfoContainer {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto;
     border: solid black;
     background-color: lightgrey;
     border-width: 1px;
@@ -94,7 +95,7 @@ ul li { /*styling the top menus, the li items*/
     opacity: .8;
     line-height: 40px;
     text-align: center;
-    font-size: 20px;
+    font-size: 15px;
     margin-right: 5px;
     margin-bottom: 5px;
     border-radius: 5px;
