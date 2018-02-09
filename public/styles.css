@@ -1,7 +1,4 @@
-div.topMenuContainer {
-   
-}
-
+/*------------- Global --------------*/
 body {
     /*grid-template-columns: 50%;*/
 }
@@ -19,17 +16,20 @@ div.labelInput {
 div.labelInput label {display: block;}
 div.labelInput input {display: inline-block;}
 
-/*********** Show All Users ***********/
+input[type="submit"] {
+    border: solid lightgrey;
+    border-width: 1px;
+    border-radius: 3px;
+}
+
+/*----------- Show All Users ------------*/
 .showUsersMultipleContainer {
     display: inline-block;
-    font-size: 12px;
 }
 .showUsersMultipleContainer table {
     margin-top: 5px;
 }
 .showUsersMultipleContainer table td {
-    color: black;
-    background-color: white;
     opacity: .9;
     border: 1px;
     border-style: solid;
@@ -42,6 +42,7 @@ div.labelInput input {display: inline-block;}
 .showUsersMultipleContainer table td:hover {
     background-color: greenyellow;
 }
+/*--------- bill lines ------------*/
 
 div.UserSingleInputs {
     display: grid;
@@ -68,9 +69,6 @@ div.billLines {
     border-radius: 5px;
     margin-bottom: 5px;
 }
-
-
-
 
 /********************TOP MENU**************************/
 .topMenuContainer {
