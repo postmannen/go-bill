@@ -149,24 +149,39 @@
 <div class="container">
     <form>
         <div class="modifyUserSingleContainer">
-            <div class="modifyUserSingleInputs">
-                <!-- <input title="The customer nr" type="text" name="number" placeholder={{.Number}}> -->
-                <label for="firstname">Firstname</label>
-                <input title="The name" type="inputUserText" name="firstName" value="{{.FirstName}}" maxlength="64">
-                <label for="lastname">Lastname</label>
-                <input title="The lastname" type="inputUserText" name="lastName" value="{{.LastName}}" maxlength="64">
-                <label for="mail">Mail</label>
-                <input title="The mail address" type="inputUserText" name="mail" value="{{.Mail}}" maxlength="64">
-                <label for="address">Address</label>
-                <input title="The address" type="inputUserText" name="address" value="{{.Address}}" maxlength="64">
-                <label for="poAddr">PostNrAndPlace</label>
-                <input title="The Post nr and place" type="inputUserText" name="poAddr" value="{{.PostNrAndPlace}}" maxlength="64">
-                <label for="phone">Phone</label>
-                <input title="The phone number" type="inputUserText" name="phone" value="{{.PhoneNr}}" maxlength="64">
-                <label for="orgNr">Org Nr</label>
-                <input title="The Org nr" type="inputUserText" name="orgNr" value="{{.OrgNr}}" maxlength="64">
-                <label for="countryId">Country</label>
-                <input title="The country ID" type="inputUserText" name="countryId" value="{{.CountryID}}" maxlength="64">
+            <div class="userSingleInputs">
+                <div class="labelInput">
+                    <label for="Firstname">Firstname</label>
+                    <input title="The name" type="inputUserText" name="firstName" value="{{.FirstName}}" maxlength="64">
+                </div>
+                <div class="labelInput">
+                    <label for="Lastname">Lastname</label>
+                    <input title="The lastname" type="inputUserText" name="lastName" value="{{.LastName}}" maxlength="64">
+                </div>
+                <div class="labelInput">
+                    <label for="Mail">Mail</label>
+                    <input title="The mail address" type="inputUserText" name="mail" value="{{.Mail}}" maxlength="64">
+                </div>
+                <div class="labelInput">
+                    <label for="Address">Address</label>
+                    <input title="The address" type="inputUserText" name="address" value="{{.Address}}" maxlength="64">
+                </div>
+                <div class="labelInput">
+                    <label for="PostNrAndPlace">PostNrAndPlace</label>
+                    <input title="The Post nr and place" type="inputUserText" name="poAddr" value="{{.PostNrAndPlace}}" maxlength="64">
+                </div>
+                <div class="labelInput">
+                    <label for="Phone">Phone</label>
+                    <input title="The phone number" type="inputUserText" name="phone" value="{{.PhoneNr}}" maxlength="64">
+                </div>
+                <div class="labelInput">
+                    <label for="Org">Org Nr</label>
+                    <input title="The Org nr" type="inputUserText" name="orgNr" value="{{.OrgNr}}" maxlength="64">
+                </div>
+                <div class="labelInput">
+                    <label for="country">Country</label>
+                    <input title="The country ID" type="inputUserText" name="countryId" value="{{.CountryID}}" maxlength="64">
+                </div>
             </div>
             <div class="modifyUserSingleConfirm">
                 Mark to confirm changes before you press Apply
@@ -177,8 +192,6 @@
     </form>
 </div>
 {{end}}
-
-<!-- ******************* BILL PAGES *********************-->
 
 <!-- ******************* TOP MENU ***********************-->
 <!-- The link opened by the href below is controlled via the http.HandleFunc in main.go-->

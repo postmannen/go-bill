@@ -19,6 +19,30 @@ div.labelInput {
 div.labelInput label {display: block;}
 div.labelInput input {display: inline-block;}
 
+/*********** Show All Users ***********/
+.showUsersMultipleContainer {
+    display: inline-block;
+    font-size: 12px;
+}
+.showUsersMultipleContainer table {
+    margin-top: 5px;
+}
+.showUsersMultipleContainer table td {
+    color: black;
+    background-color: white;
+    opacity: .9;
+    border: 1px;
+    border-style: solid;
+    border-radius: 2px;
+}
+.showUsersMultipleContainer table td a {
+    text-decoration: none;
+    color: black;
+}
+.showUsersMultipleContainer table td:hover {
+    background-color: greenyellow;
+}
+
 div.UserSingleInputs {
     display: grid;
     grid-template-columns: auto auto;
