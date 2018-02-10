@@ -145,10 +145,10 @@
 </div>
 {{end}} 
 
-{{define "modifyUserSingle"}}
+{{define "modifyUser"}}
 <div class="container">
     <form>
-        <div class="modifyUserSingleContainer">
+        <div class="modifyUserContainer">
             <div class="userSingleInputs">
                 <div class="labelInput">
                     <label for="Firstname">Firstname</label>
@@ -183,7 +183,7 @@
                     <input title="The country ID" type="inputUserText" name="countryId" value="{{.CountryID}}" maxlength="64">
                 </div>
             </div>
-            <div class="modifyUserSingleConfirm">
+            <div class="modifyUserConfirm">
                 Mark to confirm changes before you press Apply
                 <input type="checkbox" name="sure" value="ok">
                 <input type="submit" name="Modify" value="Apply">

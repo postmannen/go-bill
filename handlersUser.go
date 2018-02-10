@@ -72,7 +72,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", p[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
 			d.IndexUser = i
-			err := tmpl["user.html"].ExecuteTemplate(w, "modifyUserSingle", p[i]) //bruk bare en spesifik slice av struct og send til html template
+			err := tmpl["user.html"].ExecuteTemplate(w, "modifyUser", p[i]) //bruk bare en spesifik slice av struct og send til html template
 			if err != nil {
 				log.Println(ip, "modifyUsersWeb: error = ", err)
 			}
