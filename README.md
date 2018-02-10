@@ -63,6 +63,7 @@
     Splitting up the big functions into smaller functions
     Fixed the sum fields in bill view, also writes the data to db
     Split the functions used in handlers into separate to easyer get an overview
+	Rewrote the css.
 	
 
 ## TODO
