@@ -42,7 +42,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		if d.Users[i].Number == d.ActiveUserID && d.Users[i].Number != 0 {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName, found = ", d.Users[i].FirstName, d.Users[i].LastName)
 			//Store the index nr in slice of the chosen user
-			d.indexNR = i
+			d.IndexUser = i
 			err := tmpl["bill.html"].ExecuteTemplate(w, "billShowUserSingle", d.Users[i])
 			if err != nil {
 				log.Println(ip, "modifyUsersWeb: error = ", err)

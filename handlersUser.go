@@ -71,7 +71,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 		if p[i].Number == num {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", p[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
-			d.indexNR = i
+			d.IndexUser = i
 			err := tmpl["user.html"].ExecuteTemplate(w, "modifyUserSingle", p[i]) //bruk bare en spesifik slice av struct og send til html template
 			if err != nil {
 				log.Println(ip, "modifyUsersWeb: error = ", err)
@@ -97,36 +97,36 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 		if checkBox[0] == "ok" {
 			fmt.Printf("modifyUsersWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
 			//Check what values that are changed
-			if u.FirstName != p[d.indexNR].FirstName && u.FirstName != "" {
-				p[d.indexNR].FirstName = u.FirstName
+			if u.FirstName != p[d.IndexUser].FirstName && u.FirstName != "" {
+				p[d.IndexUser].FirstName = u.FirstName
 				changed = true
 			}
-			if u.LastName != p[d.indexNR].LastName && u.LastName != "" {
-				p[d.indexNR].LastName = u.LastName
+			if u.LastName != p[d.IndexUser].LastName && u.LastName != "" {
+				p[d.IndexUser].LastName = u.LastName
 				changed = true
 			}
-			if u.Mail != p[d.indexNR].Mail && u.Mail != "" {
-				p[d.indexNR].Mail = u.Mail
+			if u.Mail != p[d.IndexUser].Mail && u.Mail != "" {
+				p[d.IndexUser].Mail = u.Mail
 				changed = true
 			}
-			if u.Address != p[d.indexNR].Address && u.Address != "" {
-				p[d.indexNR].Address = u.Address
+			if u.Address != p[d.IndexUser].Address && u.Address != "" {
+				p[d.IndexUser].Address = u.Address
 				changed = true
 			}
-			if u.PostNrAndPlace != p[d.indexNR].PostNrAndPlace && u.PostNrAndPlace != "" {
-				p[d.indexNR].PostNrAndPlace = u.PostNrAndPlace
+			if u.PostNrAndPlace != p[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
+				p[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
 				changed = true
 			}
-			if u.PhoneNr != p[d.indexNR].PhoneNr && u.PhoneNr != "" {
-				p[d.indexNR].PhoneNr = u.PhoneNr
+			if u.PhoneNr != p[d.IndexUser].PhoneNr && u.PhoneNr != "" {
+				p[d.IndexUser].PhoneNr = u.PhoneNr
 				changed = true
 			}
-			if u.OrgNr != p[d.indexNR].OrgNr && u.OrgNr != "" {
-				p[d.indexNR].OrgNr = u.OrgNr
+			if u.OrgNr != p[d.IndexUser].OrgNr && u.OrgNr != "" {
+				p[d.IndexUser].OrgNr = u.OrgNr
 				changed = true
 			}
-			if u.CountryID != p[d.indexNR].CountryID && u.CountryID != "" {
-				p[d.indexNR].CountryID = u.CountryID
+			if u.CountryID != p[d.IndexUser].CountryID && u.CountryID != "" {
+				p[d.IndexUser].CountryID = u.CountryID
 				changed = true
 			}
 		}
@@ -136,7 +136,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//if any of the values was changed....update information into database
 	if changed {
-		data.UpdateUser(d.PDB, p[d.indexNR])
+		data.UpdateUser(d.PDB, p[d.IndexUser])
 	}
 }
 
