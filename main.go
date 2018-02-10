@@ -11,13 +11,15 @@ import (
 
 //webData struct, used to feed data to the web templates
 type webData struct {
-	Users         []data.User
-	BLines        []data.BillLines
-	Bills         []data.Bill
-	ActiveUserID  int //to store the active user beeing worked on in the different web pages
-	CurrentBillID int //to store the active bill id beeing worked on in different web pages
-	PDB           *sql.DB
-	IndexUser     int //to store the index nr. in slice where the chosen user is stored
+	Users            []data.User
+	BLines           []data.BillLines
+	Bills            []data.Bill
+	ActiveUserID     int //to store the active user beeing worked on in the different web pages
+	CurrentBillID    int //to store the active bill id beeing worked on in different web pages
+	CurrentBill      data.Bill
+	CurrentBillLines data.BillLines
+	PDB              *sql.DB
+	IndexUser        int //to store the index nr. in slice where the chosen user is stored
 }
 
 var tmpl map[string]*template.Template //map to hold all templates

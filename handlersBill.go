@@ -146,7 +146,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	updateBillTotalIncVat(&CurrentBill, storedBillLines)
 	data.UpdateBill(d.PDB, CurrentBill)
 
-	err = tmpl["bill.html"].ExecuteTemplate(w, "showBills", CurrentBill)
+	err = tmpl["bill.html"].ExecuteTemplate(w, "showBillInfo", CurrentBill)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
 	}
