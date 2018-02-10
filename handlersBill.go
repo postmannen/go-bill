@@ -207,9 +207,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	if r.FormValue("billModifyButton") == "modify" {
 		if changed {
-			fmt.Printf("\n-----******------- Changed = %v\n\n", changed)
-			fmt.Printf("-*-Orig  bill lines = %v\n", CurrentBill)
-			fmt.Printf("-*- Tmp  bill lines = %v\n\n", tmpBill)
 			data.UpdateBill(d.PDB, CurrentBill)
 
 			//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
