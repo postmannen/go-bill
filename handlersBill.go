@@ -145,8 +145,10 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	updateBillTotalExVat(&CurrentBill, d.CurrentBillID, storedBillLines)
 	updateBillTotalIncVat(&CurrentBill, storedBillLines)
 	data.UpdateBill(d.PDB, CurrentBill)
+	//TESTING
+	d.CurrentBill = CurrentBill
 
-	err = tmpl["bill.html"].ExecuteTemplate(w, "showBillInfo", CurrentBill)
+	err = tmpl["bill.html"].ExecuteTemplate(w, "showBillInfo", d.CurrentBill)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
 	}
@@ -222,8 +224,9 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//store all the bill lines in bill_lines db, to get ex vat total written to db
 	data.UpdateBillLine(d.PDB, storedBillLines)
 
+	d.CurrentBillLines = storedBillLines
 	//create all the billLines on the screen
-	err = tmpl["bill.html"].ExecuteTemplate(w, "createBillLines", storedBillLines)
+	err = tmpl["bill.html"].ExecuteTemplate(w, "createBillLines", d.CurrentBillLines)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}

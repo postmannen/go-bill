@@ -17,7 +17,7 @@ type webData struct {
 	ActiveUserID     int //to store the active user beeing worked on in the different web pages
 	CurrentBillID    int //to store the active bill id beeing worked on in different web pages
 	CurrentBill      data.Bill
-	CurrentBillLines data.BillLines
+	CurrentBillLines []data.BillLines
 	PDB              *sql.DB
 	IndexUser        int //to store the index nr. in slice where the chosen user is stored
 }
