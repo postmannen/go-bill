@@ -42,51 +42,49 @@
 <div class="container">
     <form>
         <div class="createBillLineContainer">
-            
-                    {{range .}}
-                    <div class="billLineInputs{{.LineID}}">
-                        <div class="billLines">
-
-                                <div class="labelInput">
-                                    <!-- ###Hiding the billLine box with display:none ### -->
-                                    <label style="display: none" class="infoBox5" for="billLineID{{.LineID}}">Line ID</label>
-                                    <input style="display: none" type="text" title="LineID"name="billLineID{{.LineID}}" value="{{.LineID}}" maxlength="64">
-                                </div>
-                                <div class="labelTextArea" style="display: block;">
-                                    <div class="labelInput">
-                                        <label class="infoBox5" for="billLineDescription{{.LineID}}">Description</label>
-                                        <!--<input type="text" title="Description" name="billLineDescription{{.LineID}}" value="{{.Description}}" maxlength="512" style="width: 400px">-->
-                                        <textarea cols="40" rows="5" style="border: none;" name="billLineDescription{{.LineID}}" value="{{.Description}}" placeholder="{{.Description}}" maxlength="512">{{.Description}}</textarea>
-                                    </div>
-                                </div>
-                                <div class="labelInput">
-                                    <label class="infoBox5" for="billLineQuantity{{.LineID}}">Quantity</label>
-                                    <input type="text" title="Quantity" name="billLineQuantity{{.LineID}}" value="{{.Quantity}}" maxlength="64">
-                                </div>
-                                <div class="labelInput">
-                                    <label class="infoBox5" for="billLineDiscountPercentage{{.LineID}}">Discount</label>
-                                    <input type="text" title="Discount Percentage" name="billLineDiscountPercentage{{.LineID}}" value="{{.DiscountPercentage}}" maxlength="64">
-                                </div>
-                                <div class="labelInput">
-                                    <label class="infoBox5" for="billLineVatUsed{{.LineID}}">Vat</label>
-                                    <input type="text" title="Vat Used" name="billLineVatUsed{{.LineID}}" value="{{.VatUsed}}" maxlength="64">
-                                </div>
-                                <div class="labelInput">
-                                    <label class="infoBox5" for="billLinePriceExVat{{.LineID}}">Price Ex Vat</label>
-                                    <input type="text" title="Price Ex Vat" name="billLinePriceExVat{{.LineID}}" value="{{.PriceExVat}}" maxlength="64">
-                                </div>
-                                <div class="labelInput">
-                                    <label class="infoBox5" for="billLinePriceExVatTotal{{.LineID}}">Price Ex Vat Total</label>
-                                    <input type="text" title="Price Ex Vat" name="billLinePriceExVatTotal{{.LineID}}" value="{{.PriceExVatTotal}}" maxlength="64" readonly>
-                                </div>
+            {{range .}}
+                <div class="billLineInputs{{.LineID}}">
+                    <div class="billLines">
+                        <div class="labelInput">
+                            <!-- ###Hiding the billLine box with display:none ### -->
+                            <label style="display: none" class="infoBox5" for="billLineID{{.LineID}}">Line ID</label>
+                            <input style="display: none" type="text" title="LineID"name="billLineID{{.LineID}}" value="{{.LineID}}" maxlength="64">
                         </div>
+                        <div class="labelTextArea" style="display: block;">
+                            <div class="labelInput">
+                                <label class="infoBox5" for="billLineDescription{{.LineID}}">Description</label>
+                                <!--<input type="text" title="Description" name="billLineDescription{{.LineID}}" value="{{.Description}}" maxlength="512" style="width: 400px">-->
+                                <textarea cols="40" rows="5" style="border: none;" name="billLineDescription{{.LineID}}" value="{{.Description}}" placeholder="{{.Description}}" maxlength="512">{{.Description}}</textarea>
+                            </div>
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineQuantity{{.LineID}}">Quantity</label>
+                            <input type="text" title="Quantity" name="billLineQuantity{{.LineID}}" value="{{.Quantity}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineDiscountPercentage{{.LineID}}">Discount</label>
+                            <input type="text" title="Discount Percentage" name="billLineDiscountPercentage{{.LineID}}" value="{{.DiscountPercentage}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineVatUsed{{.LineID}}">Vat</label>
+                            <input type="text" title="Vat Used" name="billLineVatUsed{{.LineID}}" value="{{.VatUsed}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLinePriceExVat{{.LineID}}">Price Ex Vat</label>
+                            <input type="text" title="Price Ex Vat" name="billLinePriceExVat{{.LineID}}" value="{{.PriceExVat}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLinePriceExVatTotal{{.LineID}}">Price Ex Vat Total</label>
+                            <input type="text" title="Price Ex Vat" name="billLinePriceExVatTotal{{.LineID}}" value="{{.PriceExVatTotal}}" maxlength="64" readonly>
+                        </div>
+                    </div>
                     <div class="billLineButtons">
-                            <input type="submit" name="billLineModifyButton{{.LineID}}" value="modify">
-                            <input type="submit" name="billLineAddButton{{.LineID}}" value="add">
-                            <input type="submit" name="billLineDeleteButton{{.LineID}}" value="delete">
+                        <input type="submit" name="billLineModifyButton{{.LineID}}" value="modify">
+                        <input type="submit" name="billLineAddButton{{.LineID}}" value="add">
+                        <input type="submit" name="billLineDeleteButton{{.LineID}}" value="delete">
                     </div>
-                    </div>
-                {{end}}
+                </div>
+            {{end}}
         </div>
     </form>
 </div>
