@@ -43,6 +43,8 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName, found = ", d.Users[i].FirstName, d.Users[i].LastName)
 			//Store the index nr in slice of the chosen user
 			d.IndexUser = i
+			//store all the info of the current user in the struct for feeding variables to the templates
+			d.CurrentUser = d.Users[i]
 			err := tmpl["bill.html"].ExecuteTemplate(w, "billShowUser", d.Users[i])
 			if err != nil {
 				log.Println(ip, "modifyUsersWeb: error = ", err)
@@ -98,9 +100,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("INFO: webBillLines: Active user ID when call for bills = ", d.ActiveUserID)
 	BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
-	fmt.Println("INFO: webBillLines: BillsForUser = ", BillsForUser)
 
 	//Sort the bills so the last bill_id is first in the slice, and then shown on top of the listing
 	BillsForUser = sortBills(BillsForUser)

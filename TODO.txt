@@ -8,3 +8,5 @@
 
 //TODO: The inc vat and ex vat sums in the chosen bill view should be based on the billLine sum field,
 //      not based on the price * quantity - discount as it is now.
+
+//TODO: Look at removing d.IndexUser, since the same information can be found in d.CurrentUser.Number
