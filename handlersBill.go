@@ -223,7 +223,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	d.CurrentBillLines = storedBillLines
 	//create all the billLines on the screen
-	err = tmpl["bill.html"].ExecuteTemplate(w, "createBillLines", d.CurrentBillLines)
+	err = tmpl["bill.html"].ExecuteTemplate(w, "createBillLines", d)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}
