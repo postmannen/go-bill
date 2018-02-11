@@ -12,7 +12,6 @@ import (
 //webData struct, used to feed data to the web templates
 type webData struct {
 	Users            []data.User
-	CurrentBills     []data.Bill
 	ActiveUserID     int //to store the active user beeing worked on in the different web pages
 	CurrentBillID    int //to store the active bill id beeing worked on in different web pages
 	CurrentUser      data.User
