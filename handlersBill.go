@@ -45,7 +45,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 			d.IndexUser = i
 			//store all the info of the current user in the struct for feeding variables to the templates
 			d.CurrentUser = d.Users[i]
-			err := tmpl["bill.html"].ExecuteTemplate(w, "billShowUser", d.Users[i])
+			err := tmpl["bill.html"].ExecuteTemplate(w, "billShowUser", d)
 			if err != nil {
 				log.Println(ip, "modifyUsersWeb: error = ", err)
 			}
