@@ -298,3 +298,12 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+//printBill
+func (d *webData) printBill(w http.ResponseWriter, r *http.Request) {
+
+	err := tmpl["bill.html"].ExecuteTemplate(w, "printBill", d)
+	if err != nil {
+		log.Println("webBillLines: template execution error = ", err)
+	}
+}

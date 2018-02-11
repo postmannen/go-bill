@@ -46,6 +46,7 @@ func main() {
 	http.HandleFunc("/du", wData.deleteUserWeb)
 	http.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
 	http.HandleFunc("/editBill", wData.webBillLines)
+	http.HandleFunc("/printBill", wData.printBill)
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 	http.ListenAndServe(":7000", nil)
 
