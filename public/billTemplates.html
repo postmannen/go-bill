@@ -28,13 +28,12 @@
     </body>
 {{end}}
 
-{{define "billLinesComplete2"}}
+{{define "printBillComplete"}}
 <!DOCTYPE html>
     <body>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{template "head" .}}
-        {{template "topMenu"}}
-        {{template "editBillSelectBox" .}}
+        {{template "printBill" .}}
     </body>
 {{end}}
 
@@ -205,6 +204,9 @@
                 <input class="infoBox2" type="submit" name="billModifyButton" value="modify">
         </div>
     </form>
+    <form action="/printBill">
+            <input class="infoBox2" type="submit" name="billPrintView" value="print view">
+    </form>
 </div>
 {{end}}
 
@@ -250,5 +252,48 @@
 {{end}}
 
 {{define "printBill"}}
-
+<div class="container">
+        <form>
+            <div class="showBillInfoContainer">
+                <div class="labelInputCol1">
+                    <div class="labelInput">    
+                        <label class="infoBox1" for="BillID">Bill ID</label>
+                        <input class="infoBox2" type="text" name="BillID" value="{{.CurrentBill.BillID}}" readonly>
+                    </div>
+                    <div class="labelInput">
+                        <label class="infoBox1" for="UserID">User ID</label>
+                        <input class="infoBox2" type="text" name="UserID" value="{{.CurrentBill.UserID}}" readonly>
+                    </div>
+                    <div class="labelInput">
+                        <label class="infoBox1" for="CreatedDate">Created Date</label>
+                        <input class="infoBox2" type="date" name="CreatedDate" value="{{.CurrentBill.CreatedDate}}" maxlength="64" 
+                        required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
+                    </div>
+                    <div class="labelInput">
+                        <label class="infoBox1" for="DueDate">Due Date</label>
+                        <input class="infoBox2" type="date" name="DueDate" value="{{.CurrentBill.DueDate}}" maxlength="64" 
+                        required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
+                    </div>
+                </div>
+                <div class="labelInputCol2">
+                    <div class="labelInput">
+                        <label class="infoBox1" for="Comment">Comment</label>
+                        <input class="infoBox2" type="text" name="Comment" value="{{.CurrentBill.Comment}}" maxlength="512">
+                    </div>
+                    <div class="labelInput">
+                        <label class="infoBox1" for="TotalExVat">Total Ex Vat</label>
+                        <input class="infoBox2" type="text" name="TotalExVat" value="{{.CurrentBill.TotalExVat}}" readonly>
+                    </div>
+                    <div class="labelInput">
+                        <label class="infoBox1" for="TotalIncVat">Total Inc Vat</label>
+                        <input class="infoBox2" type="text" name="TotalIncVat" value="{{.CurrentBill.TotalIncVat}}" readonly>
+                    </div>
+                    <div class="labelInput">
+                        <label class="infoBox1" for="Paid">Paid</label>
+                        <input class="infoBox2" type="text" name="Paid" value="{{.CurrentBill.Paid}}" maxlength="64">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 {{end}}
