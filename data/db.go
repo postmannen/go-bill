@@ -35,14 +35,14 @@ func QuerySingleUserInfo(db *sql.DB, uid int) User {
 
 	var pid int
 	//variables to store the rows.Scan below
-	var firstname, lastname, mail, address, postnrandplace, phonenr, orgnr, countryID string
+	var firstname, lastname, mail, address, postnrandplace, phonenr, orgnr, countryID, bankAccount string
 	//Next prepares the next result row for reading with the Scan method. It returns true on success,
 	//or false if there is no next result row or an error happened while preparing it.
 	//Err should be consulted to distinguish between the two cases.
 	for rows.Next() {
 		//Scan copies the columns in the current row into the values pointed at by dest.
 		//The number of values in dest must be the same as the number of columns in Rows of database.
-		rows.Scan(&pid, &firstname, &lastname, &mail, &address, &postnrandplace, &phonenr, &orgnr, &countryID)
+		rows.Scan(&pid, &firstname, &lastname, &mail, &address, &postnrandplace, &phonenr, &orgnr, &countryID, &bankAccount)
 
 	}
 	m := User{}
@@ -55,6 +55,7 @@ func QuerySingleUserInfo(db *sql.DB, uid int) User {
 	m.PhoneNr = phonenr
 	m.OrgNr = orgnr
 	m.CountryID = countryID
+	m.BankAccount = bankAccount
 
 	defer rows.Close()
 	return m
@@ -97,13 +98,13 @@ func UpdateUser(db *sql.DB, u User) {
 	checkErr(err)
 
 	log.Println("The org nr. sendt to updateUserDB function = ", u.OrgNr)
-	stmt, err := tx.Prepare("UPDATE user SET user_id=?,first_name=?,last_name=?,mail=?,address=?,post_nr_place=?,phone_nr=?,org_nr=?,country_id=? WHERE user_id=?")
+	stmt, err := tx.Prepare("UPDATE user SET user_id=?,first_name=?,last_name=?,mail=?,address=?,post_nr_place=?,phone_nr=?,org_nr=?,country_id=?,bank_account=? WHERE user_id=?")
 	checkErr(err)
 	defer stmt.Close()
 	log.Println("updateUserInDB : Number in updateUserInDB function = ", u.Number)
-	log.Println("************", u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number, "*************")
+	log.Println("************", u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number, u.BankAccount, "*************")
 	//number is passed an extra time at the end of DB statement to fill the variable for the Query, which is done by number of user
-	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number)
+	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number, u.BankAccount)
 
 	tx.Commit()
 	checkErr(err)
@@ -117,13 +118,13 @@ func AddUser(db *sql.DB, u User) {
 	checkErr(err)
 
 	//create statement to insert values to DB
-	stmt, err := tx.Prepare("insert into user(user_id,first_name,last_name,mail,address,post_nr_place,phone_nr,org_nr,country_id) values(?,?,?,?,?,?,?,?,?)")
+	stmt, err := tx.Prepare("insert into user(user_id,first_name,last_name,mail,address,post_nr_place,phone_nr,org_nr,country_id,bank_account) values(?,?,?,?,?,?,?,?,?,?)")
 	checkErr(err)
 	//At the end of function close the DB
 	defer stmt.Close()
 
 	//execute the statement on the DB
-	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID)
+	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.BankAccount)
 	//commit to DB
 	tx.Commit()
 	checkErr(err)
@@ -444,13 +445,14 @@ func Create() *sql.DB {
 		post_nr_place string,
 		phone_nr string,
 		org_nr string,
-		country_id string);
-			INSERT INTO user VALUES(1,'Donald','Duck','donald@andeby.com','Ducksvei 1','1 Andeby',333,'333.333.333',0);
-			INSERT INTO user VALUES(2,'Dolly','Duck','dolly@andeby.com','Ducksvei 2','1 Andeby',222,'null',0);
-			INSERT INTO user VALUES(3,'Doffen','Duck','doffen@andeby.com','Ducksvei 1','1 Andeby',333,'null',0);
-			INSERT INTO user VALUES(4,'Skrue','McDuck','skrue@andeby.com','Pengebingen','1 Andeby',99999999,'999.999.999',0);
-			INSERT INTO user VALUES(5,'Mikke','Mus','mikke@andeby.com','1 Musveien','1 Andeby',1432,'null',0);
-			INSERT INTO user VALUES(7,'Kit','Walker','kit@fantomet.com','Hodeskallegrotten','De dype skoger','Apepost','null',0);
+		country_id string,
+		bank_account string);
+			INSERT INTO user VALUES(1,'Donald','Duck','donald@andeby.com','Ducksvei 1','1 Andeby',333,'333.333.333',0,'account nr');
+			INSERT INTO user VALUES(2,'Dolly','Duck','dolly@andeby.com','Ducksvei 2','1 Andeby',222,'null',0,'account nr');
+			INSERT INTO user VALUES(3,'Doffen','Duck','doffen@andeby.com','Ducksvei 1','1 Andeby',333,'null',0,'account nr');
+			INSERT INTO user VALUES(4,'Skrue','McDuck','skrue@andeby.com','Pengebingen','1 Andeby',99999999,'999.999.999',0,'account nr');
+			INSERT INTO user VALUES(5,'Mikke','Mus','mikke@andeby.com','1 Musveien','1 Andeby',1432,'null',0,'account nr');
+			INSERT INTO user VALUES(7,'Kit','Walker','kit@fantomet.com','Hodeskallegrotten','De dype skoger','Apepost','null',0,'account nr');
 		`)
 	checkErr(err)
 

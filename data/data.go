@@ -12,6 +12,7 @@ type User struct { //some
 	OrgNr          string
 	CountryID      string
 	Selected       string
+	BankAccount    string
 }
 
 //Bill struct specifications
