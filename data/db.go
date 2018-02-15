@@ -102,9 +102,9 @@ func UpdateUser(db *sql.DB, u User) {
 	checkErr(err)
 	defer stmt.Close()
 	log.Println("updateUserInDB : Number in updateUserInDB function = ", u.Number)
-	log.Println("************", u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number, u.BankAccount, "*************")
+	log.Println("--- updateUser: ", u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.BankAccount, u.Number, "*************")
 	//number is passed an extra time at the end of DB statement to fill the variable for the Query, which is done by number of user
-	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.Number, u.BankAccount)
+	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.BankAccount, u.Number)
 
 	tx.Commit()
 	checkErr(err)

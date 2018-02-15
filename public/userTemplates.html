@@ -78,6 +78,7 @@
             <input type="text" name="phone" placeholder="Telefon nr." maxlength="64">
             <input type="text" name="orgNr" placeholder="Organisasjons nr" maxlength="64">
             <input type="text" name="countryID" placeholder="Country ID" maxlength="64">
+            <input type="text" name="bankAccount" placeholder="Bank Account" maxlength="64">
             <input type="submit" name="button1" value="Add">
         </div>
     </form>
@@ -181,6 +182,10 @@
                 <div class="labelInput">
                     <label for="country">Country</label>
                     <input title="The country ID" type="inputUserText" name="countryId" value="{{.CountryID}}" maxlength="64">
+                </div>
+                <div class="labelInput">
+                    <label for="bankAccount">Bank Account</label>
+                    <input title="The bank account" type="inputUserText" name="bankAccount" value="{{.BankAccount}}" maxlength="64">
                 </div>
             </div>
             <div class="modifyUserConfirm">

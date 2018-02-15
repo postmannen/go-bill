@@ -24,6 +24,7 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("addUsersWeb: template execution error = ", err)
 	}
+	//*************TIL HIT****************
 
 	r.ParseForm()
 	u := data.User{}
@@ -35,6 +36,7 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	u.PhoneNr = r.FormValue("phone")
 	u.OrgNr = r.FormValue("orgNr")
 	u.CountryID = "0"
+	u.BankAccount = r.FormValue("bankAccount")
 
 	if u.FirstName != "" {
 		pid, _ := data.QueryForLastUID(d.PDB)
@@ -90,6 +92,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	u.PhoneNr = r.FormValue("phone")
 	u.OrgNr = r.FormValue("orgNr")
 	u.CountryID = r.FormValue("countryId")
+	u.BankAccount = r.FormValue("bankAccount")
 	checkBox := r.Form["sure"]
 	changed := false
 
@@ -127,6 +130,10 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 			}
 			if u.CountryID != p[d.IndexUser].CountryID && u.CountryID != "" {
 				p[d.IndexUser].CountryID = u.CountryID
+				changed = true
+			}
+			if u.BankAccount != p[d.IndexUser].BankAccount && u.BankAccount != "" {
+				p[d.IndexUser].BankAccount = u.BankAccount
 				changed = true
 			}
 		}
