@@ -24,6 +24,7 @@ type Bill struct {
 	Comment     string
 	TotalExVat  float64
 	TotalIncVat float64
+	TotalVat    float64
 	Paid        int
 }
 

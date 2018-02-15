@@ -306,7 +306,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 //printBill
 func (d *webData) printBill(w http.ResponseWriter, r *http.Request) {
 	d.CurrentAdmin = data.QuerySingleUserInfo(d.PDB, 0)
-
+	d.CurrentBill.TotalVat = d.CurrentBill.TotalIncVat - d.CurrentBill.TotalExVat
 	err := tmpl["bill.html"].ExecuteTemplate(w, "printBillComplete", d)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)

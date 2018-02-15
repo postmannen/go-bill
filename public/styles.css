@@ -8,6 +8,10 @@ div.container {
     margin-bottom: 5px;
 }
 
+label {
+    
+}
+
 div.labelInput {
     display: inline-block;
     width: fit-content;
@@ -68,12 +72,13 @@ div.showPrintBillInfoContainer {
 }
 
 div.infoContainerPrintBill { /*This is the part who contains to and from + payment info forms*/
+    height: auto;
     width: 100%;
     display: grid;
     grid-template-columns:auto auto auto;
+    background-color: lightgray;
 }
 div.userInfoContainer {
-    height: auto;
     display: grid;
     grid-template-columns: 1/3;
     width: 100%;
