@@ -42,6 +42,7 @@ func main() {
 	http.HandleFunc("/sp", wData.showUsersWeb)
 	http.HandleFunc("/ap", wData.addUsersWeb)
 	http.HandleFunc("/mp", wData.modifyUsersWeb)
+	http.HandleFunc("/modifyAdmin", wData.modifyAdminWeb)
 	http.HandleFunc("/", wData.mainPage)
 	http.HandleFunc("/du", wData.deleteUserWeb)
 	http.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)

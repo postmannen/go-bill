@@ -152,6 +152,98 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//The web handler for modifying a person
+func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
+	ip := r.RemoteAddr
+	adminID := 0
+	//query the userDB for all users and put the returning slice with result in p
+	p := data.QuerySingleUserInfo(d.PDB, adminID)
+
+	//Execute the web for modify users, range over p to make the select user drop down menu
+	err := tmpl["user.html"].ExecuteTemplate(w, "modifyUserCompletePage", p)
+	if err != nil {
+		fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
+	}
+
+	//Write out all the info of the selected user to the web
+
+	err = tmpl["user.html"].ExecuteTemplate(w, "modifyUser", p) //bruk bare en spesifik slice av struct og send til html template
+	if err != nil {
+		log.Println(ip, "modifyAdminWeb: error = ", err)
+	}
+
+	//create a variable based on user to hold the values parsed from the modify web
+	u := data.User{}
+	r.ParseForm()
+	u.FirstName = r.FormValue("firstName")
+	u.LastName = r.FormValue("lastName")
+	u.Mail = r.FormValue("mail")
+	u.Address = r.FormValue("address")
+	u.PostNrAndPlace = r.FormValue("poAddr")
+	u.PhoneNr = r.FormValue("phone")
+	u.OrgNr = r.FormValue("orgNr")
+	u.CountryID = r.FormValue("countryId")
+	u.BankAccount = r.FormValue("bankAccount")
+	checkBox := r.Form["sure"]
+	changed := false
+
+	if checkBox != nil {
+		if checkBox[0] == "ok" {
+			fmt.Printf("modifyAdminWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
+			//Check what values that are changed
+			if u.FirstName != p.FirstName && u.FirstName != "" {
+				p.FirstName = u.FirstName
+				changed = true
+			}
+			if u.LastName != p.LastName && u.LastName != "" {
+				p.LastName = u.LastName
+				changed = true
+			}
+			if u.Mail != p.Mail && u.Mail != "" {
+				p.Mail = u.Mail
+				changed = true
+			}
+			if u.Address != p.Address && u.Address != "" {
+				p.Address = u.Address
+				changed = true
+			}
+			if u.PostNrAndPlace != p.PostNrAndPlace && u.PostNrAndPlace != "" {
+				p.PostNrAndPlace = u.PostNrAndPlace
+				changed = true
+			}
+			if u.PhoneNr != p.PhoneNr && u.PhoneNr != "" {
+				p.PhoneNr = u.PhoneNr
+				changed = true
+			}
+			if u.OrgNr != p.OrgNr && u.OrgNr != "" {
+				p.OrgNr = u.OrgNr
+				changed = true
+			}
+			if u.CountryID != p.CountryID && u.CountryID != "" {
+				p.CountryID = u.CountryID
+				changed = true
+			}
+			if u.BankAccount != p.BankAccount && u.BankAccount != "" {
+				p.BankAccount = u.BankAccount
+				changed = true
+			}
+		}
+	} else {
+		log.Println(ip, "modifyUserAdmin: The value of checkbox was not set")
+	}
+
+	//if any of the values was changed....update information into database
+	if changed {
+		data.UpdateUser(d.PDB, p)
+
+		//Execute the redirect to modifyAdmin to refresh page
+		err := tmpl["user.html"].ExecuteTemplate(w, "redirectTomodifyAdmin", p)
+		if err != nil {
+			fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
+		}
+	}
+}
+
 //The web handler to show and print out all registered users in the database
 func (d *webData) showUsersWeb(w http.ResponseWriter, r *http.Request) {
 	p := data.QueryAllUserInfo(d.PDB)
