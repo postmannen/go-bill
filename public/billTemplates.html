@@ -298,13 +298,14 @@
 
     <form>
         <div class="userInfoContainer">
-            <input type="text" name="firstName" value="{{.CurrentUser.FirstName}}">
-            <input type="text" name="lastName" value="{{.CurrentUser.LastName}}">
-            <input type="text" name="address" value="{{.CurrentUser.Address}}">
-            <input type="text" name="poAddr" value="{{.CurrentUser.PostNrAndPlace}}">
-            <input type="text" name="phone" value="{{.CurrentUser.PhoneNr}}">
-            <input type="text" name="orgNr" value="{{.CurrentUser.OrgNr}}">
-            <input type="text" name="mail" value="{{.CurrentUser.Mail}}">
+            <input type="text" name="firstName" value="{{.CurrentUser.FirstName}}" readonly>
+            <input type="text" name="lastName" value="{{.CurrentUser.LastName}}" readonly>
+            <input type="text" name="address" value="{{.CurrentUser.Address}}" readonly>
+            <input type="text" name="poAddr" value="{{.CurrentUser.PostNrAndPlace}}" readonly>
+            <input type="text" name="phone" value="{{.CurrentUser.PhoneNr}}" readonly>
+            <input type="text" name="orgNr" value="{{.CurrentUser.OrgNr}}" readonly>
+            <input type="text" name="mail" value="{{.CurrentUser.Mail}}" readonly>
+            <input type="text" name="mail" value="Account:{{.CurrentUser.BankAccount}}" readonly>
         </div>
     </form>
 

@@ -65,7 +65,7 @@
     Split the functions used in handlers into separate to easyer get an overview
 	Rewrote the css.
 23. Added bill print page
-24. TODO: add own company info to db and bill pages
+24. Added Bank Account to DB, and changed all code to reflect the new table
 	
 
 ## TODO

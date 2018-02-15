@@ -24,7 +24,6 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("addUsersWeb: template execution error = ", err)
 	}
-	//*************TIL HIT****************
 
 	r.ParseForm()
 	u := data.User{}
@@ -57,6 +56,12 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//Execute the web for modify users, range over p to make the select user drop down menu
 	err := tmpl["user.html"].ExecuteTemplate(w, "modifyUserCompletePage", p)
+	if err != nil {
+		fmt.Fprint(w, "template execution error = ", err)
+	}
+
+	//Execute the modifyUserSelection drop down menu template
+	err = tmpl["user.html"].ExecuteTemplate(w, "modifyUserSelection", p)
 	if err != nil {
 		fmt.Fprint(w, "template execution error = ", err)
 	}
