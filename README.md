@@ -64,6 +64,8 @@
     Fixed the sum fields in bill view, also writes the data to db
     Split the functions used in handlers into separate to easyer get an overview
 	Rewrote the css.
+23. Added bill print page
+24. TODO: add own company info to db and bill pages
 	
 
 ## TODO
