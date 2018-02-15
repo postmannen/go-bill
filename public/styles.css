@@ -58,6 +58,16 @@ div.showBillInfoContainer {
     border-radius: 5px;
 }
 
+div.userInfoContainer {
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 30%;
+    border: solid black;
+    background-color: lightgrey;
+    border-width: 1px;
+    border-radius: 5px;
+}
+
 div.createBillLineContainer {
     display: grid;
     grid-template-columns: auto;

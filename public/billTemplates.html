@@ -262,7 +262,7 @@
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="UserID">User ID</label>
-                    <input class="infoBox2" type="text" name="UserID" value="{{.CurrentBill.UserID}}" readonly>
+                    <input class="infoBox2" type="text" name="UserID" value="{{.CurrentUser.Mail}}" readonly>
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="CreatedDate">Created Date</label>
@@ -293,6 +293,18 @@
                     <input class="infoBox2" type="text" name="Paid" value="{{.CurrentBill.Paid}}" maxlength="64">
                 </div>
             </div>
+        </div>
+    </form>
+
+    <form>
+        <div class="userInfoContainer">
+            <input type="text" name="firstName" value="{{.CurrentUser.FirstName}}">
+            <input type="text" name="lastName" value="{{.CurrentUser.LastName}}">
+            <input type="text" name="address" value="{{.CurrentUser.Address}}">
+            <input type="text" name="poAddr" value="{{.CurrentUser.PostNrAndPlace}}">
+            <input type="text" name="phone" value="{{.CurrentUser.PhoneNr}}">
+            <input type="text" name="orgNr" value="{{.CurrentUser.OrgNr}}">
+            <input type="text" name="mail" value="{{.CurrentUser.Mail}}">
         </div>
     </form>
 
