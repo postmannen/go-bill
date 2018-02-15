@@ -254,11 +254,11 @@
 {{define "printBill"}}
 <div class="container">
     <form>
-        <div class="showBillInfoContainer">
+        <div class="showPrintBillInfoContainer">
             <div class="labelInputCol1">
                 <div class="labelInput">    
-                    <label class="infoBox1" for="BillID">Bill ID</label>
-                    <input class="infoBox2" type="text" name="BillID" value="{{.CurrentBill.BillID}}" readonly>
+                    <label class="infoBox1" for="BillID" style="font-weight: bold;">Bill ID</label>
+                    <input class="infoBox2" type="text" name="BillID" value="{{.CurrentBill.BillID}}" readonly style="font-weight: bold;">
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="UserID">User ID</label>
@@ -270,9 +270,9 @@
                     required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
                 </div>
                 <div class="labelInput">
-                    <label class="infoBox1" for="DueDate">Due Date</label>
+                    <label class="infoBox1" for="DueDate" style="font-weight: bold;">Due Date</label>
                     <input class="infoBox2" type="date" name="DueDate" value="{{.CurrentBill.DueDate}}" maxlength="64" 
-                    required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
+                    required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD" style="font-weight: bold;">
                 </div>
             </div>
             <div class="labelInputCol2">
@@ -285,8 +285,8 @@
                     <input class="infoBox2" type="text" name="TotalExVat" value="{{.CurrentBill.TotalExVat}}" readonly>
                 </div>
                 <div class="labelInput">
-                    <label class="infoBox1" for="TotalIncVat">Total Inc Vat</label>
-                    <input class="infoBox2" type="text" name="TotalIncVat" value="{{.CurrentBill.TotalIncVat}}" readonly>
+                    <label class="infoBox1" for="TotalIncVat" style="font-weight: bold;">Total Inc Vat</label>
+                    <input class="infoBox2" type="text" name="TotalIncVat" value="{{.CurrentBill.TotalIncVat}}" readonly style="font-weight: bold;">
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="Paid">Paid</label>
@@ -296,18 +296,57 @@
         </div>
     </form>
 
-    <form>
-        <div class="userInfoContainer">
-            <input type="text" name="firstName" value="{{.CurrentUser.FirstName}}" readonly>
-            <input type="text" name="lastName" value="{{.CurrentUser.LastName}}" readonly>
-            <input type="text" name="address" value="{{.CurrentUser.Address}}" readonly>
-            <input type="text" name="poAddr" value="{{.CurrentUser.PostNrAndPlace}}" readonly>
-            <input type="text" name="phone" value="{{.CurrentUser.PhoneNr}}" readonly>
-            <input type="text" name="orgNr" value="{{.CurrentUser.OrgNr}}" readonly>
-            <input type="text" name="mail" value="{{.CurrentUser.Mail}}" readonly>
-            <input type="text" name="mail" value="Account:{{.CurrentUser.BankAccount}}" readonly>
-        </div>
-    </form>
+    <div class="infoContainerPrintBill">
+        <form>
+            <div class="userInfoContainer">
+                <label for="">To :</label>
+                <input type="text" name="firstName" value="{{.CurrentUser.FirstName}}" readonly>
+                <input type="text" name="lastName" value="{{.CurrentUser.LastName}}" readonly>
+                <input type="text" name="address" value="{{.CurrentUser.Address}}" readonly>
+                <input type="text" name="poAddr" value="{{.CurrentUser.PostNrAndPlace}}" readonly>
+                <input type="text" name="phone" value="{{.CurrentUser.PhoneNr}}" readonly>
+                <input type="text" name="orgNr" value="{{.CurrentUser.OrgNr}}" readonly>
+                <input type="text" name="mail" value="{{.CurrentUser.Mail}}" readonly>
+                <input type="text" name="bankAccount" value="Account:{{.CurrentUser.BankAccount}}" readonly>
+            </div>
+        </form>
+
+        <form>
+            <div class="adminInfoContainer">
+                <label for="">From :</label>
+                <input type="text" name="firstName" value="{{.CurrentAdmin.FirstName}}" readonly>
+                <input type="text" name="lastName" value="{{.CurrentAdmin.LastName}}" readonly>
+                <input type="text" name="address" value="{{.CurrentAdmin.Address}}" readonly>
+                <input type="text" name="poAddr" value="{{.CurrentAdmin.PostNrAndPlace}}" readonly>
+                <input type="text" name="phone" value="{{.CurrentAdmin.PhoneNr}}" readonly>
+                <input type="text" name="orgNr" value="{{.CurrentAdmin.OrgNr}}" readonly>
+                <input type="text" name="mail" value="{{.CurrentAdmin.Mail}}" readonly>
+                <input type="text" name="bankAccount" value="Account:{{.CurrentAdmin.BankAccount}}" readonly style="font-weight: bold;">
+            </div>
+        </form>
+
+        <form>
+            <div class="paymentInfoContainer">
+                    <label for="">Payment Info :</label>
+                <div class="labelInput">
+                    <label class="infoBox1" for="bankAccount">Bank Account:</label>
+                    <input type="text" name="bankAccount" value="Account:{{.CurrentAdmin.BankAccount}}" readonly style="font-weight: bold;">
+                </div>
+                <div class="labelInput">
+                    <label class="infoBox1" for="TotalIncVat">Total:</label>
+                    <input class="infoBox2" type="text" name="TotalIncVat" value="{{.CurrentBill.TotalIncVat}}" readonly style="font-weight: bold;">
+                </div>
+                <div class="labelInput">
+                        <label class="infoBox1" for="DueDate">Due Date:</label>
+                    <input class="infoBox2" type="date" name="DueDate" value="{{.CurrentBill.DueDate}}" maxlength="64" style="font-weight: bold;">
+                </div>
+                <div class="labelInput">
+                        <label class="infoBox1" for="BillID">Bill ID:</label>
+                    <input class="infoBox2" type="text" name="BillID" value="{{.CurrentBill.BillID}}" readonly style="font-weight: bold;">
+                </div>
+            </div>
+        </form>
+    </div>
 
     <form>
         <div class="createBillLineContainer">

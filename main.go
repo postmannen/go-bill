@@ -14,6 +14,7 @@ type webData struct {
 	Users            []data.User
 	ActiveUserID     int //to store the active user beeing worked on in the different web pages
 	CurrentBillID    int //to store the active bill id beeing worked on in different web pages
+	CurrentAdmin     data.User
 	CurrentUser      data.User
 	CurrentBill      data.Bill
 	CurrentBillLines []data.BillLines
