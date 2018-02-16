@@ -101,7 +101,7 @@ div.adminInfoContainer input {
 }
 div.paymentInfoContainer {
     display: grid;
-    grid-template-columns: 3/3;
+    grid-template-columns: auto;
     width: 100%;
     border: solid black;
     background-color: lightgrey;
