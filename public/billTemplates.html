@@ -330,7 +330,7 @@
                 <label>Payment Info :</label>
                 <div class="labelInput">
                         <!--<label class="infoBox1" for="BillID">Bill ID:</label>-->
-                    <label>Bill nr: {{.CurrentBill.BillID}}</label>
+                    <label>Bill/KID: {{.CurrentBill.BillID}}</label>
                 </div>
                 <div class="labelInput">
                     <!--<label class="infoBox1" for="bankAccount">Bank Account:</label>-->
@@ -393,6 +393,16 @@
                     </div>
                 </div>
             {{end}}
+        </div>
+    </form>
+
+    <form>
+        <div class="paymentInfoContainerBottom">
+                <label>Bill/KID: {{.CurrentBill.BillID}}</label>
+                <label>Bank Account: {{.CurrentAdmin.BankAccount}}</label>
+                <label>Sum: {{.CurrentBill.TotalIncVat}}</label>
+                <label>Vat: {{.CurrentBill.TotalVat}}</label>
+                <label>Pay day: {{.CurrentBill.DueDate}}</label>
         </div>
     </form>
 

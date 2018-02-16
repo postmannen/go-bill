@@ -108,6 +108,12 @@ div.paymentInfoContainer {
     border-width: 1px;
     border-radius: 5px;
 }
+div.paymentInfoContainerBottom {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    border-top: 3px solid;
+    border-bottom: 3px solid;
+}
 
 div.createBillLineContainer {
     display: grid;
