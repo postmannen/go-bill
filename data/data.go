@@ -15,6 +15,14 @@ type User struct { //some
 	BankAccount    string
 }
 
+type ape struct {
+	navn string
+}
+
+type hest struct {
+	ape
+}
+
 //Bill struct specifications
 type Bill struct {
 	BillID      int
