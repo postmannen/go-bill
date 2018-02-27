@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/jung-kurt/gofpdf"
-	"github.com/postmannen/fakt/data"
+	"github.com/postmannen/go-bill/data"
 )
 
 //separateStrNumForButton , takes *http.Request as input, and returns string and int

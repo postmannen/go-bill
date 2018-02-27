@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/postmannen/fakt/data"
+	"github.com/postmannen/go-bill/data"
 )
 
 //The web handler to the user selection in create bills

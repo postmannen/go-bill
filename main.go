@@ -2,11 +2,14 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
+	"os/exec"
+	"runtime"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/postmannen/fakt/data"
+	"github.com/postmannen/go-bill/data"
 )
 
 //webData struct, used to feed data to the web templates
@@ -38,6 +41,8 @@ func main() {
 	wData.PDB = data.Create()
 	defer wData.PDB.Close()
 
+	openBrowser()
+
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
 	//and pointer to Request function as second parameter
 	http.HandleFunc("/sp", wData.showUsersWeb)
@@ -52,4 +57,16 @@ func main() {
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 	http.ListenAndServe(":7000", nil)
 
+}
+
+func openBrowser() {
+	fmt.Println(runtime.GOOS)
+
+	switch runtime.GOOS {
+	case "darwin":
+		fmt.Println("The OS which is chosen is MacOs")
+		cmd := exec.Command("open", "http://localhost:7000")
+		cmd.Run()
+
+	}
 }

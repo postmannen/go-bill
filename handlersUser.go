@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/postmannen/fakt/data"
+	"github.com/postmannen/go-bill/data"
 )
 
 //The default handler for the / main page
