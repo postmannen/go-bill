@@ -97,18 +97,24 @@ func UpdateUser(db *sql.DB, u User) {
 	tx, err := db.Begin()
 	checkErr(err)
 
+	log.Println("Entering the UpdateUser function")
 	log.Println("The org nr. sendt to updateUserDB function = ", u.OrgNr)
 	stmt, err := tx.Prepare("UPDATE user SET user_id=?,first_name=?,last_name=?,mail=?,address=?,post_nr_place=?,phone_nr=?,org_nr=?,country_id=?,bank_account=? WHERE user_id=?")
 	checkErr(err)
 	defer stmt.Close()
 	log.Println("updateUserInDB : Number in updateUserInDB function = ", u.Number)
 	log.Println("--- updateUser: ", u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.BankAccount, u.Number, "*************")
+
 	//number is passed an extra time at the end of DB statement to fill the variable for the Query, which is done by number of user
 	_, err = stmt.Exec(u.Number, u.FirstName, u.LastName, u.Mail, u.Address, u.PostNrAndPlace, u.PhoneNr, u.OrgNr, u.CountryID, u.BankAccount, u.Number)
+	if err != nil {
+		log.Println("Error: data db.go: UpdateUser stmt.Exec: ", err)
+	}
 
-	tx.Commit()
-	checkErr(err)
-
+	err = tx.Commit()
+	if err != nil {
+		log.Println("Error: data db.go: UpdateUser tx.Commit: ", err)
+	}
 }
 
 //AddUser , Adds user to Database. takes pointer to DB, and type User struct as input
@@ -447,6 +453,7 @@ func Create() *sql.DB {
 		org_nr string,
 		country_id string,
 		bank_account string);
+			INSERT INTO user VALUES(0,'First Name','Last Name','mail@localhost','Some Road 1','1234 Some City',333,'333.333.333',0,'account nr');
 			INSERT INTO user VALUES(1,'Donald','Duck','donald@andeby.com','Ducksvei 1','1 Andeby',333,'333.333.333',0,'account nr');
 			INSERT INTO user VALUES(2,'Dolly','Duck','dolly@andeby.com','Ducksvei 2','1 Andeby',222,'null',0,'account nr');
 			INSERT INTO user VALUES(3,'Doffen','Duck','doffen@andeby.com','Ducksvei 1','1 Andeby',333,'null',0,'account nr');

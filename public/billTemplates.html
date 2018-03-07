@@ -338,11 +338,11 @@
                 </div>
                 <div class="labelInput">
                     <!--<label class="infoBox1" for="TotalIncVat">Total:</label>-->
-                    <label>Sum: {{.CurrentBill.TotalIncVat}}</label>
+                    <label>Sum: {{.CurrentBill.TotalIncVat}} {{.Currency}}</label>
                 </div>
                 <div class="labelInput">
                         <!--<label class="infoBox1" for="TotalVat">TotalVat:</label>-->
-                    <label>Vat: {{.CurrentBill.TotalVat}}</label>
+                    <label>Vat: {{.CurrentBill.TotalVat}} {{.Currency}}</label>
                 </div>
                 <div class="labelInput">
                         <!--<label class="infoBox1" for="DueDate">Due Date:</label>-->
@@ -400,8 +400,8 @@
         <div class="paymentInfoContainerBottom">
                 <label>Bill/KID: {{.CurrentBill.BillID}}</label>
                 <label>Bank Account: {{.CurrentAdmin.BankAccount}}</label>
-                <label>Sum: {{.CurrentBill.TotalIncVat}}</label>
-                <label>Vat: {{.CurrentBill.TotalVat}}</label>
+                <label>Sum: {{.CurrentBill.TotalIncVat}} {{.Currency}}</label>
+                <label>Vat: {{.CurrentBill.TotalVat}} {{.Currency}}</label>
                 <label>Pay day: {{.CurrentBill.DueDate}}</label>
         </div>
     </form>

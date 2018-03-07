@@ -22,7 +22,8 @@ type webData struct {
 	CurrentBill      data.Bill
 	CurrentBillLines []data.BillLines
 	PDB              *sql.DB
-	IndexUser        int //to store the index nr. in slice where the chosen user is stored
+	IndexUser        int    //to store the index nr. in slice where the chosen user is stored
+	Currency         string //TODO: Make this linked to chosen language for admin user
 }
 
 var tmpl map[string]*template.Template //map to hold all templates
@@ -40,6 +41,7 @@ func main() {
 	wData := webData{}
 	wData.PDB = data.Create()
 	defer wData.PDB.Close()
+	wData.Currency = "$"
 
 	openBrowser()
 

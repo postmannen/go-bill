@@ -175,6 +175,8 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	//create a variable based on user to hold the values parsed from the modify web
 	u := data.User{}
 	r.ParseForm()
+	fmt.Println("------------------------------------------------------------")
+	fmt.Println("---Form Content", r.Form)
 	u.FirstName = r.FormValue("firstName")
 	u.LastName = r.FormValue("lastName")
 	u.Mail = r.FormValue("mail")
