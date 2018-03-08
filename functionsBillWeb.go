@@ -7,7 +7,6 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/jung-kurt/gofpdf"
 	"github.com/postmannen/go-bill/data"
 )
 
@@ -244,15 +243,4 @@ func updateLineExVatTotal(b []data.BillLines) {
 		sum = sum - (sum / 100 * float64(b[i].DiscountPercentage))
 		b[i].PriceExVatTotal = sum
 	}
-}
-
-func makePDF() {
-	pdf := gofpdf.New("P", "mm", "A4", "")
-	pdf.AddPage()
-	pdf.SetFont("Arial", "", 10)
-	pdf.Cell(40, 10, "Hello, world")
-	pdf.Cell(70, 20, "test")
-	err := pdf.OutputFileAndClose("hello.pdf")
-	fmt.Println("ERROR : ", err)
-
 }
