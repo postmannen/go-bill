@@ -43,7 +43,7 @@ func main() {
 	defer wData.PDB.Close()
 	wData.Currency = "$"
 
-	openBrowser()
+	//openBrowser()
 
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
 	//and pointer to Request function as second parameter
@@ -55,6 +55,7 @@ func main() {
 	http.HandleFunc("/du", wData.deleteUserWeb)
 	http.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
 	http.HandleFunc("/editBill", wData.webBillLines)
+	http.HandleFunc("/eBill", wData.editBill)
 	http.HandleFunc("/printBill", wData.printBill)
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 	http.ListenAndServe(":7000", nil)
