@@ -2,11 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"net/http"
-	"os/exec"
-	"runtime"
+
+	"github.com/gorilla/mux"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/postmannen/go-bill/data"
@@ -26,6 +25,18 @@ type webData struct {
 	Currency         string //TODO: Make this linked to chosen language for admin user
 }
 
+type server struct {
+	addr   string
+	router *mux.Router
+}
+
+func newServer() *server {
+	return &server{
+		addr:   ":8080",
+		router: mux.NewRouter(),
+	}
+}
+
 var tmpl map[string]*template.Template //map to hold all templates
 
 func init() {
@@ -36,6 +47,7 @@ func init() {
 }
 
 func main() {
+	s := newServer()
 
 	//create DB and store pointer in pDB
 	wData := webData{}
@@ -47,29 +59,17 @@ func main() {
 
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
 	//and pointer to Request function as second parameter
-	http.HandleFunc("/sp", wData.showUsersWeb)
-	http.HandleFunc("/ap", wData.addUsersWeb)
-	http.HandleFunc("/mp", wData.modifyUsersWeb)
-	http.HandleFunc("/modifyAdmin", wData.modifyAdminWeb)
-	http.HandleFunc("/", wData.mainPage)
-	http.HandleFunc("/du", wData.deleteUserWeb)
-	http.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
-	http.HandleFunc("/editBill", wData.webBillLines)
-	http.HandleFunc("/eBill", wData.editBill)
-	http.HandleFunc("/printBill", wData.printBill)
-	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
-	http.ListenAndServe(":7000", nil)
+	s.router.HandleFunc("/sp", wData.showUsersWeb)
+	s.router.HandleFunc("/ap", wData.addUsersWeb)
+	s.router.HandleFunc("/mp", wData.modifyUsersWeb)
+	s.router.HandleFunc("/modifyAdmin", wData.modifyAdminWeb)
+	s.router.HandleFunc("/", wData.mainPage)
+	s.router.HandleFunc("/du", wData.deleteUserWeb)
+	s.router.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
+	s.router.HandleFunc("/editBill", wData.webBillLines)
+	s.router.HandleFunc("/eBill", wData.editBill)
+	s.router.HandleFunc("/printBill", wData.printBill)
+	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+	http.ListenAndServe(s.addr, s.router)
 
-}
-
-func openBrowser() {
-	fmt.Println(runtime.GOOS)
-
-	switch runtime.GOOS {
-	case "darwin":
-		fmt.Println("The OS which is chosen is MacOs")
-		cmd := exec.Command("open", "http://localhost:7000")
-		cmd.Run()
-
-	}
 }
