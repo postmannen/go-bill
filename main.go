@@ -28,6 +28,7 @@ type webData struct {
 type server struct {
 	addr   string
 	router *mux.Router
+	data   webData
 }
 
 func newServer() *server {
@@ -50,25 +51,25 @@ func main() {
 	s := newServer()
 
 	//create DB and store pointer in pDB
-	wData := webData{}
-	wData.PDB = data.Create()
-	defer wData.PDB.Close()
-	wData.Currency = "$"
+	//wData := webData{}
+	s.data.PDB = data.Create()
+	defer s.data.PDB.Close()
+	s.data.Currency = "$"
 
 	//openBrowser()
 
 	//HandleFunc takes a handle (ResponseWriter) as first parameter,
 	//and pointer to Request function as second parameter
-	s.router.HandleFunc("/sp", wData.showUsersWeb)
-	s.router.HandleFunc("/ap", wData.addUsersWeb)
-	s.router.HandleFunc("/mp", wData.modifyUsersWeb)
-	s.router.HandleFunc("/modifyAdmin", wData.modifyAdminWeb)
-	s.router.HandleFunc("/", wData.mainPage)
-	s.router.HandleFunc("/du", wData.deleteUserWeb)
-	s.router.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
-	s.router.HandleFunc("/editBill", wData.webBillLines)
-	s.router.HandleFunc("/eBill", wData.editBill)
-	s.router.HandleFunc("/printBill", wData.printBill)
+	s.router.HandleFunc("/sp", s.data.showUsersWeb)
+	s.router.HandleFunc("/ap", s.data.addUsersWeb)
+	s.router.HandleFunc("/mp", s.data.modifyUsersWeb)
+	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdminWeb)
+	s.router.HandleFunc("/", s.data.mainPage)
+	s.router.HandleFunc("/du", s.data.deleteUserWeb)
+	s.router.HandleFunc("/createBillSelectUser", s.data.webBillSelectUser)
+	s.router.HandleFunc("/editBill", s.data.webBillLines)
+	s.router.HandleFunc("/eBill", s.data.editBill)
+	s.router.HandleFunc("/printBill", s.data.printBill)
 	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 	http.ListenAndServe(s.addr, s.router)
 
