@@ -25,6 +25,10 @@ type webData struct {
 	Currency         string //TODO: Make this linked to chosen language for admin user
 }
 
+func newWebData() *webData {
+
+}
+
 type server struct {
 	addr   string
 	router *mux.Router
@@ -36,6 +40,20 @@ func newServer() *server {
 		addr:   ":8080",
 		router: mux.NewRouter(),
 	}
+}
+
+func (s *server) routes() {
+	s.router.HandleFunc("/sp", s.data.showUsersWeb)
+	s.router.HandleFunc("/ap", s.data.addUsersWeb)
+	s.router.HandleFunc("/mp", s.data.modifyUsersWeb)
+	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdminWeb)
+	s.router.HandleFunc("/", s.data.mainPage)
+	s.router.HandleFunc("/du", s.data.deleteUserWeb)
+	s.router.HandleFunc("/createBillSelectUser", s.data.webBillSelectUser)
+	s.router.HandleFunc("/editBill", s.data.webBillLines)
+	s.router.HandleFunc("/eBill", s.data.editBill)
+	s.router.HandleFunc("/printBill", s.data.printBill)
+	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 }
 
 var tmpl map[string]*template.Template //map to hold all templates
@@ -50,27 +68,14 @@ func init() {
 func main() {
 	s := newServer()
 
-	//create DB and store pointer in pDB
-	//wData := webData{}
+	//initialize db, and create if not exist
 	s.data.PDB = data.Create()
 	defer s.data.PDB.Close()
+
+	//should be changed based on language
 	s.data.Currency = "$"
 
-	//openBrowser()
-
-	//HandleFunc takes a handle (ResponseWriter) as first parameter,
-	//and pointer to Request function as second parameter
-	s.router.HandleFunc("/sp", s.data.showUsersWeb)
-	s.router.HandleFunc("/ap", s.data.addUsersWeb)
-	s.router.HandleFunc("/mp", s.data.modifyUsersWeb)
-	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdminWeb)
-	s.router.HandleFunc("/", s.data.mainPage)
-	s.router.HandleFunc("/du", s.data.deleteUserWeb)
-	s.router.HandleFunc("/createBillSelectUser", s.data.webBillSelectUser)
-	s.router.HandleFunc("/editBill", s.data.webBillLines)
-	s.router.HandleFunc("/eBill", s.data.editBill)
-	s.router.HandleFunc("/printBill", s.data.printBill)
-	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+	s.routes()
 	http.ListenAndServe(s.addr, s.router)
 
 }
