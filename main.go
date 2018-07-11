@@ -43,12 +43,12 @@ func newServer() *server {
 }
 
 func (s *server) routes() {
-	s.router.HandleFunc("/sp", s.data.showUsersWeb)
-	s.router.HandleFunc("/ap", s.data.addUsersWeb)
-	s.router.HandleFunc("/mp", s.data.modifyUsersWeb)
-	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdminWeb)
-	s.router.HandleFunc("/", s.data.mainPage)
-	s.router.HandleFunc("/du", s.data.deleteUserWeb)
+	s.router.HandleFunc("/sp", s.data.showUsersWeb())
+	s.router.HandleFunc("/ap", s.data.addUsersWeb())
+	s.router.HandleFunc("/mp", s.data.modifyUsersWeb())
+	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdminWeb())
+	s.router.HandleFunc("/", s.data.mainPage())
+	s.router.HandleFunc("/du", s.data.deleteUserWeb())
 	s.router.HandleFunc("/createBillSelectUser", s.data.webBillSelectUser)
 	s.router.HandleFunc("/editBill", s.data.webBillLines)
 	s.router.HandleFunc("/eBill", s.data.editBill)
