@@ -26,13 +26,13 @@ type webData struct {
 }
 
 func newWebData() *webData {
-
+	return &webData{}
 }
 
 type server struct {
-	addr   string
-	router *mux.Router
-	data   webData
+	addr   string      //the adress and port to listen on
+	router *mux.Router //use gorilla mux for our router
+	data   webData     //put all the user data into the server struct
 }
 
 func newServer() *server {
