@@ -49,10 +49,10 @@ func (s *server) routes() {
 	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdminWeb())
 	s.router.HandleFunc("/", s.data.mainPage())
 	s.router.HandleFunc("/du", s.data.deleteUserWeb())
-	s.router.HandleFunc("/createBillSelectUser", s.data.webBillSelectUser)
-	s.router.HandleFunc("/editBill", s.data.webBillLines)
-	s.router.HandleFunc("/eBill", s.data.editBill)
-	s.router.HandleFunc("/printBill", s.data.printBill)
+	s.router.HandleFunc("/createBillSelectUser", s.data.webBillSelectUser())
+	s.router.HandleFunc("/editBill", s.data.webBillLines())
+	s.router.HandleFunc("/eBill", s.data.editBill()) //is this one of any use ???
+	s.router.HandleFunc("/printBill", s.data.printBill())
 	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 }
 

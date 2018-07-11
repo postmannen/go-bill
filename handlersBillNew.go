@@ -1,16 +1,21 @@
 package main
 
 import (
-	"log"
 	"net/http"
+	"sync"
 	"text/template"
 )
 
-func (d *webData) editBill(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("public/bill.html")
-	if err != nil {
-		log.Println("error: template.ParseFiles: ", err)
+//is this one of any use ???
+func (d *webData) editBill() http.HandlerFunc {
+	var init sync.Once
+	var tpl *template.Template
+	init.Do(func() {
+		tpl = template.Must(template.ParseFiles("public/billTemplates.html"))
+	})
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		tpl.Execute(w, d)
 	}
-	t.Execute(w, d)
 
 }
