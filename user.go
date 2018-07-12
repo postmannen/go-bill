@@ -8,6 +8,8 @@ import (
 	"sync"
 	"text/template"
 
+	"github.com/gorilla/schema"
+
 	"github.com/postmannen/go-bill/data"
 )
 
@@ -42,17 +44,24 @@ func (d *webData) addUsersWeb() http.HandlerFunc {
 			log.Println("addUsersWeb: template execution error = ", err)
 		}
 
-		r.ParseForm()
-		u := data.User{}
-		u.FirstName = r.FormValue("firstName")
-		u.LastName = r.FormValue("lastName")
-		u.Mail = r.FormValue("mail")
-		u.Address = r.FormValue("address")
-		u.PostNrAndPlace = r.FormValue("poAddr")
-		u.PhoneNr = r.FormValue("phone")
-		u.OrgNr = r.FormValue("orgNr")
-		u.CountryID = "0"
-		u.BankAccount = r.FormValue("bankAccount")
+		//temp variable for holding the parsed user values from the r.Form
+		var u data.User
+		var formDecoder = schema.NewDecoder()
+
+		err = r.ParseForm()
+		if err != nil {
+			log.Printf("error: parseform : %v \n", err)
+		}
+
+		fmt.Println("-------r.Form----------", r.Form)
+
+		//use gorilla schema to parse the values of the form, and put them into
+		//a temp variable 'u'
+		err = formDecoder.Decode(&u, r.Form)
+		if err != nil {
+			log.Printf("error: formDecoder : %v \n", err)
+		}
+		fmt.Println(u)
 
 		if u.FirstName != "" {
 			pid, _ := data.QueryForLastUID(d.PDB)
