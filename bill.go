@@ -38,7 +38,6 @@ func (d *webData) webBillSelectUser() http.HandlerFunc {
 		//'if' sentence to keep the chosen user ID. Reason is that it resets to 0 when the page is redrawn after "choose" is pushed
 		//put the value in chooseUserButton which is a global variable
 		if r.FormValue("chooseUserButton") == "choose" {
-			//Get the value (numberPart) of the chosen user from form dropdown menu <select name="users">
 			d.ActiveUserID, _ = strconv.Atoi(r.FormValue("users"))
 			//reset data.CurrentBillID so a new user dont inherit the last bill used for another user.
 			d.CurrentBillID = 0
@@ -49,7 +48,7 @@ func (d *webData) webBillSelectUser() http.HandlerFunc {
 		//Iterate the slice of struct for all the users found in db to find the data for the user selected
 		for i := range d.Users {
 			if d.Users[i].Number == d.ActiveUserID && d.Users[i].Number != 0 {
-				log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName, found = ", d.Users[i].FirstName, d.Users[i].LastName)
+				log.Println(ip, "modifyUsersWeb: user p[i].FirstName, p[i].LastName, found = ", d.Users[i].FirstName, d.Users[i].LastName)
 				//Store the index nr in slice of the chosen user
 				d.IndexUser = i
 				//store all the info of the current user in the struct for feeding variables to the templates
@@ -62,19 +61,17 @@ func (d *webData) webBillSelectUser() http.HandlerFunc {
 		}
 
 		//Get the last used bill_id from DB
-		highestBillNR, totalLineCount := data.QueryLastBillID(d.PDB)
-		log.Println(ip, "billCreateWeb: highestBillNR = ", highestBillNR, ", and totaltLineCount = ", totalLineCount)
+		highestBillID, totalLineCount := data.QueryLastBillID(d.PDB)
+		log.Println(ip, "billCreateWeb: highestBillID = ", highestBillID, ", and totaltLineCount = ", totalLineCount)
 
 		//Check which of the two input buttons where pushed. They both have name=userActionButton,
 		//and the value can be read with r.FormValue("userActionButton")
 		r.ParseForm()
-		log.Println("r.Form shows = ", r.Form)
 		buttonAction := r.FormValue("userActionButton")
-		log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
 
 		//if the manage bills button were pushed
 		if buttonAction == "manage bills" {
-			err = tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
+			err = tpl.ExecuteTemplate(w, "redirectToEditBill", nil)
 			if err != nil {
 				log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 			}
@@ -84,11 +81,11 @@ func (d *webData) webBillSelectUser() http.HandlerFunc {
 			fmt.Println(buttonAction, "pressed")
 
 			//get the last used bill id
-			highestBillNR, totalLineCount := data.QueryLastBillID(d.PDB)
-			log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", totaltLineCount = ", totalLineCount)
+			highestBillID, totalLineCount := data.QueryLastBillID(d.PDB)
+			log.Println("billCreateWeb: highestBillID = ", highestBillID, ", totaltLineCount = ", totalLineCount)
 
 			newBill := data.Bill{}
-			newBill.BillID = highestBillNR + 1
+			newBill.BillID = highestBillID + 1
 			newBill.UserID = d.ActiveUserID
 			t := time.Now()
 			//										   yyyy-mm-dd
@@ -96,15 +93,6 @@ func (d *webData) webBillSelectUser() http.HandlerFunc {
 			//create a new bill and return the new billID to use later
 			d.CurrentBillID = data.AddBill(d.PDB, newBill)
 			log.Println("billCreateWeb: newBillID = ", d.CurrentBillID)
-
-			/*	Add a default nr. 1 bill line on new bills have been moved to billLines handler
-				billLine := data.BillLines{}
-				billLine.BillID = d.CurrentBillID
-				billLine.LineID = 1
-				billLine.Description = "noe tekst"
-
-				data.AddBillLine(d.PDB, billLine)
-			*/
 		}
 	}
 }
