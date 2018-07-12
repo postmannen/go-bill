@@ -53,8 +53,6 @@ func (d *webData) addUsersWeb() http.HandlerFunc {
 			log.Printf("error: parseform : %v \n", err)
 		}
 
-		fmt.Println("-------r.Form----------", r.Form)
-
 		//use gorilla schema to parse the values of the form, and put them into
 		//a temp variable 'u'
 		err = formDecoder.Decode(&u, r.Form)
@@ -100,7 +98,6 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 			fmt.Fprint(w, "template execution error = ", err)
 		}
 
-		//Parse all the variables in the html form to get all the data
 		r.ParseForm()
 		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 		num, _ := strconv.Atoi(r.FormValue("users"))
@@ -113,7 +110,7 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 				log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", p[i].FirstName, p[i].LastName)
 				//Store the index nr in slice of the chosen user
 				d.IndexUser = i
-				err := tmpl["user.html"].ExecuteTemplate(w, "modifyUser", p[i]) //bruk bare en spesifik slice av struct og send til html template
+				err := tmpl["user.html"].ExecuteTemplate(w, "modifyUser", p[i])
 				if err != nil {
 					log.Println(ip, "modifyUsersWeb: error = ", err)
 				}
@@ -122,17 +119,23 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 		}
 
 		//create a variable based on user to hold the values parsed from the modify web
-		u := data.User{}
-		r.ParseForm()
-		u.FirstName = r.FormValue("firstName")
-		u.LastName = r.FormValue("lastName")
-		u.Mail = r.FormValue("mail")
-		u.Address = r.FormValue("address")
-		u.PostNrAndPlace = r.FormValue("poAddr")
-		u.PhoneNr = r.FormValue("phone")
-		u.OrgNr = r.FormValue("orgNr")
-		u.CountryID = r.FormValue("countryId")
-		u.BankAccount = r.FormValue("bankAccount")
+		//temp variable for holding the parsed user values from the r.Form
+		var u data.User
+		var formDecoder = schema.NewDecoder()
+
+		err = r.ParseForm()
+		if err != nil {
+			log.Printf("error: parseform : %v \n", err)
+		}
+
+		//use gorilla schema to parse the values of the form, and put them into
+		//a temp variable 'u'
+		err = formDecoder.Decode(&u, r.Form)
+		if err != nil {
+			log.Printf("error: formDecoder : %v \n", err)
+		}
+		fmt.Println(u)
+
 		checkBox := r.Form["sure"]
 		changed := false
 
