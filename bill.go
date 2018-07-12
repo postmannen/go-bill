@@ -118,8 +118,6 @@ func (d *webData) webBillLines() http.HandlerFunc {
 		}
 
 		r.ParseForm()
-		fmt.Println("r.Form = ", r.Form)
-
 		if r.FormValue("userActionButton") == "choose bill" {
 			d.CurrentBillID, _ = strconv.Atoi(r.FormValue("billID"))
 		}
@@ -135,11 +133,11 @@ func (d *webData) webBillLines() http.HandlerFunc {
 				LineID: 1,
 			}
 			data.AddBillLine(d.PDB, billLine)
-			//rerun gathering av bill line data for selected bill to get new data
+			//rerun gathering of bill line data for selected bill to get new data
 			storedBillLines = data.QueryBillLines(d.PDB, d.CurrentBillID)
 		}
 
-		//Find all the data on the current bill id
+		//Gather all the data of the current bill id
 		var CurrentBill data.Bill
 		for i, v := range UserBills {
 			if v.BillID == d.CurrentBillID {
@@ -167,7 +165,7 @@ func (d *webData) webBillLines() http.HandlerFunc {
 		for k, v := range r.Form {
 			reNumOnly := regexp.MustCompile("^[0-9]+$")
 
-			//convert the string read from the r.Form into v to v1 of int which is used in struct
+			//convert the string read from the r.Form string to int which is used in struct
 			var v1 int
 			//check if the string only contains numbers
 			if reNumOnly.Match([]byte(v[0])) {
@@ -223,10 +221,6 @@ func (d *webData) webBillLines() http.HandlerFunc {
 			}
 		}
 
-		//if r.FormValue("billPrintView") == "print view" {
-		//	err = tmpl["bill.html"].ExecuteTemplate(w,)
-		//}
-
 		updateLineExVatTotal(storedBillLines)
 		//store all the bill lines in bill_lines db, to get ex vat total written to db
 		data.UpdateBillLine(d.PDB, storedBillLines)
@@ -251,10 +245,11 @@ func (d *webData) webBillLines() http.HandlerFunc {
 			billLine := data.BillLines{}
 			billLine.BillID = d.CurrentBillID
 			fmt.Println("#######billid some benyttes er =", d.CurrentBillID)
+			//TODO : fix this one below with an auto increment number
 			//create a random numberPart for the bill line....for now....
 			rand.Seed(time.Now().UnixNano())
 			billLine.LineID = rand.Intn(10000)
-			billLine.Description = "noe tekst"
+			billLine.Description = "Enter the description here"
 			data.AddBillLine(d.PDB, billLine)
 			//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
 			err = tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
