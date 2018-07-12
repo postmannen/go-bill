@@ -105,13 +105,14 @@ func (d *webData) webBillLines() http.HandlerFunc {
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
+		//exported/capitalized since its passed with the execution of the template below
+		UserBills := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
 
 		//Sort the bills so the last bill_id is first in the slice, and then shown on top of the listing
-		BillsForUser = sortBills(BillsForUser)
+		UserBills = sortBills(UserBills)
 
 		//draw the bill select box in the window
-		err := tpl.ExecuteTemplate(w, "billSelectBox", BillsForUser)
+		err := tpl.ExecuteTemplate(w, "billSelectBox", UserBills)
 		if err != nil {
 			log.Println("webBillLines: template execution error = ", err)
 		}
@@ -140,9 +141,9 @@ func (d *webData) webBillLines() http.HandlerFunc {
 
 		//Find all the data on the current bill id
 		var CurrentBill data.Bill
-		for i, v := range BillsForUser {
+		for i, v := range UserBills {
 			if v.BillID == d.CurrentBillID {
-				CurrentBill = BillsForUser[i]
+				CurrentBill = UserBills[i]
 			}
 		}
 
