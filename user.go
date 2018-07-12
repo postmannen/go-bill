@@ -134,55 +134,54 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 		if err != nil {
 			log.Printf("error: formDecoder : %v \n", err)
 		}
-		fmt.Println(u)
 
-		checkBox := r.Form["sure"]
+		//checkBox := r.Form["sure"]
 		changed := false
 
-		if checkBox != nil {
-			if checkBox[0] == "ok" {
-				fmt.Printf("modifyUsersWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
-				//Check what values that are changed
-				if u.FirstName != p[d.IndexUser].FirstName && u.FirstName != "" {
-					p[d.IndexUser].FirstName = u.FirstName
-					changed = true
-				}
-				if u.LastName != p[d.IndexUser].LastName && u.LastName != "" {
-					p[d.IndexUser].LastName = u.LastName
-					changed = true
-				}
-				if u.Mail != p[d.IndexUser].Mail && u.Mail != "" {
-					p[d.IndexUser].Mail = u.Mail
-					changed = true
-				}
-				if u.Address != p[d.IndexUser].Address && u.Address != "" {
-					p[d.IndexUser].Address = u.Address
-					changed = true
-				}
-				if u.PostNrAndPlace != p[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
-					p[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
-					changed = true
-				}
-				if u.PhoneNr != p[d.IndexUser].PhoneNr && u.PhoneNr != "" {
-					p[d.IndexUser].PhoneNr = u.PhoneNr
-					changed = true
-				}
-				if u.OrgNr != p[d.IndexUser].OrgNr && u.OrgNr != "" {
-					p[d.IndexUser].OrgNr = u.OrgNr
-					changed = true
-				}
-				if u.CountryID != p[d.IndexUser].CountryID && u.CountryID != "" {
-					p[d.IndexUser].CountryID = u.CountryID
-					changed = true
-				}
-				if u.BankAccount != p[d.IndexUser].BankAccount && u.BankAccount != "" {
-					p[d.IndexUser].BankAccount = u.BankAccount
-					changed = true
-				}
-			}
-		} else {
-			log.Println(ip, "modifyUsersWeb: The value of checkbox was not set")
+		//if checkBox != nil {
+		//if checkBox[0] == "ok" {
+		//fmt.Printf("modifyUsersWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
+		//Check what values that are changed
+		if u.FirstName != p[d.IndexUser].FirstName && u.FirstName != "" {
+			p[d.IndexUser].FirstName = u.FirstName
+			changed = true
 		}
+		if u.LastName != p[d.IndexUser].LastName && u.LastName != "" {
+			p[d.IndexUser].LastName = u.LastName
+			changed = true
+		}
+		if u.Mail != p[d.IndexUser].Mail && u.Mail != "" {
+			p[d.IndexUser].Mail = u.Mail
+			changed = true
+		}
+		if u.Address != p[d.IndexUser].Address && u.Address != "" {
+			p[d.IndexUser].Address = u.Address
+			changed = true
+		}
+		if u.PostNrAndPlace != p[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
+			p[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
+			changed = true
+		}
+		if u.PhoneNr != p[d.IndexUser].PhoneNr && u.PhoneNr != "" {
+			p[d.IndexUser].PhoneNr = u.PhoneNr
+			changed = true
+		}
+		if u.OrgNr != p[d.IndexUser].OrgNr && u.OrgNr != "" {
+			p[d.IndexUser].OrgNr = u.OrgNr
+			changed = true
+		}
+		if u.CountryID != p[d.IndexUser].CountryID && u.CountryID != "" {
+			p[d.IndexUser].CountryID = u.CountryID
+			changed = true
+		}
+		if u.BankAccount != p[d.IndexUser].BankAccount && u.BankAccount != "" {
+			p[d.IndexUser].BankAccount = u.BankAccount
+			changed = true
+		}
+		//}
+		//} else {
+		//	log.Println(ip, "modifyUsersWeb: The value of checkbox was not set")
+		//}
 
 		//if any of the values was changed....update information into database
 		if changed {
