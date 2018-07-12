@@ -378,7 +378,8 @@ func sortBills(bills []data.Bill) []data.Bill {
 	return bills
 }
 
-//Finds all the numbers used in html names in form
+//All the names of the html elements are postfixed with a unique number.
+//findBillLineNumbersInForm finds all the numbers used in html names in form
 //used to get all the unique bill lines
 func findBillLineNumbersInForm(r *http.Request) (numbers []int) {
 	for k, v := range r.Form {
@@ -439,10 +440,13 @@ func checkIfBillLineChanged(lineNRs []int, storedLines []data.BillLines, formLin
 	return changed
 }
 
-//getBillLineFormValues parses all the data in the form, compares them with the current billID, and returns
+//getBillLineFormValues parses all the data in the form,
+//compares them with the current billID, and returns
 //a slice with all the values entered in the form.
-//all fields and buttons in the form have name values postfixed with the {{.LineID}}, so this function
-//separates the first part of the name and the {{.LineID}} to know what fields to update
+//all fields and buttons in the form have name values
+//postfixed with the {{.LineID}}, so this function
+//separates the first part of the name and the {{.LineID}}
+//to know what fields to update.
 func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (formBillLines []data.BillLines) {
 	var tempLines data.BillLines
 
@@ -454,9 +458,12 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 			//split out the letter and number part of button name
 			reLetters := regexp.MustCompile("[a-zA-Z]+")
 			reNum := regexp.MustCompile("[0-9]+")
-			letterPart := reLetters.FindString(k)    //get name "billLineModifyButton"
-			numberStr := reNum.FindString(k)         //get the line nr.that the button belonged to. Nr is postfixed in the name
-			numberPart, _ := strconv.Atoi(numberStr) //convert the nr got`en from form to int, so it can be used later
+			//get name "billLineModifyButton"
+			letterPart := reLetters.FindString(k)
+			//get the line nr.that the button belonged to. Nr is postfixed in the name
+			numberStr := reNum.FindString(k)
+			//convert the nr got`en from form to int, so it can be used later
+			numberPart, _ := strconv.Atoi(numberStr)
 
 			if num == numberPart {
 				tempLines.BillID = billID
@@ -521,13 +528,6 @@ func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLine
 		v.PriceExVat -= v.PriceExVat / 100 * float64(v.DiscountPercentage)
 		bill.TotalExVat += v.PriceExVat
 	}
-
-	/* NOTE : Removing db db write, will put in a write for all fields when all data is processed
-	//add the TotalExVat to db here
-	if bill.TotalExVat != 0 {
-		data.UpdateBillPriceExVat(pDB, bill.TotalExVat, bill.BillID)
-	}
-	*/
 }
 
 //updateBillTotalIncVat updates the bill field total price ex vat,
