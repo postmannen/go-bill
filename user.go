@@ -135,13 +135,9 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 			log.Printf("error: formDecoder : %v \n", err)
 		}
 
-		//checkBox := r.Form["sure"]
 		changed := false
 
-		//if checkBox != nil {
-		//if checkBox[0] == "ok" {
-		//fmt.Printf("modifyUsersWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
-		//Check what values that are changed
+		//check if the values in the form where changed by comparing them to the original ones
 		if u.FirstName != p[d.IndexUser].FirstName && u.FirstName != "" {
 			p[d.IndexUser].FirstName = u.FirstName
 			changed = true
@@ -178,10 +174,6 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 			p[d.IndexUser].BankAccount = u.BankAccount
 			changed = true
 		}
-		//}
-		//} else {
-		//	log.Println(ip, "modifyUsersWeb: The value of checkbox was not set")
-		//}
 
 		//if any of the values was changed....update information into database
 		if changed {
@@ -190,7 +182,7 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 	}
 }
 
-//The web handler for modifying a person
+//The web handler for modifying the admin user
 func (d *webData) modifyAdminWeb() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template //template
@@ -218,65 +210,59 @@ func (d *webData) modifyAdminWeb() http.HandlerFunc {
 		}
 
 		//create a variable based on user to hold the values parsed from the modify web
-		u := data.User{}
-		r.ParseForm()
-		fmt.Println("------------------------------------------------------------")
-		fmt.Println("---Form Content", r.Form)
-		u.FirstName = r.FormValue("firstName")
-		u.LastName = r.FormValue("lastName")
-		u.Mail = r.FormValue("mail")
-		u.Address = r.FormValue("address")
-		u.PostNrAndPlace = r.FormValue("poAddr")
-		u.PhoneNr = r.FormValue("phone")
-		u.OrgNr = r.FormValue("orgNr")
-		u.CountryID = r.FormValue("countryId")
-		u.BankAccount = r.FormValue("bankAccount")
-		checkBox := r.Form["sure"]
-		changed := false
+		//temp variable for holding the parsed user values from the r.Form
+		var u data.User
+		var formDecoder = schema.NewDecoder()
 
-		if checkBox != nil {
-			if checkBox[0] == "ok" {
-				fmt.Printf("modifyAdminWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
-				//Check what values that are changed
-				if u.FirstName != p.FirstName && u.FirstName != "" {
-					p.FirstName = u.FirstName
-					changed = true
-				}
-				if u.LastName != p.LastName && u.LastName != "" {
-					p.LastName = u.LastName
-					changed = true
-				}
-				if u.Mail != p.Mail && u.Mail != "" {
-					p.Mail = u.Mail
-					changed = true
-				}
-				if u.Address != p.Address && u.Address != "" {
-					p.Address = u.Address
-					changed = true
-				}
-				if u.PostNrAndPlace != p.PostNrAndPlace && u.PostNrAndPlace != "" {
-					p.PostNrAndPlace = u.PostNrAndPlace
-					changed = true
-				}
-				if u.PhoneNr != p.PhoneNr && u.PhoneNr != "" {
-					p.PhoneNr = u.PhoneNr
-					changed = true
-				}
-				if u.OrgNr != p.OrgNr && u.OrgNr != "" {
-					p.OrgNr = u.OrgNr
-					changed = true
-				}
-				if u.CountryID != p.CountryID && u.CountryID != "" {
-					p.CountryID = u.CountryID
-					changed = true
-				}
-				if u.BankAccount != p.BankAccount && u.BankAccount != "" {
-					p.BankAccount = u.BankAccount
-					changed = true
-				}
-			}
-		} else {
-			log.Println(ip, "modifyUserAdmin: The value of checkbox was not set")
+		err = r.ParseForm()
+		if err != nil {
+			log.Printf("error: parseform : %v \n", err)
+		}
+
+		//use gorilla schema to parse the values of the form, and put them into
+		//a temp variable 'u'
+		err = formDecoder.Decode(&u, r.Form)
+		if err != nil {
+			log.Printf("error: formDecoder : %v \n", err)
+		}
+
+		//check if any of the values of the form is changed compared to the original values
+		changed := false
+		if u.FirstName != p.FirstName && u.FirstName != "" {
+			p.FirstName = u.FirstName
+			changed = true
+		}
+		if u.LastName != p.LastName && u.LastName != "" {
+			p.LastName = u.LastName
+			changed = true
+		}
+		if u.Mail != p.Mail && u.Mail != "" {
+			p.Mail = u.Mail
+			changed = true
+		}
+		if u.Address != p.Address && u.Address != "" {
+			p.Address = u.Address
+			changed = true
+		}
+		if u.PostNrAndPlace != p.PostNrAndPlace && u.PostNrAndPlace != "" {
+			p.PostNrAndPlace = u.PostNrAndPlace
+			changed = true
+		}
+		if u.PhoneNr != p.PhoneNr && u.PhoneNr != "" {
+			p.PhoneNr = u.PhoneNr
+			changed = true
+		}
+		if u.OrgNr != p.OrgNr && u.OrgNr != "" {
+			p.OrgNr = u.OrgNr
+			changed = true
+		}
+		if u.CountryID != p.CountryID && u.CountryID != "" {
+			p.CountryID = u.CountryID
+			changed = true
+		}
+		if u.BankAccount != p.BankAccount && u.BankAccount != "" {
+			p.BankAccount = u.BankAccount
+			changed = true
 		}
 
 		//if any of the values was changed....update information into database
