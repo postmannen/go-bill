@@ -110,7 +110,7 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 				log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", p[i].FirstName, p[i].LastName)
 				//Store the index nr in slice of the chosen user
 				d.IndexUser = i
-				err := tmpl["user.html"].ExecuteTemplate(w, "modifyUser", p[i])
+				err := tpl.ExecuteTemplate(w, "modifyUser", p[i])
 				if err != nil {
 					log.Println(ip, "modifyUsersWeb: error = ", err)
 				}
@@ -270,7 +270,7 @@ func (d *webData) modifyAdminWeb() http.HandlerFunc {
 			data.UpdateUser(d.PDB, p)
 
 			//Execute the redirect to modifyAdmin to refresh page
-			err := tmpl["user.html"].ExecuteTemplate(w, "redirectTomodifyAdmin", p)
+			err := tpl.ExecuteTemplate(w, "redirectTomodifyAdmin", p)
 			if err != nil {
 				fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
 			}

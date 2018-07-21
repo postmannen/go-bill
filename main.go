@@ -57,13 +57,6 @@ func (s *server) routes() {
 
 var tmpl map[string]*template.Template //map to hold all templates
 
-func init() {
-	//initate the templates
-	tmpl = make(map[string]*template.Template)
-	tmpl["user.html"] = template.Must(template.ParseFiles("public/userTemplates.html"))
-	tmpl["bill.html"] = template.Must(template.ParseFiles("public/billTemplates.html"))
-}
-
 func main() {
 	s := newServer()
 
