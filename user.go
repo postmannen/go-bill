@@ -84,12 +84,17 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+		if err != nil {
+			log.Printf("error: parseform : %v \n", err)
+		}
+
 		ip := r.RemoteAddr
 		//query the userDB for all users and put the returning slice with result in p
 		p := data.QueryAllUserInfo(d.PDB)
 
 		//Execute the web for modify users, range over p to make the select user drop down menu
-		err := tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
+		err = tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
 		if err != nil {
 			fmt.Fprint(w, "template execution error = ", err)
 		}
@@ -100,7 +105,6 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 			fmt.Fprint(w, "template execution error = ", err)
 		}
 
-		r.ParseForm()
 		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 		num, _ := strconv.Atoi(r.FormValue("users"))
 
@@ -123,12 +127,6 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 		//create a variable based on user to hold the values parsed from the modify web
 		//temp variable for holding the parsed user values from the r.Form
 		var u data.User
-		var formDecoder = schema.NewDecoder()
-
-		err = r.ParseForm()
-		if err != nil {
-			log.Printf("error: parseform : %v \n", err)
-		}
 
 		//use gorilla schema to parse the values of the form, and put them into
 		//a temp variable 'u'
@@ -193,13 +191,18 @@ func (d *webData) modifyAdminWeb() http.HandlerFunc {
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+		if err != nil {
+			log.Printf("error: parseform : %v \n", err)
+		}
+
 		ip := r.RemoteAddr
 		adminID := 0
 		//query the userDB for all users and put the returning slice with result in p
 		p := data.QuerySingleUserInfo(d.PDB, adminID)
 
 		//Execute the web for modify users, range over p to make the select user drop down menu
-		err := tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
+		err = tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
 		if err != nil {
 			fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
 		}
@@ -215,11 +218,6 @@ func (d *webData) modifyAdminWeb() http.HandlerFunc {
 		//temp variable for holding the parsed user values from the r.Form
 		var u data.User
 		var formDecoder = schema.NewDecoder()
-
-		err = r.ParseForm()
-		if err != nil {
-			log.Printf("error: parseform : %v \n", err)
-		}
 
 		//use gorilla schema to parse the values of the form, and put them into
 		//a temp variable 'u'
@@ -307,14 +305,16 @@ func (d *webData) deleteUserWeb() http.HandlerFunc {
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+		if err != nil {
+			log.Printf("error: Parseform :", err)
+		}
 		p := data.QueryAllUserInfo(d.PDB)
-		err := tpl.ExecuteTemplate(w, "deleteUserCompletePage", p)
+		err = tpl.ExecuteTemplate(w, "deleteUserCompletePage", p)
 		if err != nil {
 			log.Println("showUsersWeb: template execution error = ", err)
 		}
 
-		//parse the html form and get all the data
-		r.ParseForm()
 		fn, _ := strconv.Atoi(r.FormValue("users"))
 		data.DeleteUser(d.PDB, fn)
 	}
