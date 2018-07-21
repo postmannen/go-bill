@@ -39,6 +39,9 @@ func (d *webData) addUsersWeb() http.HandlerFunc {
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		//seems like the ParseForm have to before template execution with
+		//POST methods, to be able to grab the values. The returned map
+		//0 when it is after TemplateExecution.
 		err := r.ParseForm()
 		if err != nil {
 			log.Printf("error: parseform : %v \n", err)
