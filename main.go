@@ -2,10 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"html/template"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/postmannen/go-bill/data"
@@ -35,6 +35,8 @@ type server struct {
 	data   webData     //put all the user data into the server struct
 }
 
+var formDecoder = schema.NewDecoder()
+
 func newServer() *server {
 	return &server{
 		addr:   ":8080",
@@ -54,8 +56,6 @@ func (s *server) routes() {
 	s.router.HandleFunc("/printBill", s.data.printBill())
 	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 }
-
-var tmpl map[string]*template.Template //map to hold all templates
 
 func main() {
 	s := newServer()

@@ -43,25 +43,39 @@
 {{end}} {{define "index"}} Nothing here yet {{end}}
 
 <!-- ******************* USER PAGES ***********************-->
-
 {{define "addUser"}}
-<div class="container">
-    <form method="POST">
-        <div class="addUserContainer">
-            <h3>Add user</h3>
-            <input type="text" name="firstName" placeholder="Fornavn" required pattern="[a-zA-ZæøåÆØÅ]+">
-            <input type="text" name="lastName" placeholder="Etternavn" required pattern="^[a-zA-ZæøåÆØÅ\s]+" maxlength="64">
-            <input type="text" name="mail" placeholder="Mail" required pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" title="Please enter a valid email.">
-            <input type="text" name="address" placeholder="Adresse" maxlength="64">
-            <input type="text" name="poAddr" placeholder="Post nr og sted" maxlength="64">
-            <input type="text" name="phone" placeholder="Telefon nr." maxlength="64">
-            <input type="text" name="orgNr" placeholder="Organisasjons nr" maxlength="64">
-            <input type="text" name="countryID" placeholder="Country ID" maxlength="64">
-            <input type="text" name="bankAccount" placeholder="Bank Account" maxlength="64">
-            <input type="submit" name="button1" value="Add">
-        </div>
-    </form>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <form method="POST">
+            <div class="addUserContainer">
+                <h3>Add user</h3>
+                <input type="text" name="firstName" placeholder="Fornavn" required pattern="[a-zA-ZæøåÆØÅ]+">
+                <input type="text" name="lastName" placeholder="Etternavn" required pattern="^[a-zA-ZæøåÆØÅ\s]+" maxlength="64">
+                <input type="text" name="mail" placeholder="Mail" required pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" title="Please enter a valid email.">
+                <input type="text" name="address" placeholder="Adresse" maxlength="64">
+                <input type="text" name="poAddr" placeholder="Post nr og sted" maxlength="64">
+                <input type="text" name="phone" placeholder="Telefon nr." maxlength="64">
+                <input type="text" name="orgNr" placeholder="Organisasjons nr" maxlength="64">
+                <input type="text" name="countryID" placeholder="Country ID" maxlength="64">
+                <input type="text" name="bankAccount" placeholder="Bank Account" maxlength="64">
+                <input type="submit" name="button1" value="Add">
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>
 {{end}} {{define "modifyUserSelection"}}
 <div class="container">
     <div class="modifyUserSelectionContainer">

@@ -39,23 +39,22 @@ func (d *webData) addUsersWeb() http.HandlerFunc {
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := tpl.ExecuteTemplate(w, "addUserCompletePage", "some data")
+		err := r.ParseForm()
+		if err != nil {
+			log.Printf("error: parseform : %v \n", err)
+		}
+
+		err = tpl.ExecuteTemplate(w, "addUserCompletePage", nil)
 		if err != nil {
 			log.Println("addUsersWeb: template execution error = ", err)
 		}
 
 		//temp variable for holding the parsed user values from the r.Form
 		var u data.User
-		var formDecoder = schema.NewDecoder()
-
-		err = r.ParseForm()
-		if err != nil {
-			log.Printf("error: parseform : %v \n", err)
-		}
 
 		//use gorilla schema to parse the values of the form, and put them into
 		//a temp variable 'u'
-		err = formDecoder.Decode(&u, r.Form)
+		err = formDecoder.Decode(&u, r.PostForm)
 		if err != nil {
 			log.Printf("error: formDecoder : %v \n", err)
 		}
