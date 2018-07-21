@@ -307,7 +307,7 @@ func (d *webData) deleteUserWeb() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 		if err != nil {
-			log.Printf("error: Parseform :", err)
+			log.Printf("error: Parseform : %v\n", err)
 		}
 		p := data.QueryAllUserInfo(d.PDB)
 		err = tpl.ExecuteTemplate(w, "deleteUserCompletePage", p)

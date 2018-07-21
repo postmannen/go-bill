@@ -33,14 +33,18 @@ type server struct {
 	addr   string      //the adress and port to listen on
 	router *mux.Router //use gorilla mux for our router
 	data   webData     //put all the user data into the server struct
+	//msgToTemplate is a reference to know what html template to
+	//be used based on which msg comming in from the client browser.
+	msgToTemplate map[string]string
 }
 
 var formDecoder = schema.NewDecoder()
 
 func newServer() *server {
 	return &server{
-		addr:   ":8080",
-		router: mux.NewRouter(),
+		addr:          ":8080",
+		router:        mux.NewRouter(),
+		msgToTemplate: make(map[string]string),
 	}
 }
 
@@ -55,6 +59,17 @@ func (s *server) routes() {
 	s.router.HandleFunc("/editBill", s.data.webBillLines())
 	s.router.HandleFunc("/printBill", s.data.printBill())
 	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+}
+
+func (s *server) templates() {
+	s.msgToTemplate = map[string]string{
+		//TODO:
+		//Look at maybe removing the complete page templates,
+		//or check so content that migth change based on key
+		//press or edited data also change via the websocket,
+		//and don't have to wait for the page to reload to
+		//get upated.
+	}
 }
 
 func main() {
