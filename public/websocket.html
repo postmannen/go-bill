@@ -1,4 +1,3 @@
-{{define "websocket"}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,7 +20,8 @@
         <li>addParagraph</li>
     </ul>
     <pre id="output"></pre>
-
+    <!---->
+    {{define "websocket"}}
     <script>
         var input = document.getElementById("input");
         var output = document.getElementById("output");
@@ -63,7 +63,8 @@
             e.parentElement.removeChild(e)
         }
     </script>
+    <!---->
+    {{end}}
 </body>
 
 </html>
-{{end}}

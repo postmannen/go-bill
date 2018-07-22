@@ -283,7 +283,7 @@ func (d *webData) showUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template //template
 	init.Do(func() {
-		tpl = template.Must(template.ParseFiles("public/userTemplates.html"))
+		tpl = template.Must(template.ParseFiles("public/userTemplates.html", "public/websocket.html"))
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {

@@ -56,6 +56,7 @@ func (s *server) socketHandler() http.HandlerFunc {
 			//print message to console
 			fmt.Printf("Client=%v typed : %v \n", conn.RemoteAddr(), string(msg))
 
+			//Select the correct Template based on the msg recieved from the client.
 			//loop through the map and check if there is a key in the map that match with
 			//the msg comming in on the websocket from browser.
 			//If there is no match, whats in msg will be sendt directly back ovet the socket,
