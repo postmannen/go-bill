@@ -3,44 +3,104 @@
 <head>
     <title>Faktura</title>
     <!-- This is the text that is shown in the tab of the browser. Title shall be inside <head> -->
-    <html>
     <link rel="stylesheet" href="/public/styles.css">
-
-    </html>
 </head>
 {{end}}
 <!-- ******************* COMPLETE PAGES ***********************-->
 {{define "addUserCompletePage"}}
 <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/public/styles.css">
+    <title>GoFakt</title>
+</head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "head" .}} {{template "topMenu" .}} {{template "addUser" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "addUser" .}}
 </body>
-{{end}} {{define "showUserCompletePage"}}
+
+</html>
+{{end}}
+<!---->
+{{define "showUserCompletePage"}}
 <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/public/styles.css">
+    <title>GoFakt</title>
+</head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "head" .}} {{template "topMenu" .}} {{template "showUserMultiple" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "showUserMultiple" .}}
 </body>
-{{end}} {{define "mainCompletePage"}}
+
+</html>
+{{end}}
+<!---->
+{{define "mainCompletePage"}}
 <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/public/styles.css">
+    <title>GoFakt</title>
+</head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "head" .}} {{template "topMenu" .}} {{template "index" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "index" .}}
 </body>
-{{end}} {{define "modifyUserCompletePage"}}
-<!DOCTYPE html>
+
+</html>
+{{end}}
+<!---->
+{{define "modifyUserCompletePage"}}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/public/styles.css">
+    <title>GoFakt</title>
+</head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "head" .}} {{template "topMenu" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}}
 </body>
-{{end}} {{define "deleteUserCompletePage"}}
-<!DOCTYPE html>
+
+</html>
+{{end}}
+<!---->
+{{define "deleteUserCompletePage"}}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/public/styles.css">
+    <title>GoFakt</title>
+</head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "head" .}} {{template "topMenu" .}} {{template "deleteUserSelection" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "deleteUserSelection" .}}
 </body>
-{{end}} {{define "index"}} Nothing here yet {{end}}
+
+</html>
+{{end}}
+<!---->
+{{define "index"}} Nothing here yet {{end}}
 
 <!-- ******************* USER PAGES ***********************-->
 {{define "addUser"}}
@@ -76,7 +136,9 @@
 </body>
 
 </html>
-{{end}} {{define "modifyUserSelection"}}
+{{end}}
+<!---->
+{{define "modifyUserSelection"}}
 <div class="container">
     <div class="modifyUserSelectionContainer">
         <form>
@@ -91,7 +153,9 @@
         </form>
     </div>
 </div>
-{{end}} {{define "deleteUserSelection"}}
+{{end}}
+<!---->
+{{define "deleteUserSelection"}}
 <div class="container">
     <div class="deleteUserSelectionContainer">
         <form>
@@ -106,7 +170,9 @@
         </form>
     </div>
 </div>
-{{end}} {{define "showUserMultiple"}}
+{{end}}
+<!---->
+{{define "showUserMultiple"}}
 <div class="container">
     <div class="showUsersMultipleContainer">
         <form>
@@ -143,7 +209,9 @@
         </form>
     </div>
 </div>
-{{end}} {{define "modifyUser"}}
+{{end}}
+<!---->
+{{define "modifyUser"}}
 <div class="container">
     <form>
         <div class="modifyUserContainer">
@@ -191,7 +259,9 @@
         </div>
     </form>
 </div>
-{{end}} {{define "redirectTomodifyAdmin"}}
+{{end}}
+<!---->
+{{define "redirectTomodifyAdmin"}}
 <meta http-equiv="refresh" content="0; URL=/modifyAdmin"> {{end}}
 
 <!-- ******************* TOP MENU ***********************-->
