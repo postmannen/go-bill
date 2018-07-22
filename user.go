@@ -31,7 +31,7 @@ func (d *webData) mainPage() http.HandlerFunc {
 }
 
 //The handler for adding persons
-func (d *webData) addUsersWeb() http.HandlerFunc {
+func (d *webData) addUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template //template
 	init.Do(func() {
@@ -76,7 +76,7 @@ func (d *webData) addUsersWeb() http.HandlerFunc {
 }
 
 //The web handler for modifying a person
-func (d *webData) modifyUsersWeb() http.HandlerFunc {
+func (d *webData) modifyUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template
 	init.Do(func() {
@@ -183,7 +183,7 @@ func (d *webData) modifyUsersWeb() http.HandlerFunc {
 }
 
 //The web handler for modifying the admin user
-func (d *webData) modifyAdminWeb() http.HandlerFunc {
+func (d *webData) modifyAdmin() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template //template
 	init.Do(func() {
@@ -279,7 +279,7 @@ func (d *webData) modifyAdminWeb() http.HandlerFunc {
 }
 
 //The web handler to show and print out all registered users in the database
-func (d *webData) showUsersWeb() http.HandlerFunc {
+func (d *webData) showUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template //template
 	init.Do(func() {
@@ -288,7 +288,7 @@ func (d *webData) showUsersWeb() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		p := data.QueryAllUserInfo(d.PDB)
-		err := tpl.ExecuteTemplate(w, "showUserCompletePage", p)
+		err := tpl.ExecuteTemplate(w, "showAllUsersCompletePage", p)
 		if err != nil {
 			log.Println("showUsersWeb: template execution error = ", err)
 		}
@@ -297,7 +297,7 @@ func (d *webData) showUsersWeb() http.HandlerFunc {
 }
 
 //The web handler to delete a person
-func (d *webData) deleteUserWeb() http.HandlerFunc {
+func (d *webData) deleteUser() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template
 	init.Do(func() {

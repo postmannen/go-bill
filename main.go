@@ -49,26 +49,35 @@ func newServer() *server {
 }
 
 func (s *server) routes() {
-	s.router.HandleFunc("/showUsers", s.data.showUsersWeb())
-	s.router.HandleFunc("/addUser", s.data.addUsersWeb())
-	s.router.HandleFunc("/modifyUser", s.data.modifyUsersWeb())
-	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdminWeb())
 	s.router.HandleFunc("/", s.data.mainPage())
-	s.router.HandleFunc("/deleteUser", s.data.deleteUserWeb())
-	s.router.HandleFunc("/createBillSelectUser", s.data.webBillSelectUser())
-	s.router.HandleFunc("/editBill", s.data.webBillLines())
+	s.router.HandleFunc("/showUsers", s.data.showUsers())
+	s.router.HandleFunc("/addUser", s.data.addUsers())
+	s.router.HandleFunc("/modifyUser", s.data.modifyUsers())
+	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdmin())
+	s.router.HandleFunc("/deleteUser", s.data.deleteUser())
+	s.router.HandleFunc("/createBillSelectUser", s.data.selectUserForBill())
+	s.router.HandleFunc("/editBill", s.data.editBill())
 	s.router.HandleFunc("/printBill", s.data.printBill())
 	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 }
 
 func (s *server) templates() {
+	//key = name sendt to backend from JS at client browser.
+	//value = name of template to use
 	s.msgToTemplate = map[string]string{
-		//TODO:
-		//Look at maybe removing the complete page templates,
-		//or check so content that migth change based on key
-		//press or edited data also change via the websocket,
-		//and don't have to wait for the page to reload to
-		//get upated.
+		//user templates
+		"topMenu":             "topMenu",
+		"addUser":             "addUser",
+		"modifyUserSelection": "modifyUserSelection",
+		"deleteUserSelection": "deleteUserSelection",
+		"showAllUsers":        "showAllUsers",
+		"modifyUser":          "modifyUser",
+		//bill templates
+		"createBillLines":         "createBillLines",
+		"createBillUserSelection": "createBillUserSelection",
+		"billShowUser":            "billShowUser",
+		"showBillInfo":            "showBillInfo",
+		"editBillSelectBox":       "editBillSelectBox",
 	}
 }
 

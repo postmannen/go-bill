@@ -27,7 +27,7 @@
 </html>
 {{end}}
 <!---->
-{{define "billSelectBox"}}
+{{define "editBillMain"}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -241,8 +241,10 @@
 </div>
 {{end}}
 <!---->
-{{define "redirectToEditBill"}}
-<meta http-equiv="refresh" content="0; URL=/editBill"> {{end}} {{define "editBillSelectBox"}}
+{{define "redirectEditBillMain"}}
+<meta http-equiv="refresh" content="0; URL=/editBill"> {{end}}
+<!---->
+{{define "editBillSelectBox"}}
 <div class="editBillSelectBox">
     <form>
         <select name="billID">

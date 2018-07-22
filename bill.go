@@ -15,7 +15,7 @@ import (
 )
 
 //The web handler to the user selection in create bills
-func (d *webData) webBillSelectUser() http.HandlerFunc {
+func (d *webData) selectUserForBill() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template
 	init.Do(func() {
@@ -71,7 +71,7 @@ func (d *webData) webBillSelectUser() http.HandlerFunc {
 
 		//if the manage bills button were pushed
 		if buttonAction == "manage bills" {
-			err = tpl.ExecuteTemplate(w, "redirectToEditBill", nil)
+			err = tpl.ExecuteTemplate(w, "redirectEditBillMain", nil)
 			if err != nil {
 				log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 			}
@@ -97,7 +97,7 @@ func (d *webData) webBillSelectUser() http.HandlerFunc {
 	}
 }
 
-func (d *webData) webBillLines() http.HandlerFunc {
+func (d *webData) editBill() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template
 	init.Do(func() {
@@ -112,7 +112,7 @@ func (d *webData) webBillLines() http.HandlerFunc {
 		UserBills = sortBills(UserBills)
 
 		//draw the bill select box in the window
-		err := tpl.ExecuteTemplate(w, "billSelectBox", UserBills)
+		err := tpl.ExecuteTemplate(w, "editBillMain", UserBills)
 		if err != nil {
 			log.Println("webBillLines: template execution error = ", err)
 		}
