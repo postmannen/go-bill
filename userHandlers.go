@@ -281,7 +281,7 @@ func (d *webData) modifyAdmin() http.HandlerFunc {
 
 //The web handler to show and print out all registered users in the database
 //Using websocket template
-func (d *webData) showAllUsers() http.HandlerFunc {
+func (d *webData) manageUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template //template
 	init.Do(func() {
@@ -290,7 +290,7 @@ func (d *webData) showAllUsers() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		p := data.QueryAllUserInfo(d.PDB)
-		err := tpl.ExecuteTemplate(w, "showAllUsersPage", p)
+		err := tpl.ExecuteTemplate(w, "manageUsersPage", p)
 		if err != nil {
 			log.Println("showUsersWeb: template execution error = ", err)
 		}

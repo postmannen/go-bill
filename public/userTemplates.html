@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/public/styles.css">
 </head>
 {{end}}
-<!-- ******************* COMPLETE PAGES ***********************-->
+<!-- ******************* Initial pages ***********************-->
 {{define "addUserPage"}}
 <!DOCTYPE html>
 <html lang="en">
@@ -20,13 +20,15 @@
 </head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "addUser" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---->
+    {{template "topMenu" .}} {{template "addUser" .}}
 </body>
 
 </html>
 {{end}}
 <!---->
-{{define "showAllUsersPage"}}
+{{define "manageUsersPage"}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,7 +41,9 @@
 </head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "showAllUsers" .}} {{template "websocket"}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---->
+    {{template "topMenu" .}} {{template "websocket"}}
     <button onclick="send('modifyUserSelection')">modifyUserSelection Template</button>
 </body>
 
@@ -59,7 +63,9 @@
 </head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "index" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---->
+    {{template "topMenu" .}} {{template "index" .}}
 </body>
 
 </html>
@@ -77,7 +83,9 @@
 </head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "websocket"}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---->
+    {{template "topMenu" .}} {{template "websocket"}}
 </body>
 
 </html>
@@ -95,7 +103,9 @@
 </head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "deleteUserSelection" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---->
+    {{template "topMenu" .}} {{template "deleteUserSelection" .}}
 </body>
 
 </html>
@@ -103,7 +113,7 @@
 <!---->
 {{define "index"}} Nothing here yet {{end}}
 
-<!-- ******************* USER PAGES ***********************-->
+<!-- ******************* Elements used in pages ***********************-->
 {{define "addUser"}}
 <!DOCTYPE html>
 <html lang="en">
@@ -278,7 +288,7 @@
             <a>User</a>
             <ul>
                 <li>
-                    <a href="/showUsers">Show all</a>
+                    <a href="/manageUsers">Show all</a>
                 </li>
                 <li>
                     <a href="/addUser">Add</a>
