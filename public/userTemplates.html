@@ -39,7 +39,9 @@
 </head>
 
 <body>
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "showAllUsers" .}} {{template "websocket"}}-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "showAllUsers" .}} {{template "websocket"}}
+    <button onclick="send('modifyUserSelection')">test button</button>
 </body>
 
 </html>
@@ -76,7 +78,8 @@
 </head>
 
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "topMenu" .}} {{template "websocket"}}
+    <button onclick="send('modifyUserSelection')">show modify user selection</button>
 </body>
 
 </html>

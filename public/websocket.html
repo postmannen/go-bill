@@ -19,9 +19,10 @@
         <li>addTemplate</li>
         <li>addParagraph</li>
     </ul>
-    <pre id="output"></pre>
+
     <!---->
     {{define "websocket"}}
+    <div id="output"></div>
     <script>
         var input = document.getElementById("input");
         var output = document.getElementById("output");
@@ -34,9 +35,9 @@
         //the event is delivered to onmessage, and used in function as "serverEvent"
         socket.onmessage = function (serverEvent) {
             m = serverEvent.data
-            for (var i = 0; i < m.length; i++) {
-                console.log(m.charCodeAt(i));
-            }
+            //for (var i = 0; i < m.length; i++) {
+            //    console.log(m.charCodeAt(i));
+            //}
             //console.log(serverEvent.data)
             output.innerHTML += m;
         };
@@ -46,10 +47,10 @@
         //--------Functions called based on the actions in the form----------
         //this is the function that is being called when clicking the 'send' button
         //for the text input field.
-        function send() {
-            socket.send(input.value);
+        function send(v) {
+            socket.send(v);
             //set the input.value variable to null when done sending.
-            input.value = "";
+            //input.value = "";
         }
         //This is for when the used pressed the add button on top
         function addButton() {

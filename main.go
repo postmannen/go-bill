@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -23,6 +24,9 @@ type webData struct {
 	PDB              *sql.DB
 	IndexUser        int    //to store the index nr. in slice where the chosen user is stored
 	Currency         string //TODO: Make this linked to chosen language for admin user
+	//msgToTemplate is a reference to know what html template to
+	//be used based on which msg comming in from the client browser.
+	msgToTemplate map[string]string
 }
 
 func newWebData() *webData {
@@ -33,22 +37,38 @@ type server struct {
 	addr   string      //the adress and port to listen on
 	router *mux.Router //use gorilla mux for our router
 	data   webData     //put all the user data into the server struct
-	//msgToTemplate is a reference to know what html template to
-	//be used based on which msg comming in from the client browser.
-	msgToTemplate map[string]string
 }
 
 var formDecoder = schema.NewDecoder()
 
 func newServer() *server {
 	return &server{
-		addr:          ":8080",
-		router:        mux.NewRouter(),
-		msgToTemplate: make(map[string]string),
+		addr:   ":8080",
+		router: mux.NewRouter(),
+		//msgToTemplate: make(map[string]string),
 	}
 }
 
+/*
+HVA EN MÅ GJØRE !!!!!!!!!!
+Websocket html siden, må kalle kalle opp en egen echo handler type for hver enkelt side.
+Denne siden må ha en egen URL så det går ann å skille dem fra hverandre.
+
+Det som da skjer er følgende for en spesifik side:
+---------------------------------------------------
+1.
+En hoved handler kjører hoved templaten for en side som inneholder den generelle javascript.html
+siden som skal kjøres på en klient. Javascript koden må inneholde hvilken "websocket handlerfunc"
+som skal benyttes for siden.
+
+2.
+I tilegg så settes det opp en egen websocket handlerfunc for hver side. Denne siden inneholder all
+logikken som skal til for å tegne dynamiske data på siden. Denne siden er også den som må gjøre
+spøringer til f.eks. databasen for å hente ut data.
+*/
+
 func (s *server) routes() {
+	s.router.HandleFunc("/echo", s.data.socketHandler())
 	s.router.HandleFunc("/", s.data.mainPage())
 	s.router.HandleFunc("/showUsers", s.data.showUsers())
 	s.router.HandleFunc("/addUser", s.data.addUsers())
@@ -61,26 +81,6 @@ func (s *server) routes() {
 	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 }
 
-func (s *server) templates() {
-	//key = name sendt to backend from JS at client browser.
-	//value = name of template to use
-	s.msgToTemplate = map[string]string{
-		//user templates
-		"topMenu":             "topMenu",
-		"addUser":             "addUser",
-		"modifyUserSelection": "modifyUserSelection",
-		"deleteUserSelection": "deleteUserSelection",
-		"showAllUsers":        "showAllUsers",
-		"modifyUser":          "modifyUser",
-		//bill templates
-		"createBillLines":         "createBillLines",
-		"createBillUserSelection": "createBillUserSelection",
-		"billShowUser":            "billShowUser",
-		"showBillInfo":            "showBillInfo",
-		"editBillSelectBox":       "editBillSelectBox",
-	}
-}
-
 func main() {
 	s := newServer()
 
@@ -91,6 +91,8 @@ func main() {
 	//should be changed based on language
 	s.data.Currency = "$"
 
+	s.data.templates()
+	fmt.Println(s.data.msgToTemplate)
 	s.routes()
 	http.ListenAndServe(s.addr, s.router)
 

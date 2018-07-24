@@ -10,7 +10,28 @@ import (
 	"text/template"
 
 	"github.com/gorilla/websocket"
+	"github.com/postmannen/go-bill/data"
 )
+
+func (d *webData) templates() {
+	//key = name sendt to backend from JS at client browser.
+	//value = name of template to use
+	d.msgToTemplate = map[string]string{
+		//user templates
+		"topMenu":             "topMenu",
+		"addUser":             "addUser",
+		"modifyUserSelection": "modifyUserSelection",
+		"deleteUserSelection": "deleteUserSelection",
+		"showAllUsers":        "showAllUsers",
+		"modifyUser":          "modifyUser",
+		//bill templates
+		"createBillLines":         "createBillLines",
+		"createBillUserSelection": "createBillUserSelection",
+		"billShowUser":            "billShowUser",
+		"showBillInfo":            "showBillInfo",
+		"editBillSelectBox":       "editBillSelectBox",
+	}
+}
 
 //socketHandler is the handler who controls all the serverside part
 //of the websocket. The other handlers like the rootHandle have to
@@ -18,7 +39,7 @@ import (
 //communication with the serside websocket.
 //This handler is used with all the other handlers if they open a
 //websocket on the client side.
-func (s *server) socketHandler() http.HandlerFunc {
+func (d *webData) socketHandler() http.HandlerFunc {
 	var upgrader = websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
@@ -28,7 +49,7 @@ func (s *server) socketHandler() http.HandlerFunc {
 	var err error
 
 	init.Do(func() {
-		tpl, err = template.ParseFiles("socketTemplates.gohtml")
+		tpl, err = template.ParseFiles("public/billTemplates.html", "public/userTemplates.html")
 		if err != nil {
 			log.Printf("error: ParseFiles : %v\n", err)
 		}
@@ -63,14 +84,15 @@ func (s *server) socketHandler() http.HandlerFunc {
 			//to be printed out in the client browser.
 			strMsg := string(msg)
 			if strMsg != "" {
-				tplName, ok := s.msgToTemplate[strMsg]
+				tplName, ok := d.msgToTemplate[strMsg]
 				if ok {
 					//Declare a bytes.Buffer to hold the data for the executed template.
 					var tplData bytes.Buffer
 					//tplData is a bytes.Buffer, which is a type io.Writer. Here we choose
 					//execute the template, but passing the output into tplData insted of
 					//'w'. Then we can take the data in tplData and send them over the socket.
-					tpl.ExecuteTemplate(&tplData, tplName, divID)
+					p := data.QueryAllUserInfo(d.PDB)
+					tpl.ExecuteTemplate(&tplData, tplName, p)
 					d := tplData.String()
 					//New-lines between the html tags in the template source code
 					//is shown in the browser. Trimming awat the new-lines in each line

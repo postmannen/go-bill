@@ -80,7 +80,7 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template
 	init.Do(func() {
-		tpl = template.Must(template.ParseFiles("public/userTemplates.html"))
+		tpl = template.Must(template.ParseFiles("public/userTemplates.html", "public/websocket.html"))
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -100,10 +100,10 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 		}
 
 		//Execute the modifyUserSelection drop down menu template
-		err = tpl.ExecuteTemplate(w, "modifyUserSelection", p)
-		if err != nil {
-			fmt.Fprint(w, "template execution error = ", err)
-		}
+		//err = tpl.ExecuteTemplate(w, "modifyUserSelection", p)
+		//if err != nil {
+		//	fmt.Fprint(w, "template execution error = ", err)
+		//}
 
 		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 		num, _ := strconv.Atoi(r.FormValue("users"))
