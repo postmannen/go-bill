@@ -106,6 +106,17 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 			fmt.Fprint(w, "template execution error = ", err)
 		}
 
+		//Delete user from db when button is pushed
+		fmt.Println("---The FORM = ", r.Form)
+		fmt.Println("---single value from form = ", r.Form["users"])
+		deleteUserButton := r.FormValue("deleteUserButton")
+		//if the manage bills button were pushed
+		if deleteUserButton == "Delete user" {
+			fn, _ := strconv.Atoi(r.FormValue("users"))
+			fmt.Printf("---fn = %v, and type = %T\n", fn, fn)
+			data.DeleteUser(d.PDB, fn)
+		}
+
 		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 		num, _ := strconv.Atoi(r.FormValue("users"))
 
@@ -297,29 +308,5 @@ func (d *webData) manageUsers() http.HandlerFunc {
 			log.Println("showUsersWeb: template execution error = ", err)
 		}
 		fmt.Fprint(w, err)
-	}
-}
-
-//The web handler to delete a person
-func (d *webData) deleteUser() http.HandlerFunc {
-	var init sync.Once
-	var tpl *template.Template
-	init.Do(func() {
-		tpl = template.Must(template.ParseFiles("public/userTemplates.html"))
-	})
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		err := r.ParseForm()
-		if err != nil {
-			log.Printf("error: Parseform : %v\n", err)
-		}
-		p := data.QueryAllUserInfo(d.PDB)
-		err = tpl.ExecuteTemplate(w, "deleteUserPage", p)
-		if err != nil {
-			log.Println("showUsersWeb: template execution error = ", err)
-		}
-
-		fn, _ := strconv.Atoi(r.FormValue("users"))
-		data.DeleteUser(d.PDB, fn)
 	}
 }

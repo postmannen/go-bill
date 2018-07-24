@@ -74,7 +74,6 @@ func (s *server) routes() {
 	s.router.HandleFunc("/addUser", s.data.addUsers())
 	s.router.HandleFunc("/modifyUser", s.data.modifyUsers())
 	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdmin())
-	s.router.HandleFunc("/deleteUser", s.data.deleteUser())
 	s.router.HandleFunc("/createBillSelectUser", s.data.selectUserForBill())
 	s.router.HandleFunc("/editBill", s.data.editBill())
 	s.router.HandleFunc("/printBill", s.data.printBill())

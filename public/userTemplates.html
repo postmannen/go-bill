@@ -91,26 +91,6 @@
 </html>
 {{end}}
 <!---->
-{{define "deleteUserPage"}}
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/public/styles.css">
-    <title>GoFakt</title>
-</head>
-
-<body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!---->
-    {{template "topMenu" .}} {{template "deleteUserSelection" .}}
-</body>
-
-</html>
-{{end}}
-<!---->
 {{define "index"}} Nothing here yet {{end}}
 
 <!-- ******************* Elements used in pages ***********************-->
@@ -161,23 +141,7 @@
                 {{end}}
             </select>
             <input type="submit" name="submitModifyButton" value="Choose selected">
-        </form>
-    </div>
-</div>
-{{end}}
-<!---->
-{{define "deleteUserSelection"}}
-<div class="container">
-    <div class="deleteUserSelectionContainer">
-        <form>
-            <h3>Delete user</h3>
-            <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
-            <select name="users">
-                {{range .}}
-                <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
-                {{end}}
-            </select>
-            <input type="submit" name="submitDeleteButton" value="Delete selected">
+            <input type="submit" name="deleteUserButton" value="Delete user">
         </form>
     </div>
 </div>
@@ -295,9 +259,6 @@
                 </li>
                 <li>
                     <a href="/modifyUser">Modify User</a>
-                </li>
-                <li>
-                    <a href="/deleteUser">Delete User</a>
                 </li>
                 <li>
                     <a href="/modifyAdmin">Modify Admin</a>
