@@ -76,6 +76,7 @@ func (d *webData) addUsers() http.HandlerFunc {
 }
 
 //The web handler for modifying a person
+//Using websocket
 func (d *webData) modifyUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template
@@ -100,10 +101,10 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 		}
 
 		//Execute the modifyUserSelection drop down menu template
-		//err = tpl.ExecuteTemplate(w, "modifyUserSelection", p)
-		//if err != nil {
-		//	fmt.Fprint(w, "template execution error = ", err)
-		//}
+		err = tpl.ExecuteTemplate(w, "modifyUserSelection", d.Users)
+		if err != nil {
+			fmt.Fprint(w, "template execution error = ", err)
+		}
 
 		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 		num, _ := strconv.Atoi(r.FormValue("users"))
@@ -279,7 +280,8 @@ func (d *webData) modifyAdmin() http.HandlerFunc {
 }
 
 //The web handler to show and print out all registered users in the database
-func (d *webData) showUsers() http.HandlerFunc {
+//Using websocket template
+func (d *webData) showAllUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template //template
 	init.Do(func() {

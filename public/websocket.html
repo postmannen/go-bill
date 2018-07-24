@@ -47,8 +47,8 @@
         //--------Functions called based on the actions in the form----------
         //this is the function that is being called when clicking the 'send' button
         //for the text input field.
-        function send(v) {
-            socket.send(v);
+        function send(stringValue) {
+            socket.send(stringValue);
             //set the input.value variable to null when done sending.
             //input.value = "";
         }
@@ -58,9 +58,9 @@
             socket.send("addButton")
         }
         //The function called from the "delete element" buttons
-        function deleteElement(v) {
-            alert("deleting element with id = " + v)
-            var e = document.getElementById(v)
+        function deleteElement(elementID) {
+            alert("deleting element with id = " + elemenetID)
+            var e = document.getElementById(elementID)
             e.parentElement.removeChild(e)
         }
     </script>

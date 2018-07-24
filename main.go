@@ -70,7 +70,7 @@ spøringer til f.eks. databasen for å hente ut data.
 func (s *server) routes() {
 	s.router.HandleFunc("/echo", s.data.socketHandler())
 	s.router.HandleFunc("/", s.data.mainPage())
-	s.router.HandleFunc("/showUsers", s.data.showUsers())
+	s.router.HandleFunc("/showUsers", s.data.showAllUsers())
 	s.router.HandleFunc("/addUser", s.data.addUsers())
 	s.router.HandleFunc("/modifyUser", s.data.modifyUsers())
 	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdmin())
