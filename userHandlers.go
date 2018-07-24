@@ -289,8 +289,10 @@ func (d *webData) manageUsers() http.HandlerFunc {
 	})
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		p := data.QueryAllUserInfo(d.PDB)
-		err := tpl.ExecuteTemplate(w, "manageUsersPage", p)
+		//The idea here is to draw the manageUsersPage profile as the initial page,
+		//and add templates based on which action chosen in the JS via the websocket.
+		d.Users = data.QueryAllUserInfo(d.PDB)
+		err := tpl.ExecuteTemplate(w, "manageUsersPage", d)
 		if err != nil {
 			log.Println("showUsersWeb: template execution error = ", err)
 		}

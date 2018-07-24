@@ -34,6 +34,7 @@
         //here we are receiving messages from the server
         //the event is delivered to onmessage, and used in function as "serverEvent"
         socket.onmessage = function (serverEvent) {
+            console.log("socket.readyState in onmessage = " + socket.readyState)
             m = serverEvent.data
             //for (var i = 0; i < m.length; i++) {
             //    console.log(m.charCodeAt(i));
@@ -48,9 +49,11 @@
         //this is the function that is being called when clicking the 'send' button
         //for the text input field.
         function send(stringValue) {
+            console.log("socket.readyState = " + socket.readyState)
             socket.send(stringValue);
             //set the input.value variable to null when done sending.
-            //input.value = "";
+            input.value = "";
+
         }
         //This is for when the used pressed the add button on top
         function addButton() {

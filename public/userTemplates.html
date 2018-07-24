@@ -27,7 +27,8 @@
 
 </html>
 {{end}}
-<!---->
+<!--WORKING HERE-->
+
 {{define "manageUsersPage"}}
 <!DOCTYPE html>
 <html lang="en">
@@ -40,11 +41,10 @@
     <title>GoFakt</title>
 </head>
 
-<body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<body onload="send('showAllUsers')">
     <!---->
     {{template "topMenu" .}} {{template "websocket"}}
-    <button onclick="send('modifyUserSelection')">modifyUserSelection Template</button>
+    <button onclick="send('showAllUsers')">Show all users</button>
 </body>
 
 </html>
@@ -288,19 +288,19 @@
             <a>User</a>
             <ul>
                 <li>
-                    <a href="/manageUsers">Show all</a>
+                    <a href="/manageUsers">Manage Users</a>
                 </li>
                 <li>
-                    <a href="/addUser">Add</a>
+                    <a href="/addUser">Add User</a>
                 </li>
                 <li>
-                    <a href="/modifyUser">Modify</a>
+                    <a href="/modifyUser">Modify User</a>
                 </li>
                 <li>
-                    <a href="/deleteUser">Delete</a>
+                    <a href="/deleteUser">Delete User</a>
                 </li>
                 <li>
-                    <a href="/modifyAdmin">Modify admin</a>
+                    <a href="/modifyAdmin">Modify Admin</a>
                 </li>
             </ul>
         </li>
