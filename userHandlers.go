@@ -23,7 +23,7 @@ func (d *webData) mainPage() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		//start a web page based on template
-		err := tpl.ExecuteTemplate(w, "mainCompletePage", "put the data here")
+		err := tpl.ExecuteTemplate(w, "mainPage", "put the data here")
 		if err != nil {
 			log.Println("mainPage: template execution error = ", err)
 		}
@@ -47,7 +47,7 @@ func (d *webData) addUsers() http.HandlerFunc {
 			log.Printf("error: parseform : %v \n", err)
 		}
 
-		err = tpl.ExecuteTemplate(w, "addUserCompletePage", nil)
+		err = tpl.ExecuteTemplate(w, "addUserPage", nil)
 		if err != nil {
 			log.Println("addUsersWeb: template execution error = ", err)
 		}
@@ -91,10 +91,10 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 
 		ip := r.RemoteAddr
 		//query the userDB for all users and put the returning slice with result in p
-		p := data.QueryAllUserInfo(d.PDB)
+		d.Users = data.QueryAllUserInfo(d.PDB)
 
 		//Execute the web for modify users, range over p to make the select user drop down menu
-		err = tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
+		err = tpl.ExecuteTemplate(w, "modifyUserPage", d.Users)
 		if err != nil {
 			fmt.Fprint(w, "template execution error = ", err)
 		}
@@ -109,14 +109,14 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 		num, _ := strconv.Atoi(r.FormValue("users"))
 
 		//Write out all the info of the selected user to the web
-		for i := range p {
-			log.Println(ip, "modifyUsersWeb: p[i].Number = ", p[i].Number)
+		for i := range d.Users {
+			log.Println(ip, "modifyUsersWeb: d.Users[i].Number = ", d.Users[i].Number)
 			//Iterate over the complete struct of users until the chosen user is found
-			if p[i].Number == num {
-				log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", p[i].FirstName, p[i].LastName)
+			if d.Users[i].Number == num {
+				log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", d.Users[i].FirstName, d.Users[i].LastName)
 				//Store the index nr in slice of the chosen user
 				d.IndexUser = i
-				err := tpl.ExecuteTemplate(w, "modifyUser", p[i])
+				err := tpl.ExecuteTemplate(w, "modifyUser", d.Users[i])
 				if err != nil {
 					log.Println(ip, "modifyUsersWeb: error = ", err)
 				}
@@ -138,46 +138,46 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 		changed := false
 
 		//check if the values in the form where changed by comparing them to the original ones
-		if u.FirstName != p[d.IndexUser].FirstName && u.FirstName != "" {
-			p[d.IndexUser].FirstName = u.FirstName
+		if u.FirstName != d.Users[d.IndexUser].FirstName && u.FirstName != "" {
+			d.Users[d.IndexUser].FirstName = u.FirstName
 			changed = true
 		}
-		if u.LastName != p[d.IndexUser].LastName && u.LastName != "" {
-			p[d.IndexUser].LastName = u.LastName
+		if u.LastName != d.Users[d.IndexUser].LastName && u.LastName != "" {
+			d.Users[d.IndexUser].LastName = u.LastName
 			changed = true
 		}
-		if u.Mail != p[d.IndexUser].Mail && u.Mail != "" {
-			p[d.IndexUser].Mail = u.Mail
+		if u.Mail != d.Users[d.IndexUser].Mail && u.Mail != "" {
+			d.Users[d.IndexUser].Mail = u.Mail
 			changed = true
 		}
-		if u.Address != p[d.IndexUser].Address && u.Address != "" {
-			p[d.IndexUser].Address = u.Address
+		if u.Address != d.Users[d.IndexUser].Address && u.Address != "" {
+			d.Users[d.IndexUser].Address = u.Address
 			changed = true
 		}
-		if u.PostNrAndPlace != p[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
-			p[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
+		if u.PostNrAndPlace != d.Users[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
+			d.Users[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
 			changed = true
 		}
-		if u.PhoneNr != p[d.IndexUser].PhoneNr && u.PhoneNr != "" {
-			p[d.IndexUser].PhoneNr = u.PhoneNr
+		if u.PhoneNr != d.Users[d.IndexUser].PhoneNr && u.PhoneNr != "" {
+			d.Users[d.IndexUser].PhoneNr = u.PhoneNr
 			changed = true
 		}
-		if u.OrgNr != p[d.IndexUser].OrgNr && u.OrgNr != "" {
-			p[d.IndexUser].OrgNr = u.OrgNr
+		if u.OrgNr != d.Users[d.IndexUser].OrgNr && u.OrgNr != "" {
+			d.Users[d.IndexUser].OrgNr = u.OrgNr
 			changed = true
 		}
-		if u.CountryID != p[d.IndexUser].CountryID && u.CountryID != "" {
-			p[d.IndexUser].CountryID = u.CountryID
+		if u.CountryID != d.Users[d.IndexUser].CountryID && u.CountryID != "" {
+			d.Users[d.IndexUser].CountryID = u.CountryID
 			changed = true
 		}
-		if u.BankAccount != p[d.IndexUser].BankAccount && u.BankAccount != "" {
-			p[d.IndexUser].BankAccount = u.BankAccount
+		if u.BankAccount != d.Users[d.IndexUser].BankAccount && u.BankAccount != "" {
+			d.Users[d.IndexUser].BankAccount = u.BankAccount
 			changed = true
 		}
 
 		//if any of the values was changed....update information into database
 		if changed {
-			data.UpdateUser(d.PDB, p[d.IndexUser])
+			data.UpdateUser(d.PDB, d.Users[d.IndexUser])
 		}
 	}
 }
@@ -202,7 +202,7 @@ func (d *webData) modifyAdmin() http.HandlerFunc {
 		p := data.QuerySingleUserInfo(d.PDB, adminID)
 
 		//Execute the web for modify users, range over p to make the select user drop down menu
-		err = tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
+		err = tpl.ExecuteTemplate(w, "modifyUserPage", p)
 		if err != nil {
 			fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
 		}
@@ -288,7 +288,7 @@ func (d *webData) showUsers() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		p := data.QueryAllUserInfo(d.PDB)
-		err := tpl.ExecuteTemplate(w, "showAllUsersCompletePage", p)
+		err := tpl.ExecuteTemplate(w, "showAllUsersPage", p)
 		if err != nil {
 			log.Println("showUsersWeb: template execution error = ", err)
 		}
@@ -310,7 +310,7 @@ func (d *webData) deleteUser() http.HandlerFunc {
 			log.Printf("error: Parseform : %v\n", err)
 		}
 		p := data.QueryAllUserInfo(d.PDB)
-		err = tpl.ExecuteTemplate(w, "deleteUserCompletePage", p)
+		err = tpl.ExecuteTemplate(w, "deleteUserPage", p)
 		if err != nil {
 			log.Println("showUsersWeb: template execution error = ", err)
 		}

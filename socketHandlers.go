@@ -10,7 +10,6 @@ import (
 	"text/template"
 
 	"github.com/gorilla/websocket"
-	"github.com/postmannen/go-bill/data"
 )
 
 func (d *webData) templates() {
@@ -91,8 +90,7 @@ func (d *webData) socketHandler() http.HandlerFunc {
 					//tplData is a bytes.Buffer, which is a type io.Writer. Here we choose
 					//execute the template, but passing the output into tplData insted of
 					//'w'. Then we can take the data in tplData and send them over the socket.
-					p := data.QueryAllUserInfo(d.PDB)
-					tpl.ExecuteTemplate(&tplData, tplName, p)
+					tpl.ExecuteTemplate(&tplData, tplName, d.Users)
 					d := tplData.String()
 					//New-lines between the html tags in the template source code
 					//is shown in the browser. Trimming awat the new-lines in each line
