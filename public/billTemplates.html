@@ -419,3 +419,44 @@
 
 </div>
 {{end}}
+<!-- ******************* TOP MENU ***********************-->
+<!-- The link opened by the href below is controlled via the http.HandleFunc in main.go-->
+{{define "topMenu"}}
+
+<div class="topMenuContainer">
+    <ul class="nav">
+        <li>
+            <a href="/">Home</a>
+        </li>
+        <li>
+            <a>User</a>
+            <ul>
+                <li>
+                    <a href="/manageUsers">Manage Users</a>
+                </li>
+                <li>
+                    <a href="/addUser">Add User</a>
+                </li>
+                <li>
+                    <a href="/modifyUser">Modify User</a>
+                </li>
+                <li>
+                    <a href="/modifyAdmin">Modify Admin</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a>Bill</a>
+            <ul>
+                <li>
+                    <a href="/createBillSelectUser">Create</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a>About</a>
+        </li>
+    </ul>
+</div>
+
+{{end}}
