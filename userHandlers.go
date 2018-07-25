@@ -94,6 +94,22 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 		//query the userDB for all users and put the returning slice with result in p
 		d.Users = data.QueryAllUserInfo(d.PDB)
 
+		//The selected field of a user is not stored in the db, so we set it here.
+		//WORKING HERE !!!!!!!!!!
+		//if buttonPushed == "Choose selected" {
+		d.ActiveUserID, _ = strconv.Atoi(r.FormValue("users"))
+		//}
+		for i, v := range d.Users {
+			fmt.Println("v = ", v)
+			d.Users[i].Selected = ""
+			//if the id from the dropdown is the same as the one we found, set selected
+			if d.Users[i].Number == d.ActiveUserID {
+				fmt.Println("*************FOUND THE USER*******************")
+				d.Users[i].Selected = "selected"
+			}
+			fmt.Println("--- ", d.Users[i])
+		}
+
 		//Execute the web for modify users, range over p to make the select user drop down menu
 		err = tpl.ExecuteTemplate(w, "modifyUserPage", d.Users)
 		if err != nil {
@@ -115,21 +131,6 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 			userID, _ := strconv.Atoi(r.FormValue("users"))
 			fmt.Printf("---userID = %v, and type = %T\n", userID, userID)
 			data.DeleteUser(d.PDB, userID)
-		}
-		//WORKING HERE !!!!!!!!!!
-		if buttonPushed == "Choose selected" {
-			userID, _ := strconv.Atoi(r.FormValue("users"))
-			//first range all users and make sure none is marked as selected
-			for i, v := range d.Users {
-				fmt.Println("v = ", v)
-				d.Users[i].Selected = ""
-				//if the id from the dropdown is the same as the one we found, set selected
-				if d.Users[i].Number == userID {
-					fmt.Println("*************FOUND THE USER*******************")
-					d.Users[i].Selected = "selected"
-				}
-				fmt.Println("--- ", d.Users[i])
-			}
 		}
 
 		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
