@@ -95,7 +95,6 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 		d.Users = data.QueryAllUserInfo(d.PDB)
 
 		//The selected field of a user is not stored in the db, so we set it here.
-		//WORKING HERE !!!!!!!!!!
 		//if buttonPushed == "Choose selected" {
 		d.ActiveUserID, _ = strconv.Atoi(r.FormValue("users"))
 		//}
@@ -119,25 +118,12 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 			fmt.Fprint(w, "template execution error = ", err)
 		}
 
-		//Delete user from db when button is pushed
-		fmt.Println("---The FORM = ", r.Form)
-		fmt.Println("---single value from form = ", r.Form["users"])
-		buttonPushed := r.FormValue("submitButton")
-		//if the manage bills button were pushed
-		if buttonPushed == "Delete user" {
-			userID, _ := strconv.Atoi(r.FormValue("users"))
-			fmt.Printf("---userID = %v, and type = %T\n", userID, userID)
-			data.DeleteUser(d.PDB, userID)
-		}
-
-		//Get the value (number) of the chosen user from form dropdown menu <select name="users">
-		num, _ := strconv.Atoi(r.FormValue("users"))
-
 		//Write out all the info of the selected user to the web
 		for i := range d.Users {
 			log.Println(ip, "modifyUsersWeb: d.Users[i].Number = ", d.Users[i].Number)
 			//Iterate over the complete struct of users until the chosen user is found
-			if d.Users[i].Number == num {
+			fmt.Println("---ActiveUserID = ", d.ActiveUserID)
+			if d.Users[i].Number == d.ActiveUserID {
 				log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", d.Users[i].FirstName, d.Users[i].LastName)
 				//Store the index nr in slice of the chosen user
 				d.IndexUser = i
@@ -147,6 +133,17 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 				}
 			}
 
+		}
+
+		//Delete user from db when button is pushed
+		fmt.Println("---The FORM = ", r.Form)
+		fmt.Println("---single value from form = ", r.Form["users"])
+		buttonPushed := r.FormValue("submitButton")
+		//if the manage bills button were pushed
+		if buttonPushed == "Delete user" {
+			userID, _ := strconv.Atoi(r.FormValue("users"))
+			fmt.Printf("---userID = %v, and type = %T\n", userID, userID)
+			data.DeleteUser(d.PDB, userID)
 		}
 
 		//create a variable based on user to hold the values parsed from the modify web
@@ -160,50 +157,57 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 			log.Printf("error: formDecoder : %v \n", err)
 		}
 
-		changed := false
+		d.checkIfUserModified(u)
 
-		//check if the values in the form where changed by comparing them to the original ones
-		if u.FirstName != d.Users[d.IndexUser].FirstName && u.FirstName != "" {
-			d.Users[d.IndexUser].FirstName = u.FirstName
-			changed = true
-		}
-		if u.LastName != d.Users[d.IndexUser].LastName && u.LastName != "" {
-			d.Users[d.IndexUser].LastName = u.LastName
-			changed = true
-		}
-		if u.Mail != d.Users[d.IndexUser].Mail && u.Mail != "" {
-			d.Users[d.IndexUser].Mail = u.Mail
-			changed = true
-		}
-		if u.Address != d.Users[d.IndexUser].Address && u.Address != "" {
-			d.Users[d.IndexUser].Address = u.Address
-			changed = true
-		}
-		if u.PostNrAndPlace != d.Users[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
-			d.Users[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
-			changed = true
-		}
-		if u.PhoneNr != d.Users[d.IndexUser].PhoneNr && u.PhoneNr != "" {
-			d.Users[d.IndexUser].PhoneNr = u.PhoneNr
-			changed = true
-		}
-		if u.OrgNr != d.Users[d.IndexUser].OrgNr && u.OrgNr != "" {
-			d.Users[d.IndexUser].OrgNr = u.OrgNr
-			changed = true
-		}
-		if u.CountryID != d.Users[d.IndexUser].CountryID && u.CountryID != "" {
-			d.Users[d.IndexUser].CountryID = u.CountryID
-			changed = true
-		}
-		if u.BankAccount != d.Users[d.IndexUser].BankAccount && u.BankAccount != "" {
-			d.Users[d.IndexUser].BankAccount = u.BankAccount
-			changed = true
-		}
+	}
+}
 
-		//if any of the values was changed....update information into database
-		if changed {
-			data.UpdateUser(d.PDB, d.Users[d.IndexUser])
-		}
+//checkIfUserModified checks if any of the fields for the user have been modified,
+//and writes changes to the database
+func (d *webData) checkIfUserModified(u data.User) {
+	changed := false
+
+	//check if the values in the form where changed by comparing them to the original ones
+	if u.FirstName != d.Users[d.IndexUser].FirstName && u.FirstName != "" {
+		d.Users[d.IndexUser].FirstName = u.FirstName
+		changed = true
+	}
+	if u.LastName != d.Users[d.IndexUser].LastName && u.LastName != "" {
+		d.Users[d.IndexUser].LastName = u.LastName
+		changed = true
+	}
+	if u.Mail != d.Users[d.IndexUser].Mail && u.Mail != "" {
+		d.Users[d.IndexUser].Mail = u.Mail
+		changed = true
+	}
+	if u.Address != d.Users[d.IndexUser].Address && u.Address != "" {
+		d.Users[d.IndexUser].Address = u.Address
+		changed = true
+	}
+	if u.PostNrAndPlace != d.Users[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
+		d.Users[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
+		changed = true
+	}
+	if u.PhoneNr != d.Users[d.IndexUser].PhoneNr && u.PhoneNr != "" {
+		d.Users[d.IndexUser].PhoneNr = u.PhoneNr
+		changed = true
+	}
+	if u.OrgNr != d.Users[d.IndexUser].OrgNr && u.OrgNr != "" {
+		d.Users[d.IndexUser].OrgNr = u.OrgNr
+		changed = true
+	}
+	if u.CountryID != d.Users[d.IndexUser].CountryID && u.CountryID != "" {
+		d.Users[d.IndexUser].CountryID = u.CountryID
+		changed = true
+	}
+	if u.BankAccount != d.Users[d.IndexUser].BankAccount && u.BankAccount != "" {
+		d.Users[d.IndexUser].BankAccount = u.BankAccount
+		changed = true
+	}
+
+	//if any of the values was changed....update information into database
+	if changed {
+		data.UpdateUser(d.PDB, d.Users[d.IndexUser])
 	}
 }
 
