@@ -99,15 +99,12 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 		//if buttonPushed == "Choose selected" {
 		d.ActiveUserID, _ = strconv.Atoi(r.FormValue("users"))
 		//}
-		for i, v := range d.Users {
-			fmt.Println("v = ", v)
+		for i := range d.Users {
 			d.Users[i].Selected = ""
 			//if the id from the dropdown is the same as the one we found, set selected
 			if d.Users[i].Number == d.ActiveUserID {
-				fmt.Println("*************FOUND THE USER*******************")
 				d.Users[i].Selected = "selected"
 			}
-			fmt.Println("--- ", d.Users[i])
 		}
 
 		//Execute the web for modify users, range over p to make the select user drop down menu
