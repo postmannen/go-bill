@@ -72,7 +72,7 @@ func (s *server) routes() {
 	s.router.HandleFunc("/", s.data.mainPage())
 	s.router.HandleFunc("/manageUsers", s.data.manageUsers())
 	s.router.HandleFunc("/addUser", s.data.addUsers())
-	s.router.HandleFunc("/modifyUser", s.modifyUsers())
+	s.router.HandleFunc("/modifyUser", s.data.modifyUsers())
 	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdmin())
 	s.router.HandleFunc("/createBillSelectUser", s.data.selectUserForBill())
 	s.router.HandleFunc("/editBill", s.data.editBill())

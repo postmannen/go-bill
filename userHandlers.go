@@ -77,7 +77,7 @@ func (d *webData) addUsers() http.HandlerFunc {
 
 //The web handler for modifying a person
 //Using websocket
-func (d *server) modifyUsers() http.HandlerFunc {
+func (d *webData) modifyUsers() http.HandlerFunc {
 	var init sync.Once
 	var tpl *template.Template
 	init.Do(func() {
@@ -92,16 +92,16 @@ func (d *server) modifyUsers() http.HandlerFunc {
 
 		ip := r.RemoteAddr
 		//query the userDB for all users and put the returning slice with result in p
-		d.data.Users = data.QueryAllUserInfo(d.data.PDB)
+		d.Users = data.QueryAllUserInfo(d.PDB)
 
 		//Execute the web for modify users, range over p to make the select user drop down menu
-		err = tpl.ExecuteTemplate(w, "modifyUserPage", d.data.Users)
+		err = tpl.ExecuteTemplate(w, "modifyUserPage", d.Users)
 		if err != nil {
 			fmt.Fprint(w, "template execution error = ", err)
 		}
 
 		//Execute the modifyUserSelection drop down menu template
-		err = tpl.ExecuteTemplate(w, "modifyUserSelection", d.data.Users)
+		err = tpl.ExecuteTemplate(w, "modifyUserSelection", d.Users)
 		if err != nil {
 			fmt.Fprint(w, "template execution error = ", err)
 		}
@@ -114,21 +114,21 @@ func (d *server) modifyUsers() http.HandlerFunc {
 		if buttonPushed == "Delete user" {
 			userID, _ := strconv.Atoi(r.FormValue("users"))
 			fmt.Printf("---userID = %v, and type = %T\n", userID, userID)
-			data.DeleteUser(d.data.PDB, userID)
+			data.DeleteUser(d.PDB, userID)
 		}
 		//WORKING HERE !!!!!!!!!!
 		if buttonPushed == "Choose selected" {
 			userID, _ := strconv.Atoi(r.FormValue("users"))
 			//first range all users and make sure none is marked as selected
-			for i, v := range d.data.Users {
+			for i, v := range d.Users {
 				fmt.Println("v = ", v)
-				d.data.Users[i].Selected = ""
+				d.Users[i].Selected = ""
 				//if the id from the dropdown is the same as the one we found, set selected
-				if d.data.Users[i].Number == userID {
+				if d.Users[i].Number == userID {
 					fmt.Println("*************FOUND THE USER*******************")
-					d.data.Users[i].Selected = "selected"
+					d.Users[i].Selected = "selected"
 				}
-				fmt.Println("--- ", d.data.Users[i])
+				fmt.Println("--- ", d.Users[i])
 			}
 		}
 
@@ -136,14 +136,14 @@ func (d *server) modifyUsers() http.HandlerFunc {
 		num, _ := strconv.Atoi(r.FormValue("users"))
 
 		//Write out all the info of the selected user to the web
-		for i := range d.data.Users {
-			log.Println(ip, "modifyUsersWeb: d.Users[i].Number = ", d.data.Users[i].Number)
+		for i := range d.Users {
+			log.Println(ip, "modifyUsersWeb: d.Users[i].Number = ", d.Users[i].Number)
 			//Iterate over the complete struct of users until the chosen user is found
-			if d.data.Users[i].Number == num {
-				log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", d.data.Users[i].FirstName, d.data.Users[i].LastName)
+			if d.Users[i].Number == num {
+				log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", d.Users[i].FirstName, d.Users[i].LastName)
 				//Store the index nr in slice of the chosen user
-				d.data.IndexUser = i
-				err := tpl.ExecuteTemplate(w, "modifyUser", d.data.Users[i])
+				d.IndexUser = i
+				err := tpl.ExecuteTemplate(w, "modifyUser", d.Users[i])
 				if err != nil {
 					log.Println(ip, "modifyUsersWeb: error = ", err)
 				}
@@ -165,46 +165,46 @@ func (d *server) modifyUsers() http.HandlerFunc {
 		changed := false
 
 		//check if the values in the form where changed by comparing them to the original ones
-		if u.FirstName != d.data.Users[d.data.IndexUser].FirstName && u.FirstName != "" {
-			d.data.Users[d.data.IndexUser].FirstName = u.FirstName
+		if u.FirstName != d.Users[d.IndexUser].FirstName && u.FirstName != "" {
+			d.Users[d.IndexUser].FirstName = u.FirstName
 			changed = true
 		}
-		if u.LastName != d.data.Users[d.data.IndexUser].LastName && u.LastName != "" {
-			d.data.Users[d.data.IndexUser].LastName = u.LastName
+		if u.LastName != d.Users[d.IndexUser].LastName && u.LastName != "" {
+			d.Users[d.IndexUser].LastName = u.LastName
 			changed = true
 		}
-		if u.Mail != d.data.Users[d.data.IndexUser].Mail && u.Mail != "" {
-			d.data.Users[d.data.IndexUser].Mail = u.Mail
+		if u.Mail != d.Users[d.IndexUser].Mail && u.Mail != "" {
+			d.Users[d.IndexUser].Mail = u.Mail
 			changed = true
 		}
-		if u.Address != d.data.Users[d.data.IndexUser].Address && u.Address != "" {
-			d.data.Users[d.data.IndexUser].Address = u.Address
+		if u.Address != d.Users[d.IndexUser].Address && u.Address != "" {
+			d.Users[d.IndexUser].Address = u.Address
 			changed = true
 		}
-		if u.PostNrAndPlace != d.data.Users[d.data.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
-			d.data.Users[d.data.IndexUser].PostNrAndPlace = u.PostNrAndPlace
+		if u.PostNrAndPlace != d.Users[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
+			d.Users[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
 			changed = true
 		}
-		if u.PhoneNr != d.data.Users[d.data.IndexUser].PhoneNr && u.PhoneNr != "" {
-			d.data.Users[d.data.IndexUser].PhoneNr = u.PhoneNr
+		if u.PhoneNr != d.Users[d.IndexUser].PhoneNr && u.PhoneNr != "" {
+			d.Users[d.IndexUser].PhoneNr = u.PhoneNr
 			changed = true
 		}
-		if u.OrgNr != d.data.Users[d.data.IndexUser].OrgNr && u.OrgNr != "" {
-			d.data.Users[d.data.IndexUser].OrgNr = u.OrgNr
+		if u.OrgNr != d.Users[d.IndexUser].OrgNr && u.OrgNr != "" {
+			d.Users[d.IndexUser].OrgNr = u.OrgNr
 			changed = true
 		}
-		if u.CountryID != d.data.Users[d.data.IndexUser].CountryID && u.CountryID != "" {
-			d.data.Users[d.data.IndexUser].CountryID = u.CountryID
+		if u.CountryID != d.Users[d.IndexUser].CountryID && u.CountryID != "" {
+			d.Users[d.IndexUser].CountryID = u.CountryID
 			changed = true
 		}
-		if u.BankAccount != d.data.Users[d.data.IndexUser].BankAccount && u.BankAccount != "" {
-			d.data.Users[d.data.IndexUser].BankAccount = u.BankAccount
+		if u.BankAccount != d.Users[d.IndexUser].BankAccount && u.BankAccount != "" {
+			d.Users[d.IndexUser].BankAccount = u.BankAccount
 			changed = true
 		}
 
 		//if any of the values was changed....update information into database
 		if changed {
-			data.UpdateUser(d.data.PDB, d.data.Users[d.data.IndexUser])
+			data.UpdateUser(d.PDB, d.Users[d.IndexUser])
 		}
 	}
 }
