@@ -137,7 +137,7 @@
             <!--Sett inn en select boks som viser .Firstname, og legger ID variablen i .Number -->
             <select name="users">
                 {{range .}}
-                <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
+                <option value="{{.Number}}" {{.Selected}}>{{.Number}}. {{.FirstName}} {{.LastName}}</option>
                 {{end}}
             </select>
             <input type="submit" name="submitButton" value="Choose selected">
