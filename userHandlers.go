@@ -109,7 +109,7 @@ func (d *webData) modifyUsers() http.HandlerFunc {
 		//Delete user from db when button is pushed
 		fmt.Println("---The FORM = ", r.Form)
 		fmt.Println("---single value from form = ", r.Form["users"])
-		deleteUserButton := r.FormValue("deleteUserButton")
+		deleteUserButton := r.FormValue("submitButton")
 		//if the manage bills button were pushed
 		if deleteUserButton == "Delete user" {
 			fn, _ := strconv.Atoi(r.FormValue("users"))
