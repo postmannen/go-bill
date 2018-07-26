@@ -12,7 +12,6 @@ import (
 
 type server struct {
 	address string
-	tpl     *template.Template
 	wData   *webData
 }
 
@@ -28,15 +27,16 @@ type webData struct {
 	PDB              *sql.DB
 	IndexUser        int    //to store the index nr. in slice where the chosen user is stored
 	Currency         string //TODO: Make this linked to chosen language for admin user
+	tpl              *template.Template
 }
 
 var tmpl map[string]*template.Template //map to hold all templates
 
 func init() {
-	//initate the templates
+	/*//initate the templates
 	tmpl = make(map[string]*template.Template)
 	tmpl["user.html"] = template.Must(template.ParseFiles("public/userTemplates.html"))
-	tmpl["bill.html"] = template.Must(template.ParseFiles("public/billTemplates.html"))
+	tmpl["bill.html"] = template.Must(template.ParseFiles("public/billTemplates.html"))*/
 }
 
 func newServer() *server {
@@ -49,8 +49,9 @@ func newServer() *server {
 
 	return &server{
 		address: "localhost:8080",
-		tpl:     t,
-		wData:   &webData{},
+		wData: &webData{
+			tpl: t,
+		},
 	}
 }
 

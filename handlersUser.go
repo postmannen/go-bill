@@ -12,7 +12,7 @@ import (
 //The default handler for the / main page
 func (d *webData) mainPage(w http.ResponseWriter, r *http.Request) {
 	//start a web page based on template
-	err := tmpl["user.html"].ExecuteTemplate(w, "mainCompletePage", "put the data here")
+	err := d.tpl.ExecuteTemplate(w, "mainCompletePage", d)
 	if err != nil {
 		log.Println("mainPage: template execution error = ", err)
 	}
@@ -20,7 +20,7 @@ func (d *webData) mainPage(w http.ResponseWriter, r *http.Request) {
 
 //The web handler for adding persons
 func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
-	err := tmpl["user.html"].ExecuteTemplate(w, "addUserCompletePage", "some data")
+	err := d.tpl.ExecuteTemplate(w, "addUserCompletePage", "some data")
 	if err != nil {
 		log.Println("addUsersWeb: template execution error = ", err)
 	}
@@ -55,13 +55,13 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	p := data.QueryAllUserInfo(d.PDB)
 
 	//Execute the web for modify users, range over p to make the select user drop down menu
-	err := tmpl["user.html"].ExecuteTemplate(w, "modifyUserCompletePage", p)
+	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
 	if err != nil {
 		fmt.Fprint(w, "template execution error = ", err)
 	}
 
 	//Execute the modifyUserSelection drop down menu template
-	err = tmpl["user.html"].ExecuteTemplate(w, "modifyUserSelection", p)
+	err = d.tpl.ExecuteTemplate(w, "modifyUserSelection", p)
 	if err != nil {
 		fmt.Fprint(w, "template execution error = ", err)
 	}
@@ -79,7 +79,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", p[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
 			d.IndexUser = i
-			err := tmpl["user.html"].ExecuteTemplate(w, "modifyUser", p[i]) //bruk bare en spesifik slice av struct og send til html template
+			err := d.tpl.ExecuteTemplate(w, "modifyUser", p[i]) //bruk bare en spesifik slice av struct og send til html template
 			if err != nil {
 				log.Println(ip, "modifyUsersWeb: error = ", err)
 			}
@@ -160,14 +160,14 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	p := data.QuerySingleUserInfo(d.PDB, adminID)
 
 	//Execute the web for modify users, range over p to make the select user drop down menu
-	err := tmpl["user.html"].ExecuteTemplate(w, "modifyUserCompletePage", p)
+	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
 	if err != nil {
 		fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
 	}
 
 	//Write out all the info of the selected user to the web
 
-	err = tmpl["user.html"].ExecuteTemplate(w, "modifyUser", p) //bruk bare en spesifik slice av struct og send til html template
+	err = d.tpl.ExecuteTemplate(w, "modifyUser", p) //bruk bare en spesifik slice av struct og send til html template
 	if err != nil {
 		log.Println(ip, "modifyAdminWeb: error = ", err)
 	}
@@ -239,7 +239,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 		data.UpdateUser(d.PDB, p)
 
 		//Execute the redirect to modifyAdmin to refresh page
-		err := tmpl["user.html"].ExecuteTemplate(w, "redirectTomodifyAdmin", p)
+		err := d.tpl.ExecuteTemplate(w, "redirectTomodifyAdmin", p)
 		if err != nil {
 			fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
 		}
@@ -249,7 +249,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 //The web handler to show and print out all registered users in the database
 func (d *webData) showUsersWeb(w http.ResponseWriter, r *http.Request) {
 	p := data.QueryAllUserInfo(d.PDB)
-	err := tmpl["user.html"].ExecuteTemplate(w, "showUserCompletePage", p)
+	err := d.tpl.ExecuteTemplate(w, "showUserCompletePage", p)
 	if err != nil {
 		log.Println("showUsersWeb: template execution error = ", err)
 	}
@@ -259,7 +259,7 @@ func (d *webData) showUsersWeb(w http.ResponseWriter, r *http.Request) {
 //The web handler to delete a person
 func (d *webData) deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 	p := data.QueryAllUserInfo(d.PDB)
-	err := tmpl["user.html"].ExecuteTemplate(w, "deleteUserCompletePage", p)
+	err := d.tpl.ExecuteTemplate(w, "deleteUserCompletePage", p)
 	if err != nil {
 		log.Println("showUsersWeb: template execution error = ", err)
 	}

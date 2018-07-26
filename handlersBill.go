@@ -18,7 +18,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	ip := r.RemoteAddr
 
 	//creates the header and the select box from templates
-	err := tmpl["bill.html"].ExecuteTemplate(w, "createBillCompletePage", d)
+	err := d.tpl.ExecuteTemplate(w, "createBillCompletePage", d)
 	if err != nil {
 		log.Println("createBillUserSelection: template execution error = ", err)
 	}
@@ -45,7 +45,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 			d.IndexUser = i
 			//store all the info of the current user in the struct for feeding variables to the templates
 			d.CurrentUser = d.Users[i]
-			err := tmpl["bill.html"].ExecuteTemplate(w, "billShowUser", d)
+			err := d.tpl.ExecuteTemplate(w, "billShowUser", d)
 			if err != nil {
 				log.Println(ip, "modifyUsersWeb: error = ", err)
 			}
@@ -65,7 +65,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 
 	//if the manage bills button were pushed
 	if buttonAction == "manage bills" {
-		err = tmpl["bill.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
@@ -106,7 +106,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	BillsForUser = sortBills(BillsForUser)
 
 	//draw the bill select box in the window
-	err := tmpl["bill.html"].ExecuteTemplate(w, "billSelectBox", BillsForUser)
+	err := d.tpl.ExecuteTemplate(w, "billSelectBox", BillsForUser)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
 	}
@@ -148,7 +148,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//TESTING
 	d.CurrentBill = CurrentBill
 
-	err = tmpl["bill.html"].ExecuteTemplate(w, "showBillInfo", d.CurrentBill)
+	err = d.tpl.ExecuteTemplate(w, "showBillInfo", d.CurrentBill)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
 	}
@@ -210,7 +210,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			data.UpdateBill(d.PDB, CurrentBill)
 
 			//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
-			err = tmpl["bill.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+			err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 			if err != nil {
 				log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 			}
@@ -218,7 +218,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//if r.FormValue("billPrintView") == "print view" {
-	//	err = tmpl["bill.html"].ExecuteTemplate(w,)
+	//	err = d.tpl.ExecuteTemplate(w,)
 	//}
 
 	updateLineExVatTotal(storedBillLines)
@@ -227,7 +227,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	d.CurrentBillLines = storedBillLines
 	//create all the billLines on the screen
-	err = tmpl["bill.html"].ExecuteTemplate(w, "createBillLines", d)
+	err = d.tpl.ExecuteTemplate(w, "createBillLines", d)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}
@@ -251,7 +251,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		billLine.Description = "noe tekst"
 		data.AddBillLine(d.PDB, billLine)
 		//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
-		err = tmpl["bill.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
@@ -267,7 +267,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		data.DeleteBillLine(d.PDB, d.CurrentBillID, buttonNumbers)
 
 		//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
-		err = tmpl["bill.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
@@ -296,7 +296,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	if changed && modifyButtonPushed {
 		data.UpdateBillLine(d.PDB, formBillLines)
 
-		err = tmpl["bill.html"].ExecuteTemplate(w, "redirectToEditBill", "some data")
+		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
@@ -307,7 +307,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 func (d *webData) printBill(w http.ResponseWriter, r *http.Request) {
 	d.CurrentAdmin = data.QuerySingleUserInfo(d.PDB, 0)
 	d.CurrentBill.TotalVat = d.CurrentBill.TotalIncVat - d.CurrentBill.TotalExVat
-	err := tmpl["bill.html"].ExecuteTemplate(w, "printBillComplete", d)
+	err := d.tpl.ExecuteTemplate(w, "printBillComplete", d)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
 	}
