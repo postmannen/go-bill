@@ -3,10 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"html/template"
 	"net/http"
-
-	"github.com/gorilla/mux"
-	"github.com/gorilla/schema"
+	"os/exec"
+	"runtime"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/postmannen/go-bill/data"
@@ -24,75 +24,52 @@ type webData struct {
 	PDB              *sql.DB
 	IndexUser        int    //to store the index nr. in slice where the chosen user is stored
 	Currency         string //TODO: Make this linked to chosen language for admin user
-	//msgToTemplate is a reference to know what html template to
-	//be used based on which msg comming in from the client browser.
-	msgToTemplate map[string]string
 }
 
-func newWebData() *webData {
-	return &webData{}
-}
+var tmpl map[string]*template.Template //map to hold all templates
 
-type server struct {
-	addr   string      //the adress and port to listen on
-	router *mux.Router //use gorilla mux for our router
-	data   webData     //put all the user data into the server struct
-}
-
-var formDecoder = schema.NewDecoder()
-
-func newServer() *server {
-	return &server{
-		addr:   ":8080",
-		router: mux.NewRouter(),
-		//msgToTemplate: make(map[string]string),
-	}
-}
-
-/*
-HVA EN MÅ GJØRE !!!!!!!!!!
-Websocket html siden, må kalle kalle opp en egen echo handler type for hver enkelt side.
-Denne siden må ha en egen URL så det går ann å skille dem fra hverandre.
-
-Det som da skjer er følgende for en spesifik side:
----------------------------------------------------
-1.
-En hoved handler kjører hoved templaten for en side som inneholder den generelle javascript.html
-siden som skal kjøres på en klient. Javascript koden må inneholde hvilken "websocket handlerfunc"
-som skal benyttes for siden.
-
-2.
-I tilegg så settes det opp en egen websocket handlerfunc for hver side. Denne siden inneholder all
-logikken som skal til for å tegne dynamiske data på siden. Denne siden er også den som må gjøre
-spøringer til f.eks. databasen for å hente ut data.
-*/
-
-func (s *server) routes() {
-	s.router.HandleFunc("/echo", s.data.socketHandler())
-	s.router.HandleFunc("/", s.data.mainPage())
-	s.router.HandleFunc("/manageUsers", s.data.manageUsers())
-	s.router.HandleFunc("/addUser", s.data.addUsers())
-	s.router.HandleFunc("/modifyUser", s.data.modifyUsers())
-	s.router.HandleFunc("/modifyAdmin", s.data.modifyAdmin())
-	s.router.HandleFunc("/createBillSelectUser", s.data.selectUserForBill())
-	s.router.HandleFunc("/editBill", s.data.editBill())
-	s.router.HandleFunc("/printBill", s.data.printBill())
-	s.router.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+func init() {
+	//initate the templates
+	tmpl = make(map[string]*template.Template)
+	tmpl["user.html"] = template.Must(template.ParseFiles("public/userTemplates.html"))
+	tmpl["bill.html"] = template.Must(template.ParseFiles("public/billTemplates.html"))
 }
 
 func main() {
-	s := newServer()
 
-	//initialize db, and create if not exist
-	s.data.PDB = data.Create()
-	defer s.data.PDB.Close()
+	//create DB and store pointer in pDB
+	wData := webData{}
+	wData.PDB = data.Create()
+	defer wData.PDB.Close()
+	wData.Currency = "$"
 
-	//should be changed based on language
-	s.data.Currency = "$"
+	//openBrowser()
 
-	s.data.templates()
-	fmt.Println(s.data.msgToTemplate)
-	s.routes()
-	http.ListenAndServe(s.addr, s.router)
+	//HandleFunc takes a handle (ResponseWriter) as first parameter,
+	//and pointer to Request function as second parameter
+	http.HandleFunc("/sp", wData.showUsersWeb)
+	http.HandleFunc("/ap", wData.addUsersWeb)
+	http.HandleFunc("/mp", wData.modifyUsersWeb)
+	http.HandleFunc("/modifyAdmin", wData.modifyAdminWeb)
+	http.HandleFunc("/", wData.mainPage)
+	http.HandleFunc("/du", wData.deleteUserWeb)
+	http.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
+	http.HandleFunc("/editBill", wData.webBillLines)
+	http.HandleFunc("/eBill", wData.editBill)
+	http.HandleFunc("/printBill", wData.printBill)
+	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+	http.ListenAndServe(":7000", nil)
 
+}
+
+func openBrowser() {
+	fmt.Println(runtime.GOOS)
+
+	switch runtime.GOOS {
+	case "darwin":
+		fmt.Println("The OS which is chosen is MacOs")
+		cmd := exec.Command("open", "http://localhost:7000")
+		cmd.Run()
+
+	}
 }

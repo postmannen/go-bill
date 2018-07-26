@@ -16,7 +16,7 @@ func QueryAllUserInfo(pDB *sql.DB) []User {
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo highestNR ER = ", lastUserID)
 	fmt.Println("queryDBForAllUserInfo : queryDBForAllUserInfo countlines = ", countLines)
 
-	for i := 0; i <= lastUserID; i++ {
+	for i := 1; i <= lastUserID; i++ {
 		//append the row to slice
 		pTemp := QuerySingleUserInfo(pDB, i)
 		//if user is not deleted, append the user id to the slice
@@ -27,8 +27,7 @@ func QueryAllUserInfo(pDB *sql.DB) []User {
 	return p
 }
 
-//QuerySingleUserInfo , Query the database for the info of a single user.
-//Takes user ID of type int as input, returns struct of single user
+//QuerySingleUserInfo , Query the database for the info of a single user. Takes user ID of type int as input, returns struct of single user
 func QuerySingleUserInfo(db *sql.DB, uid int) User {
 
 	rows, err := db.Query("select * from user where user_id=?", uid)
@@ -37,9 +36,8 @@ func QuerySingleUserInfo(db *sql.DB, uid int) User {
 	var pid int
 	//variables to store the rows.Scan below
 	var firstname, lastname, mail, address, postnrandplace, phonenr, orgnr, countryID, bankAccount string
-	//Next prepares the next result row for reading with the Scan method.
-	//It returns true on success, or false if there is no next result row
-	//or an error happened while preparing it.
+	//Next prepares the next result row for reading with the Scan method. It returns true on success,
+	//or false if there is no next result row or an error happened while preparing it.
 	//Err should be consulted to distinguish between the two cases.
 	for rows.Next() {
 		//Scan copies the columns in the current row into the values pointed at by dest.
@@ -63,8 +61,7 @@ func QuerySingleUserInfo(db *sql.DB, uid int) User {
 	return m
 }
 
-//QueryForLastUID , input *sql.DB and returns the highest uid number,
-// and line count of rows in DB
+//QueryForLastUID , input *sql.DB and returns the highest uid number, and line count of rows in DB
 func QueryForLastUID(db *sql.DB) (int, int) {
 	rows, err := db.Query("select user_id from user")
 	checkErr(err)
@@ -142,8 +139,7 @@ func AddUser(db *sql.DB, u User) {
 
 //************************** BILL SECTION ***********************************
 
-//QueryBillLines , Query the database all the bill lines for a specific bill nr.
-//Takes bill_id of type int as input,
+//QueryBillLines , Query the database all the bill lines for a specific bill nr. Takes bill_id of type int as input,
 //returns a slice of struct type BillLines
 func QueryBillLines(db *sql.DB, billID int) []BillLines {
 
@@ -163,9 +159,8 @@ func QueryBillLines(db *sql.DB, billID int) []BillLines {
 	//used to store a slice of all the values from mm
 	m := []BillLines{}
 
-	//Next prepares the next result row for reading with the Scan method.
-	//It returns true on success, or false if there is no next result row
-	//or an error happened while preparing it.
+	//Next prepares the next result row for reading with the Scan method. It returns true on success,
+	//or false if there is no next result row or an error happened while preparing it.
 	//Err should be consulted to distinguish between the two cases.
 	for rows.Next() {
 		//Scan copies the columns in the current row into the values pointed at by dest.
@@ -181,8 +176,7 @@ func QueryBillLines(db *sql.DB, billID int) []BillLines {
 	return m
 }
 
-//QueryBillsForUser , Query the database all the bills for a specific user_id.
-//Takes user_id of type int as input,
+//QueryBillsForUser , Query the database all the bills for a specific user_id. Takes user_id of type int as input,
 //returns a slice of struct type Bill
 func QueryBillsForUser(db *sql.DB, userID int) []Bill {
 
@@ -198,9 +192,8 @@ func QueryBillsForUser(db *sql.DB, userID int) []Bill {
 	//used to store a slice of all the values from mm
 	m := []Bill{}
 
-	//Next prepares the next result row for reading with the Scan method.
-	//It returns true on success, or false if there is no next result
-	//row or an error happened while preparing it.
+	//Next prepares the next result row for reading with the Scan method. It returns true on success,
+	//or false if there is no next result row or an error happened while preparing it.
 	//Err should be consulted to distinguish between the two cases.
 	for rows.Next() {
 		//Scan copies the columns in the current row into the values pointed at by dest.
@@ -220,8 +213,7 @@ func QueryBillsForUser(db *sql.DB, userID int) []Bill {
 
 //------------
 
-//QueryLastBillID , input *sql.DB and returns the highest bill number,
-//and line count of rows in DB
+//QueryLastBillID , input *sql.DB and returns the highest bill number, and line count of rows in DB
 func QueryLastBillID(db *sql.DB) (int, int) {
 	rows, err := db.Query("SELECT bill_id FROM bills")
 	checkErr(err)
@@ -234,9 +226,7 @@ func QueryLastBillID(db *sql.DB) (int, int) {
 		var readValue int
 		//The number of values below must be the same amount
 		//as the number of rows in the DB
-		//
-		//Reads data from db and puts it into the address of the variable
-		err := rows.Scan(&readValue)
+		err := rows.Scan(&readValue) //reads data from db and puts it into the address of the variable
 		checkErr(err)
 		num = append(num, readValue)
 	}
@@ -256,8 +246,7 @@ func QueryLastBillID(db *sql.DB) (int, int) {
 	return highestNr, countLines
 }
 
-//AddBill , Adds new bill to Database. takes pointer to DB,
-//and type bill struct as input. Returns bill ID of type int.
+//AddBill , Adds new bill to Database. takes pointer to DB, and type bill struct as input. Returns bill ID of type int
 func AddBill(db *sql.DB, b Bill) int {
 	//start db session
 	tx, err := db.Begin()
@@ -286,8 +275,7 @@ func AddBill(db *sql.DB, b Bill) int {
 	return b.BillID
 }
 
-//UpdateBill , updates bill to Database.
-//Takes pointer to DB, and type bill struct as input.
+//UpdateBill , updates bill to Database. takes pointer to DB, and type bill struct as input.
 func UpdateBill(db *sql.DB, b Bill) {
 	//start db session
 	tx, err := db.Begin()
@@ -343,8 +331,8 @@ func UpdateBillPriceExVat(db *sql.DB, sum float64, billID int) {
 
 }
 
-//AddBillLine , Adds new bill line to Database. takes pointer to DB,
-//and type BillLines struct as input.
+//AddBillLine , Adds new bill line to Database. takes pointer to DB, and type BillLines struct as input
+//Create a function to keep track of the next available indx number in database
 func AddBillLine(db *sql.DB, b BillLines) {
 	//start db session
 	tx, err := db.Begin()
@@ -378,8 +366,7 @@ func AddBillLine(db *sql.DB, b BillLines) {
 
 }
 
-//QueryForLastBillLineIndx , query db for the last used Bill Line Index.
-//Returns last used indx, and lineCount
+//QueryForLastBillLineIndx , query db for the last used Bill Line Index. Returns last used indx, and lineCount
 func QueryForLastBillLineIndx(db *sql.DB) (int, int) {
 	rows, err := db.Query("SELECT indx FROM bill_lines")
 	checkErr(err)
@@ -391,10 +378,8 @@ func QueryForLastBillLineIndx(db *sql.DB) (int, int) {
 	for rows.Next() {
 		var readValue int
 		//The number of values below must be the same amount
-		//as the number of rows in the DB.
-		//
-		//Reads data from db and puts it into the address of the variable.
-		err := rows.Scan(&readValue)
+		//as the number of rows in the DB
+		err := rows.Scan(&readValue) //reads data from db and puts it into the address of the variable
 		checkErr(err)
 		num = append(num, readValue)
 	}
@@ -414,8 +399,7 @@ func QueryForLastBillLineIndx(db *sql.DB) (int, int) {
 	return highestNr, countLines
 }
 
-//DeleteBillLine , Delete a row in user DB, takes pointer to db,
-//and index number uid which corresponds to column 1 in DB for input.
+//DeleteBillLine , Delete a row in user DB, takes pointer to db, and index number uid which corresponds to column 1 in DB for input
 func DeleteBillLine(db *sql.DB, billID int, billLine int) {
 	tx, err := db.Begin()
 	checkErr(err)
@@ -433,8 +417,7 @@ func DeleteBillLine(db *sql.DB, billID int, billLine int) {
 
 }
 
-//UpdateBillLine , Update bill line in Database,
-//takes pointer to db and type User struct as input
+//UpdateBillLine , Update bill line in Database, takes pointer to db and type User struct as input
 func UpdateBillLine(db *sql.DB, b []BillLines) {
 	for _, v := range b {
 		tx, err := db.Begin()
@@ -450,7 +433,6 @@ func UpdateBillLine(db *sql.DB, b []BillLines) {
 }
 
 //Create , **************************  creates the database  ********************************
-//This function will create the database and fill in some dummy values.
 func Create() *sql.DB {
 	//1. Open connection
 
@@ -519,8 +501,7 @@ func checkErr(err error, args ...string) {
 	}
 }
 
-//DeleteUser , Delete a row in user DB, takes pointer to db,
-//and index number uid which corresponds to column 1 in DB for input.
+//DeleteUser , Delete a row in user DB, takes pointer to db, and index number uid which corresponds to column 1 in DB for input
 func DeleteUser(db *sql.DB, number int) {
 	tx, err := db.Begin()
 	checkErr(err)

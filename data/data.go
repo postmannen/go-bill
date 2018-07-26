@@ -3,25 +3,25 @@ package data
 //User is used for all customers and users
 type User struct { //some
 	Number         int
-	FirstName      string `schema:"firstname"`
-	LastName       string `schema:"lastname"`
-	Mail           string `schema:"mail"`
-	Address        string `schema:"address"`
-	PostNrAndPlace string `schema:"poAddr"`
-	PhoneNr        string `schema:"phone"`
-	OrgNr          string `schema:"orgNr"`
-	CountryID      string `schema:"countryId"`
+	FirstName      string
+	LastName       string
+	Mail           string
+	Address        string
+	PostNrAndPlace string
+	PhoneNr        string
+	OrgNr          string
+	CountryID      string
 	Selected       string
-	BankAccount    string `schema:"bankAccount"`
+	BankAccount    string
 }
 
 type ape struct {
 	navn string
 }
 
-//type hest struct {
-//	ape
-//}
+type hest struct {
+	ape
+}
 
 //Bill struct specifications
 type Bill struct {

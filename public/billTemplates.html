@@ -1,125 +1,95 @@
-<!DOCTYPE html> {{define "head"}}
-
-<head>
-    <title>Faktura</title>
-    <!-- This is the text that is shown in the tab of the browser. Title shall be inside <head> -->
+<!DOCTYPE html>
+{{define "head"}}
+<head >
+    <title>Faktura</title> <!-- This is the text that is shown in the tab of the browser. Title shall be inside <head> -->
     <html>
     <link rel="stylesheet" href="/public/styles.css">
-
     </html>
 </head>
-{{end}} {{define "createBillCompletePage"}}
+{{end}} 
+
+{{define "createBillCompletePage"}}
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/public/styles.css">
-    <title>Document</title>
-</head>
-
-<body>
-    {{template "topMenu"}} {{template "createBillUserSelection" .}}
-</body>
-
-</html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}
+        {{template "topMenu"}}
+        {{template "createBillUserSelection" .}}
+    </body>
 {{end}}
-<!---->
-{{define "editBillMain"}}
+
+{{define "billSelectBox"}}
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/public/styles.css">
-    <title>Document</title>
-</head>
-
-<body>
-    {{template "topMenu"}} {{template "editBillSelectBox" .}}
-</body>
-
-</html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}
+        {{template "topMenu"}}
+        {{template "editBillSelectBox" .}}
+    </body>
 {{end}}
-<!---->
+
 {{define "printBillComplete"}}
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/public/styles.css">
-    <title>Document</title>
-</head>
-
-<body>
-    {{template "topMenu"}} {{template "printBill" .}}
-</body>
-
-</html>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{template "head" .}}
+        {{template "printBill" .}}
+    </body>
 {{end}}
-<!---->
+
 {{define "createBillLines"}}
 <div class="container">
     <form>
         <div class="createBillLineContainer">
             {{range .CurrentBillLines}}
-            <div class="billLineInputs{{.LineID}}">
-                <div class="billLines">
-                    <div class="labelInput">
-                        <!-- ###Hiding the billLine box with display:none ### -->
-                        <label style="display: none" class="infoBox5" for="billLineID{{.LineID}}">Line ID</label>
-                        <input style="display: none" type="text" title="LineID" name="billLineID{{.LineID}}" value="{{.LineID}}" maxlength="64">
-                    </div>
-                    <div class="labelTextArea" style="display: block;">
+                <div class="billLineInputs{{.LineID}}">
+                    <div class="billLines">
                         <div class="labelInput">
-                            <label class="infoBox5" for="billLineDescription{{.LineID}}">Description</label>
-                            <!--<input type="text" title="Description" name="billLineDescription{{.LineID}}" value="{{.Description}}" maxlength="512" style="width: 400px">-->
-                            <textarea cols="40" rows="5" style="border: none;" name="billLineDescription{{.LineID}}" value="{{.Description}}" placeholder="{{.Description}}"
-                                maxlength="512">{{.Description}}</textarea>
+                            <!-- ###Hiding the billLine box with display:none ### -->
+                            <label style="display: none" class="infoBox5" for="billLineID{{.LineID}}">Line ID</label>
+                            <input style="display: none" type="text" title="LineID"name="billLineID{{.LineID}}" value="{{.LineID}}" maxlength="64">
+                        </div>
+                        <div class="labelTextArea" style="display: block;">
+                            <div class="labelInput">
+                                <label class="infoBox5" for="billLineDescription{{.LineID}}">Description</label>
+                                <!--<input type="text" title="Description" name="billLineDescription{{.LineID}}" value="{{.Description}}" maxlength="512" style="width: 400px">-->
+                                <textarea cols="40" rows="5" style="border: none;" name="billLineDescription{{.LineID}}" value="{{.Description}}" placeholder="{{.Description}}" maxlength="512">{{.Description}}</textarea>
+                            </div>
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineQuantity{{.LineID}}">Quantity</label>
+                            <input type="text" title="Quantity" name="billLineQuantity{{.LineID}}" value="{{.Quantity}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineDiscountPercentage{{.LineID}}">Discount</label>
+                            <input type="text" title="Discount Percentage" name="billLineDiscountPercentage{{.LineID}}" value="{{.DiscountPercentage}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineVatUsed{{.LineID}}">Vat</label>
+                            <input type="text" title="Vat Used" name="billLineVatUsed{{.LineID}}" value="{{.VatUsed}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLinePriceExVat{{.LineID}}">Price Ex Vat</label>
+                            <input type="text" title="Price Ex Vat" name="billLinePriceExVat{{.LineID}}" value="{{.PriceExVat}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLinePriceExVatTotal{{.LineID}}">Price Ex Vat Total</label>
+                            <input type="text" title="Price Ex Vat" name="billLinePriceExVatTotal{{.LineID}}" value="{{.PriceExVatTotal}}" maxlength="64" readonly>
                         </div>
                     </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLineQuantity{{.LineID}}">Quantity</label>
-                        <input type="text" title="Quantity" name="billLineQuantity{{.LineID}}" value="{{.Quantity}}" maxlength="64">
-                    </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLineDiscountPercentage{{.LineID}}">Discount</label>
-                        <input type="text" title="Discount Percentage" name="billLineDiscountPercentage{{.LineID}}" value="{{.DiscountPercentage}}"
-                            maxlength="64">
-                    </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLineVatUsed{{.LineID}}">Vat</label>
-                        <input type="text" title="Vat Used" name="billLineVatUsed{{.LineID}}" value="{{.VatUsed}}" maxlength="64">
-                    </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLinePriceExVat{{.LineID}}">Price Ex Vat</label>
-                        <input type="text" title="Price Ex Vat" name="billLinePriceExVat{{.LineID}}" value="{{.PriceExVat}}" maxlength="64">
-                    </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLinePriceExVatTotal{{.LineID}}">Price Ex Vat Total</label>
-                        <input type="text" title="Price Ex Vat" name="billLinePriceExVatTotal{{.LineID}}" value="{{.PriceExVatTotal}}" maxlength="64"
-                            readonly>
+                    <div class="billLineButtons">
+                        <input type="submit" name="billLineModifyButton{{.LineID}}" value="modify">
+                        <input type="submit" name="billLineAddButton{{.LineID}}" value="add">
+                        <input type="submit" name="billLineDeleteButton{{.LineID}}" value="delete">
                     </div>
                 </div>
-                <div class="billLineButtons">
-                    <input type="submit" name="billLineModifyButton{{.LineID}}" value="modify">
-                    <input type="submit" name="billLineAddButton{{.LineID}}" value="add">
-                    <input type="submit" name="billLineDeleteButton{{.LineID}}" value="delete">
-                </div>
-            </div>
             {{end}}
         </div>
     </form>
 </div>
 {{end}}
-<!---->
+
+
 {{define "createBillUserSelection"}}
 <!--Use the same css as for modify User, TODO: Rewrite the naming to something more generic -->
 <div class="container">
@@ -130,7 +100,7 @@
             <select name="users">
                 <option disabled selected value> -- select an option -- </option>
                 {{range .Users}}
-                <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
+                    <option value="{{.Number}}">{{.Number}}. {{.FirstName}} {{.LastName}}</option>
                 {{end}}
             </select>
             <input type="submit" name="chooseUserButton" value="choose">
@@ -138,13 +108,13 @@
     </div>
 </div>
 {{end}}
-<!---->
+
 {{define "billShowUser"}}
 <div class="container">
     <form>
         <div class="ShowUserSingleContainer">
             <div class="UserSingleInputs">
-                <div class="labelInput">
+                <div class="labelInput">   
                     <label class="infoBox1" for="firstName">Firstname</label>
                     <input class="infoBox2" title="The name" type="inputUserText" name="firstName" value="{{.CurrentUser.FirstName}}" maxlength="64">
                 </div>
@@ -162,8 +132,7 @@
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="poAddr">PostNrAndPlace</label>
-                    <input class="infoBox2" title="The Post nr and place" type="inputUserText" name="poAddr" value="{{.CurrentUser.PostNrAndPlace}}"
-                        maxlength="64">
+                    <input class="infoBox2" title="The Post nr and place" type="inputUserText" name="poAddr" value="{{.CurrentUser.PostNrAndPlace}}" maxlength="64">
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="phone">Phone</label>
@@ -187,13 +156,13 @@
     </form>
 </div>
 {{end}}
-<!---->
+
 {{define "showBillInfo"}}
 <div class="container">
     <form>
         <div class="showBillInfoContainer">
             <div class="labelInputCol1">
-                <div class="labelInput">
+                <div class="labelInput">    
                     <label class="infoBox1" for="BillID">Bill ID</label>
                     <input class="infoBox2" type="text" name="BillID" value="{{.BillID}}" readonly>
                 </div>
@@ -203,13 +172,13 @@
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="CreatedDate">Created Date</label>
-                    <input class="infoBox2" type="date" name="CreatedDate" value="{{.CreatedDate}}" maxlength="64" required pattern="\d{4}-\d{2}-\d{2}"
-                        title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
+                    <input class="infoBox2" type="date" name="CreatedDate" value="{{.CreatedDate}}" maxlength="64" 
+                    required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="DueDate">Due Date</label>
-                    <input class="infoBox2" type="date" name="DueDate" value="{{.DueDate}}" maxlength="64" required pattern="\d{4}-\d{2}-\d{2}"
-                        title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
+                    <input class="infoBox2" type="date" name="DueDate" value="{{.DueDate}}" maxlength="64" 
+                    required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
                 </div>
             </div>
             <div class="labelInputCol2">
@@ -232,39 +201,62 @@
             </div>
         </div>
         <div class="inplab">
-            <input class="infoBox2" type="submit" name="billModifyButton" value="modify">
+                <input class="infoBox2" type="submit" name="billModifyButton" value="modify">
         </div>
     </form>
     <form action="/printBill" target="_blank">
-        <input class="infoBox2" type="submit" name="billPrintView" value="print view">
+            <input class="infoBox2" type="submit" name="billPrintView" value="print view">
     </form>
 </div>
 {{end}}
-<!---->
-{{define "redirectEditBillMain"}}
-<meta http-equiv="refresh" content="0; URL=/editBill"> {{end}}
-<!---->
+
+{{define "redirectToEditBill"}}
+    <meta http-equiv="refresh" content="0; URL=/editBill">
+{{end}}
+
 {{define "editBillSelectBox"}}
 <div class="editBillSelectBox">
     <form>
         <select name="billID">
             {{range .}}
-            <option value="{{.BillID}}">{{.BillID}}. {{.CreatedDate}}</option>
+                <option value="{{.BillID}}">{{.BillID}}.   {{.CreatedDate}}</option>
             {{end}}
         </select>
         <input type="submit" name="userActionButton" value="choose bill">
     </form>
 </div>
 {{end}}
-<!---->
 
-<!---->
+{{define "topMenu"}}
+
+    <div class="topMenuContainer">
+        <ul class="nav">
+            <li><a href="/">Home</a></li>
+            <li><a>User</a>
+                <ul>
+                    <li><a href="/sp">Show all</a></li>
+                    <li><a href="/ap">Add</a></li>
+                    <li><a href="/mp">Modify</a></li>
+                    <li><a href="/du">Delete</a></li>
+                </ul>
+            </li>
+            <li><a>Bill</a>
+                <ul>
+                    <li><a href="/createBillSelectUser">Create</a></li>
+                </ul>
+            </li>
+            <li><a>About</a></li>
+        </ul>
+    </div>
+
+{{end}}
+
 {{define "printBill"}}
 <div class="container">
     <form>
         <div class="showPrintBillInfoContainer">
             <div class="labelInputCol1">
-                <div class="labelInput">
+                <div class="labelInput">    
                     <label class="infoBox1" for="BillID" style="font-weight: bold;">Bill ID</label>
                     <input class="infoBox2" type="text" name="BillID" value="{{.CurrentBill.BillID}}" readonly style="font-weight: bold;">
                 </div>
@@ -274,13 +266,13 @@
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="CreatedDate">Created Date</label>
-                    <input class="infoBox2" type="date" name="CreatedDate" value="{{.CurrentBill.CreatedDate}}" maxlength="64" required pattern="\d{4}-\d{2}-\d{2}"
-                        title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
+                    <input class="infoBox2" type="date" name="CreatedDate" value="{{.CurrentBill.CreatedDate}}" maxlength="64" 
+                    required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD">
                 </div>
                 <div class="labelInput">
                     <label class="infoBox1" for="DueDate" style="font-weight: bold;">Due Date</label>
-                    <input class="infoBox2" type="date" name="DueDate" value="{{.CurrentBill.DueDate}}" maxlength="64" required pattern="\d{4}-\d{2}-\d{2}"
-                        title="YYYY-MM-DD" placeholder="YYYY-MM-DD" style="font-weight: bold;">
+                    <input class="infoBox2" type="date" name="DueDate" value="{{.CurrentBill.DueDate}}" maxlength="64" 
+                    required pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" placeholder="YYYY-MM-DD" style="font-weight: bold;">
                 </div>
             </div>
             <div class="labelInputCol2">
@@ -337,7 +329,7 @@
             <div class="paymentInfoContainer">
                 <label>Payment Info :</label>
                 <div class="labelInput">
-                    <!--<label class="infoBox1" for="BillID">Bill ID:</label>-->
+                        <!--<label class="infoBox1" for="BillID">Bill ID:</label>-->
                     <label>Bill/KID: {{.CurrentBill.BillID}}</label>
                 </div>
                 <div class="labelInput">
@@ -349,14 +341,14 @@
                     <label>Sum: {{.CurrentBill.TotalIncVat}} {{.Currency}}</label>
                 </div>
                 <div class="labelInput">
-                    <!--<label class="infoBox1" for="TotalVat">TotalVat:</label>-->
+                        <!--<label class="infoBox1" for="TotalVat">TotalVat:</label>-->
                     <label>Vat: {{.CurrentBill.TotalVat}} {{.Currency}}</label>
                 </div>
                 <div class="labelInput">
-                    <!--<label class="infoBox1" for="DueDate">Due Date:</label>-->
+                        <!--<label class="infoBox1" for="DueDate">Due Date:</label>-->
                     <label>Pay day: {{.CurrentBill.DueDate}}</label>
                 </div>
-
+                
             </div>
         </form>
     </div>
@@ -364,99 +356,55 @@
     <form>
         <div class="createBillLineContainer">
             {{range .CurrentBillLines}}
-            <div class="billLineInputs{{.LineID}}">
-                <div class="billLines">
-                    <div class="labelInput">
-                        <!-- ###Hiding the billLine box with display:none ### -->
-                        <label style="display: none" class="infoBox5" for="billLineID{{.LineID}}">Line ID</label>
-                        <input style="display: none" type="text" title="LineID" name="billLineID{{.LineID}}" value="{{.LineID}}" maxlength="64">
-                    </div>
-                    <div class="labelTextArea" style="display: block;">
+                <div class="billLineInputs{{.LineID}}">
+                    <div class="billLines">
                         <div class="labelInput">
-                            <label class="infoBox5" for="billLineDescription{{.LineID}}">Description</label>
-                            <!--<input type="text" title="Description" name="billLineDescription{{.LineID}}" value="{{.Description}}" maxlength="512" style="width: 400px">-->
-                            <textarea cols="40" rows="5" style="border: none;" name="billLineDescription{{.LineID}}" value="{{.Description}}" placeholder="{{.Description}}"
-                                maxlength="512">{{.Description}}</textarea>
+                            <!-- ###Hiding the billLine box with display:none ### -->
+                            <label style="display: none" class="infoBox5" for="billLineID{{.LineID}}">Line ID</label>
+                            <input style="display: none" type="text" title="LineID"name="billLineID{{.LineID}}" value="{{.LineID}}" maxlength="64">
+                        </div>
+                        <div class="labelTextArea" style="display: block;">
+                            <div class="labelInput">
+                                <label class="infoBox5" for="billLineDescription{{.LineID}}">Description</label>
+                                <!--<input type="text" title="Description" name="billLineDescription{{.LineID}}" value="{{.Description}}" maxlength="512" style="width: 400px">-->
+                                <textarea cols="40" rows="5" style="border: none;" name="billLineDescription{{.LineID}}" value="{{.Description}}" placeholder="{{.Description}}" maxlength="512">{{.Description}}</textarea>
+                            </div>
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineQuantity{{.LineID}}">Quantity</label>
+                            <input type="text" title="Quantity" name="billLineQuantity{{.LineID}}" value="{{.Quantity}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineDiscountPercentage{{.LineID}}">Discount</label>
+                            <input type="text" title="Discount Percentage" name="billLineDiscountPercentage{{.LineID}}" value="{{.DiscountPercentage}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLineVatUsed{{.LineID}}">Vat</label>
+                            <input type="text" title="Vat Used" name="billLineVatUsed{{.LineID}}" value="{{.VatUsed}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLinePriceExVat{{.LineID}}">Price Ex Vat</label>
+                            <input type="text" title="Price Ex Vat" name="billLinePriceExVat{{.LineID}}" value="{{.PriceExVat}}" maxlength="64">
+                        </div>
+                        <div class="labelInput">
+                            <label class="infoBox5" for="billLinePriceExVatTotal{{.LineID}}">Price Ex Vat Total</label>
+                            <input type="text" title="Price Ex Vat" name="billLinePriceExVatTotal{{.LineID}}" value="{{.PriceExVatTotal}}" maxlength="64" readonly>
                         </div>
                     </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLineQuantity{{.LineID}}">Quantity</label>
-                        <input type="text" title="Quantity" name="billLineQuantity{{.LineID}}" value="{{.Quantity}}" maxlength="64">
-                    </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLineDiscountPercentage{{.LineID}}">Discount</label>
-                        <input type="text" title="Discount Percentage" name="billLineDiscountPercentage{{.LineID}}" value="{{.DiscountPercentage}}"
-                            maxlength="64">
-                    </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLineVatUsed{{.LineID}}">Vat</label>
-                        <input type="text" title="Vat Used" name="billLineVatUsed{{.LineID}}" value="{{.VatUsed}}" maxlength="64">
-                    </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLinePriceExVat{{.LineID}}">Price Ex Vat</label>
-                        <input type="text" title="Price Ex Vat" name="billLinePriceExVat{{.LineID}}" value="{{.PriceExVat}}" maxlength="64">
-                    </div>
-                    <div class="labelInput">
-                        <label class="infoBox5" for="billLinePriceExVatTotal{{.LineID}}">Price Ex Vat Total</label>
-                        <input type="text" title="Price Ex Vat" name="billLinePriceExVatTotal{{.LineID}}" value="{{.PriceExVatTotal}}" maxlength="64"
-                            readonly>
-                    </div>
                 </div>
-            </div>
             {{end}}
         </div>
     </form>
 
     <form>
         <div class="paymentInfoContainerBottom">
-            <label>Bill/KID: {{.CurrentBill.BillID}}</label>
-            <label>Bank Account: {{.CurrentAdmin.BankAccount}}</label>
-            <label>Sum: {{.CurrentBill.TotalIncVat}} {{.Currency}}</label>
-            <label>Vat: {{.CurrentBill.TotalVat}} {{.Currency}}</label>
-            <label>Pay day: {{.CurrentBill.DueDate}}</label>
+                <label>Bill/KID: {{.CurrentBill.BillID}}</label>
+                <label>Bank Account: {{.CurrentAdmin.BankAccount}}</label>
+                <label>Sum: {{.CurrentBill.TotalIncVat}} {{.Currency}}</label>
+                <label>Vat: {{.CurrentBill.TotalVat}} {{.Currency}}</label>
+                <label>Pay day: {{.CurrentBill.DueDate}}</label>
         </div>
     </form>
 
 </div>
-{{end}}
-<!-- ******************* TOP MENU ***********************-->
-<!-- The link opened by the href below is controlled via the http.HandleFunc in main.go-->
-{{define "topMenu"}}
-
-<div class="topMenuContainer">
-    <ul class="nav">
-        <li>
-            <a href="/">Home</a>
-        </li>
-        <li>
-            <a>User</a>
-            <ul>
-                <li>
-                    <a href="/manageUsers">Manage Users</a>
-                </li>
-                <li>
-                    <a href="/addUser">Add User</a>
-                </li>
-                <li>
-                    <a href="/modifyUser">Modify User</a>
-                </li>
-                <li>
-                    <a href="/modifyAdmin">Modify Admin</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a>Bill</a>
-            <ul>
-                <li>
-                    <a href="/createBillSelectUser">Create</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a>About</a>
-        </li>
-    </ul>
-</div>
-
 {{end}}
