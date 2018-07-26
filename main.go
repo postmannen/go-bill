@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"os/exec"
-	"runtime"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/postmannen/go-bill/data"
 )
+
+type server struct {
+	address string
+	tpl     *template.Template
+	wData   *webData
+}
 
 //webData struct, used to feed data to the web templates
 type webData struct {
@@ -35,41 +39,44 @@ func init() {
 	tmpl["bill.html"] = template.Must(template.ParseFiles("public/billTemplates.html"))
 }
 
-func main() {
+func newServer() *server {
+	//Load the template files
+	t, err := template.ParseFiles("public/userTemplates.html",
+		"public/billTemplates.html")
+	if err != nil {
+		fmt.Println("error: Parsing templates: ", err)
+	}
 
-	//create DB and store pointer in pDB
-	wData := webData{}
-	wData.PDB = data.Create()
-	defer wData.PDB.Close()
-	wData.Currency = "$"
-
-	//openBrowser()
-
-	//HandleFunc takes a handle (ResponseWriter) as first parameter,
-	//and pointer to Request function as second parameter
-	http.HandleFunc("/sp", wData.showUsersWeb)
-	http.HandleFunc("/ap", wData.addUsersWeb)
-	http.HandleFunc("/mp", wData.modifyUsersWeb)
-	http.HandleFunc("/modifyAdmin", wData.modifyAdminWeb)
-	http.HandleFunc("/", wData.mainPage)
-	http.HandleFunc("/du", wData.deleteUserWeb)
-	http.HandleFunc("/createBillSelectUser", wData.webBillSelectUser)
-	http.HandleFunc("/editBill", wData.webBillLines)
-	http.HandleFunc("/eBill", wData.editBill)
-	http.HandleFunc("/printBill", wData.printBill)
-	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
-	http.ListenAndServe(":7000", nil)
-
+	return &server{
+		address: "localhost:8080",
+		tpl:     t,
+		wData:   &webData{},
+	}
 }
 
-func openBrowser() {
-	fmt.Println(runtime.GOOS)
+func (s *server) handlers() {
+	http.HandleFunc("/sp", s.wData.showUsersWeb)
+	http.HandleFunc("/ap", s.wData.addUsersWeb)
+	http.HandleFunc("/mp", s.wData.modifyUsersWeb)
+	http.HandleFunc("/modifyAdmin", s.wData.modifyAdminWeb)
+	http.HandleFunc("/", s.wData.mainPage)
+	http.HandleFunc("/du", s.wData.deleteUserWeb)
+	http.HandleFunc("/createBillSelectUser", s.wData.webBillSelectUser)
+	http.HandleFunc("/editBill", s.wData.webBillLines)
+	http.HandleFunc("/eBill", s.wData.editBill)
+	http.HandleFunc("/printBill", s.wData.printBill)
+	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+}
 
-	switch runtime.GOOS {
-	case "darwin":
-		fmt.Println("The OS which is chosen is MacOs")
-		cmd := exec.Command("open", "http://localhost:7000")
-		cmd.Run()
+func main() {
+	s := newServer()
 
-	}
+	//create DB and store pointer in pDB
+	s.wData.PDB = data.Create()
+	defer s.wData.PDB.Close()
+	s.wData.Currency = "$"
+
+	//execute all the handlers
+	s.handlers()
+	http.ListenAndServe(s.address, nil)
 }
