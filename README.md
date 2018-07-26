@@ -3,9 +3,9 @@
 Data is stored in local sqlite3 DB.
 Access to the DB is done via the data package.
 
-## Using the WebSocket from HTML pages
+## TODO: Using the WebSocket from HTML pages
 
-The `websocket.html` file contains the JavaScript to be executed in browsers.
+The `webs.ocket.html` file contains the JavaScript to be executed in browsers.
 Functions to be called either from other HTML elements or via the Websocket :
 
 * `send(stringValue)` will send the given string to Go websocketHandler.
@@ -13,11 +13,8 @@ Functions to be called either from other HTML elements or via the Websocket :
 
 `<button onclick="send('modifyUserSelection')">show modify user selection</button>`
 
-## TODO
+## TODO: other
 
 * Keep the number 0 in the deleted user row, increase the last user is deleted then a new used added will get that number
 * Change the user pages to 1 page with add modify and delete
-
-## Ideas
-
 * Make the primary keys uid and bill ID random numbers, so you can sync the database between different devices without getting a conflict.
