@@ -30,15 +30,6 @@ type webData struct {
 	tpl              *template.Template
 }
 
-var tmpl map[string]*template.Template //map to hold all templates
-
-func init() {
-	/*//initate the templates
-	tmpl = make(map[string]*template.Template)
-	tmpl["user.html"] = template.Must(template.ParseFiles("public/userTemplates.html"))
-	tmpl["bill.html"] = template.Must(template.ParseFiles("public/billTemplates.html"))*/
-}
-
 func newServer() *server {
 	//Load the template files
 	t, err := template.ParseFiles("public/userTemplates.html",
@@ -56,12 +47,12 @@ func newServer() *server {
 }
 
 func (s *server) handlers() {
-	http.HandleFunc("/sp", s.wData.showUsersWeb)
-	http.HandleFunc("/ap", s.wData.addUsersWeb)
-	http.HandleFunc("/mp", s.wData.modifyUsersWeb)
+	http.HandleFunc("/showUser", s.wData.showUsersWeb)
+	http.HandleFunc("/addUser", s.wData.addUsersWeb)
+	http.HandleFunc("/modifyUser", s.wData.modifyUsersWeb)
 	http.HandleFunc("/modifyAdmin", s.wData.modifyAdminWeb)
 	http.HandleFunc("/", s.wData.mainPage)
-	http.HandleFunc("/du", s.wData.deleteUserWeb)
+	http.HandleFunc("/deleteUser", s.wData.deleteUserWeb)
 	http.HandleFunc("/createBillSelectUser", s.wData.webBillSelectUser)
 	http.HandleFunc("/editBill", s.wData.webBillLines)
 	http.HandleFunc("/eBill", s.wData.editBill)
