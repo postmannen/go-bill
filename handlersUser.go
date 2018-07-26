@@ -18,15 +18,7 @@ func (d *webData) mainPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//The web handler for adding persons
-func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
-	err := d.tpl.ExecuteTemplate(w, "addUserCompletePage", "some data")
-	if err != nil {
-		log.Println("addUsersWeb: template execution error = ", err)
-	}
-
-	r.ParseForm()
-	u := data.User{}
+func getFormValuesUserInfo(u *data.User, r *http.Request) {
 	u.FirstName = r.FormValue("firstName")
 	u.LastName = r.FormValue("lastName")
 	u.Mail = r.FormValue("mail")
@@ -36,6 +28,18 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	u.OrgNr = r.FormValue("orgNr")
 	u.CountryID = "0"
 	u.BankAccount = r.FormValue("bankAccount")
+}
+
+//The web handler for adding persons
+func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
+	err := d.tpl.ExecuteTemplate(w, "addUserCompletePage", "some data")
+	if err != nil {
+		log.Println("addUsersWeb: template execution error = ", err)
+	}
+
+	r.ParseForm()
+	u := data.User{}
+	getFormValuesUserInfo(&u, r)
 
 	if u.FirstName != "" {
 		pid, _ := data.QueryForLastUID(d.PDB)
@@ -87,17 +91,10 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//create a variable based on user to hold the values parsed from the modify web
-	u := data.User{}
 	r.ParseForm()
-	u.FirstName = r.FormValue("firstName")
-	u.LastName = r.FormValue("lastName")
-	u.Mail = r.FormValue("mail")
-	u.Address = r.FormValue("address")
-	u.PostNrAndPlace = r.FormValue("poAddr")
-	u.PhoneNr = r.FormValue("phone")
-	u.OrgNr = r.FormValue("orgNr")
-	u.CountryID = r.FormValue("countryId")
-	u.BankAccount = r.FormValue("bankAccount")
+	u := data.User{}
+	getFormValuesUserInfo(&u, r)
+
 	checkBox := r.Form["sure"]
 	changed := false
 
@@ -177,15 +174,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fmt.Println("------------------------------------------------------------")
 	fmt.Println("---Form Content", r.Form)
-	u.FirstName = r.FormValue("firstName")
-	u.LastName = r.FormValue("lastName")
-	u.Mail = r.FormValue("mail")
-	u.Address = r.FormValue("address")
-	u.PostNrAndPlace = r.FormValue("poAddr")
-	u.PhoneNr = r.FormValue("phone")
-	u.OrgNr = r.FormValue("orgNr")
-	u.CountryID = r.FormValue("countryId")
-	u.BankAccount = r.FormValue("bankAccount")
+	getFormValuesUserInfo(&u, r)
 	checkBox := r.Form["sure"]
 	changed := false
 
