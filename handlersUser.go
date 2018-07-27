@@ -142,85 +142,84 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	ip := r.RemoteAddr
 	adminID := 0
 	//query the userDB for all users and put the returning slice with result in p
-	p := data.QuerySingleUserInfo(d.PDB, adminID)
+	u := data.QuerySingleUserInfo(d.PDB, adminID)
 
 	//Execute the web for modify users, range over p to make the select user drop down menu
-	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
+	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", u)
 	if err != nil {
 		fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
 	}
 
 	//Write out all the info of the selected user to the web
 
-	err = d.tpl.ExecuteTemplate(w, "modifyUser", p) //bruk bare en spesifik slice av struct og send til html template
+	err = d.tpl.ExecuteTemplate(w, "modifyUser", u) //bruk bare en spesifik slice av struct og send til html template
 	if err != nil {
 		log.Println(ip, "modifyAdminWeb: error = ", err)
 	}
 
-	//create a variable based on user to hold the values parsed from the modify web
-	u := data.User{}
 	r.ParseForm()
-	fmt.Println("------------------------------------------------------------")
-	fmt.Println("---Form Content", r.Form)
-	getFormValuesUserInfo(&u, r)
-	checkBox := r.Form["sure"]
-	changed := false
 
-	if checkBox != nil {
-		if checkBox[0] == "ok" {
-			fmt.Printf("modifyAdminWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
-			//Check what values that are changed
-			if u.FirstName != p.FirstName && u.FirstName != "" {
-				p.FirstName = u.FirstName
-				changed = true
-			}
-			if u.LastName != p.LastName && u.LastName != "" {
-				p.LastName = u.LastName
-				changed = true
-			}
-			if u.Mail != p.Mail && u.Mail != "" {
-				p.Mail = u.Mail
-				changed = true
-			}
-			if u.Address != p.Address && u.Address != "" {
-				p.Address = u.Address
-				changed = true
-			}
-			if u.PostNrAndPlace != p.PostNrAndPlace && u.PostNrAndPlace != "" {
-				p.PostNrAndPlace = u.PostNrAndPlace
-				changed = true
-			}
-			if u.PhoneNr != p.PhoneNr && u.PhoneNr != "" {
-				p.PhoneNr = u.PhoneNr
-				changed = true
-			}
-			if u.OrgNr != p.OrgNr && u.OrgNr != "" {
-				p.OrgNr = u.OrgNr
-				changed = true
-			}
-			if u.CountryID != p.CountryID && u.CountryID != "" {
-				p.CountryID = u.CountryID
-				changed = true
-			}
-			if u.BankAccount != p.BankAccount && u.BankAccount != "" {
-				p.BankAccount = u.BankAccount
-				changed = true
-			}
-		}
-	} else {
-		log.Println(ip, "modifyUserAdmin: The value of checkbox was not set")
-	}
+	//create a variable based on user to hold the values parsed from the modify web
+	uForm := data.User{}
+	//get all the values like name etc. from the form, and put them in u
+	getFormValuesUserInfo(&uForm, r)
+
+	changed := checkUserFormChanged(uForm, u)
+
+	//Check what values that are changed
 
 	//if any of the values was changed....update information into database
 	if changed {
-		data.UpdateUser(d.PDB, p)
+		data.UpdateUser(d.PDB, u)
 
 		//Execute the redirect to modifyAdmin to refresh page
-		err := d.tpl.ExecuteTemplate(w, "redirectTomodifyAdmin", p)
+		err := d.tpl.ExecuteTemplate(w, "redirectTomodifyAdmin", u)
 		if err != nil {
 			fmt.Fprint(w, "Error: modifyAdminWeb: template execution error = ", err)
 		}
 	}
+}
+
+//takes user info taken from form, and compares it with the original values
+func checkUserFormChanged(uForm data.User, p data.User) (changed bool) {
+	changed = false
+	if uForm.FirstName != p.FirstName && uForm.FirstName != "" {
+		p.FirstName = uForm.FirstName
+		changed = true
+	}
+	if uForm.LastName != p.LastName && uForm.LastName != "" {
+		p.LastName = uForm.LastName
+		changed = true
+	}
+	if uForm.Mail != p.Mail && uForm.Mail != "" {
+		p.Mail = uForm.Mail
+		changed = true
+	}
+	if uForm.Address != p.Address && uForm.Address != "" {
+		p.Address = uForm.Address
+		changed = true
+	}
+	if uForm.PostNrAndPlace != p.PostNrAndPlace && uForm.PostNrAndPlace != "" {
+		p.PostNrAndPlace = uForm.PostNrAndPlace
+		changed = true
+	}
+	if uForm.PhoneNr != p.PhoneNr && uForm.PhoneNr != "" {
+		p.PhoneNr = uForm.PhoneNr
+		changed = true
+	}
+	if uForm.OrgNr != p.OrgNr && uForm.OrgNr != "" {
+		p.OrgNr = uForm.OrgNr
+		changed = true
+	}
+	if uForm.CountryID != p.CountryID && uForm.CountryID != "" {
+		p.CountryID = uForm.CountryID
+		changed = true
+	}
+	if uForm.BankAccount != p.BankAccount && uForm.BankAccount != "" {
+		p.BankAccount = uForm.BankAccount
+		changed = true
+	}
+	return changed
 }
 
 //The web handler to show and print out all registered users in the database
