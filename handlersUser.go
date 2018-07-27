@@ -42,11 +42,13 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 //The web handler for modifying a person
 func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	ip := r.RemoteAddr
 	//query the userDB for all users and put the returning slice with result in p
 	uAllUsers := data.QueryAllUserInfo(d.PDB)
+	fmt.Println("---ALL USERS FROM DATABASE = ", uAllUsers)
 
-	//Execute the web for modify users, range over p to make the select user drop down menu
+	//Execute the web for modify users, range over allUsers to make the select user drop down menu
 	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", uAllUsers)
 	if err != nil {
 		fmt.Fprint(w, "template execution error = ", err)
@@ -58,32 +60,29 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "template execution error = ", err)
 	}
 
-	//Parse all the variables in the html form to get all the data
-	r.ParseForm()
 	//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 	num, _ := strconv.Atoi(r.FormValue("users"))
+	var singleUser data.User
 
-	//Write out all the info of the selected user to the web
+	//Find the selected single user chosen in dropdown in the slice of all users
 	for i := range uAllUsers {
-		log.Println(ip, "modifyUsersWeb: p[i].Number = ", uAllUsers[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
 		if uAllUsers[i].Number == num {
-			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", uAllUsers[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
+			singleUser = uAllUsers[i]
 			d.IndexUser = i
-			err := d.tpl.ExecuteTemplate(w, "modifyUser", uAllUsers[i]) //bruk bare en spesifik slice av struct og send til html template
-			if err != nil {
-				log.Println(ip, "modifyUsersWeb: error = ", err)
-			}
 		}
 	}
+	err = d.tpl.ExecuteTemplate(w, "modifyUser", singleUser) //bruk bare en spesifik slice av struct og send til html template
+	if err != nil {
+		log.Println(ip, "modifyUsersWeb: error = ", err)
+	}
 
-	//create a variable based on user to hold the values parsed from the modify web
-	r.ParseForm()
 	uForm := data.User{}
-	//get the all the values from the user info fileds of the the
+	//get all the values from the user info fileds of the the
 	getFormValuesUserInfo(&uForm, r)
 
+	//TODO: should work with singleUser as input below, but it doesn't. Have to investigate more about this later.
 	changed := checkUserFormChanged(uForm, &uAllUsers[d.IndexUser])
 
 	//if any of the values was changed....update information into database
@@ -136,42 +135,42 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 }
 
 //takes user info taken from form, and compares it with the original values
-func checkUserFormChanged(uForm data.User, p *data.User) (changed bool) {
+func checkUserFormChanged(uForm data.User, originalUser *data.User) (changed bool) {
 	changed = false
-	if uForm.FirstName != p.FirstName && uForm.FirstName != "" {
-		p.FirstName = uForm.FirstName
+	if uForm.FirstName != originalUser.FirstName && uForm.FirstName != "" {
+		originalUser.FirstName = uForm.FirstName
 		changed = true
 	}
-	if uForm.LastName != p.LastName && uForm.LastName != "" {
-		p.LastName = uForm.LastName
+	if uForm.LastName != originalUser.LastName && uForm.LastName != "" {
+		originalUser.LastName = uForm.LastName
 		changed = true
 	}
-	if uForm.Mail != p.Mail && uForm.Mail != "" {
-		p.Mail = uForm.Mail
+	if uForm.Mail != originalUser.Mail && uForm.Mail != "" {
+		originalUser.Mail = uForm.Mail
 		changed = true
 	}
-	if uForm.Address != p.Address && uForm.Address != "" {
-		p.Address = uForm.Address
+	if uForm.Address != originalUser.Address && uForm.Address != "" {
+		originalUser.Address = uForm.Address
 		changed = true
 	}
-	if uForm.PostNrAndPlace != p.PostNrAndPlace && uForm.PostNrAndPlace != "" {
-		p.PostNrAndPlace = uForm.PostNrAndPlace
+	if uForm.PostNrAndPlace != originalUser.PostNrAndPlace && uForm.PostNrAndPlace != "" {
+		originalUser.PostNrAndPlace = uForm.PostNrAndPlace
 		changed = true
 	}
-	if uForm.PhoneNr != p.PhoneNr && uForm.PhoneNr != "" {
-		p.PhoneNr = uForm.PhoneNr
+	if uForm.PhoneNr != originalUser.PhoneNr && uForm.PhoneNr != "" {
+		originalUser.PhoneNr = uForm.PhoneNr
 		changed = true
 	}
-	if uForm.OrgNr != p.OrgNr && uForm.OrgNr != "" {
-		p.OrgNr = uForm.OrgNr
+	if uForm.OrgNr != originalUser.OrgNr && uForm.OrgNr != "" {
+		originalUser.OrgNr = uForm.OrgNr
 		changed = true
 	}
-	if uForm.CountryID != p.CountryID && uForm.CountryID != "" {
-		p.CountryID = uForm.CountryID
+	if uForm.CountryID != originalUser.CountryID && uForm.CountryID != "" {
+		originalUser.CountryID = uForm.CountryID
 		changed = true
 	}
-	if uForm.BankAccount != p.BankAccount && uForm.BankAccount != "" {
-		p.BankAccount = uForm.BankAccount
+	if uForm.BankAccount != originalUser.BankAccount && uForm.BankAccount != "" {
+		originalUser.BankAccount = uForm.BankAccount
 		changed = true
 	}
 	return changed
