@@ -44,16 +44,16 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	ip := r.RemoteAddr
 	//query the userDB for all users and put the returning slice with result in p
-	p := data.QueryAllUserInfo(d.PDB)
+	uAllUsers := data.QueryAllUserInfo(d.PDB)
 
 	//Execute the web for modify users, range over p to make the select user drop down menu
-	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", p)
+	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", uAllUsers)
 	if err != nil {
 		fmt.Fprint(w, "template execution error = ", err)
 	}
 
 	//Execute the modifyUserSelection drop down menu template
-	err = d.tpl.ExecuteTemplate(w, "modifyUserSelection", p)
+	err = d.tpl.ExecuteTemplate(w, "modifyUserSelection", uAllUsers)
 	if err != nil {
 		fmt.Fprint(w, "template execution error = ", err)
 	}
@@ -64,14 +64,14 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	num, _ := strconv.Atoi(r.FormValue("users"))
 
 	//Write out all the info of the selected user to the web
-	for i := range p {
-		log.Println(ip, "modifyUsersWeb: p[i].Number = ", p[i].Number)
+	for i := range uAllUsers {
+		log.Println(ip, "modifyUsersWeb: p[i].Number = ", uAllUsers[i].Number)
 		//Iterate over the complete struct of users until the chosen user is found
-		if p[i].Number == num {
-			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", p[i].FirstName, p[i].LastName)
+		if uAllUsers[i].Number == num {
+			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName , found user = ", uAllUsers[i].FirstName, p[i].LastName)
 			//Store the index nr in slice of the chosen user
 			d.IndexUser = i
-			err := d.tpl.ExecuteTemplate(w, "modifyUser", p[i]) //bruk bare en spesifik slice av struct og send til html template
+			err := d.tpl.ExecuteTemplate(w, "modifyUser", uAllUsers[i]) //bruk bare en spesifik slice av struct og send til html template
 			if err != nil {
 				log.Println(ip, "modifyUsersWeb: error = ", err)
 			}
@@ -80,64 +80,19 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//create a variable based on user to hold the values parsed from the modify web
 	r.ParseForm()
-	u := data.User{}
-	getFormValuesUserInfo(&u, r)
+	uForm := data.User{}
+	//get the all the values from the user info fileds of the the
+	getFormValuesUserInfo(&uForm, r)
 
-	checkBox := r.Form["sure"]
-	changed := false
-
-	if checkBox != nil {
-		if checkBox[0] == "ok" {
-			fmt.Printf("modifyUsersWeb: Verdien av checkbox er = %v ,og typen er = %T\n\n", checkBox[0], checkBox[0])
-			//Check what values that are changed
-			if u.FirstName != p[d.IndexUser].FirstName && u.FirstName != "" {
-				p[d.IndexUser].FirstName = u.FirstName
-				changed = true
-			}
-			if u.LastName != p[d.IndexUser].LastName && u.LastName != "" {
-				p[d.IndexUser].LastName = u.LastName
-				changed = true
-			}
-			if u.Mail != p[d.IndexUser].Mail && u.Mail != "" {
-				p[d.IndexUser].Mail = u.Mail
-				changed = true
-			}
-			if u.Address != p[d.IndexUser].Address && u.Address != "" {
-				p[d.IndexUser].Address = u.Address
-				changed = true
-			}
-			if u.PostNrAndPlace != p[d.IndexUser].PostNrAndPlace && u.PostNrAndPlace != "" {
-				p[d.IndexUser].PostNrAndPlace = u.PostNrAndPlace
-				changed = true
-			}
-			if u.PhoneNr != p[d.IndexUser].PhoneNr && u.PhoneNr != "" {
-				p[d.IndexUser].PhoneNr = u.PhoneNr
-				changed = true
-			}
-			if u.OrgNr != p[d.IndexUser].OrgNr && u.OrgNr != "" {
-				p[d.IndexUser].OrgNr = u.OrgNr
-				changed = true
-			}
-			if u.CountryID != p[d.IndexUser].CountryID && u.CountryID != "" {
-				p[d.IndexUser].CountryID = u.CountryID
-				changed = true
-			}
-			if u.BankAccount != p[d.IndexUser].BankAccount && u.BankAccount != "" {
-				p[d.IndexUser].BankAccount = u.BankAccount
-				changed = true
-			}
-		}
-	} else {
-		log.Println(ip, "modifyUsersWeb: The value of checkbox was not set")
-	}
+	changed := checkUserFormChanged(uForm, &uAllUsers[d.IndexUser])
 
 	//if any of the values was changed....update information into database
 	if changed {
-		data.UpdateUser(d.PDB, p[d.IndexUser])
+		data.UpdateUser(d.PDB, uAllUsers[d.IndexUser])
 	}
 }
 
-//The web handler for modifying a person
+//The web handler for modifying the admin
 func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	ip := r.RemoteAddr
 	adminID := 0
