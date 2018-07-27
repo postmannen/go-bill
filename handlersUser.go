@@ -164,7 +164,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	//get all the values like name etc. from the form, and put them in u
 	getFormValuesUserInfo(&uForm, r)
 
-	changed := checkUserFormChanged(uForm, u)
+	changed := checkUserFormChanged(uForm, &u)
 
 	//Check what values that are changed
 
@@ -181,7 +181,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 }
 
 //takes user info taken from form, and compares it with the original values
-func checkUserFormChanged(uForm data.User, p data.User) (changed bool) {
+func checkUserFormChanged(uForm data.User, p *data.User) (changed bool) {
 	changed = false
 	if uForm.FirstName != p.FirstName && uForm.FirstName != "" {
 		p.FirstName = uForm.FirstName
