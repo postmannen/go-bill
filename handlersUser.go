@@ -18,18 +18,6 @@ func (d *webData) mainPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getFormValuesUserInfo(u *data.User, r *http.Request) {
-	u.FirstName = r.FormValue("firstName")
-	u.LastName = r.FormValue("lastName")
-	u.Mail = r.FormValue("mail")
-	u.Address = r.FormValue("address")
-	u.PostNrAndPlace = r.FormValue("poAddr")
-	u.PhoneNr = r.FormValue("phone")
-	u.OrgNr = r.FormValue("orgNr")
-	u.CountryID = "0"
-	u.BankAccount = r.FormValue("bankAccount")
-}
-
 //The web handler for adding persons
 func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	err := d.tpl.ExecuteTemplate(w, "addUserCompletePage", "some data")
@@ -257,4 +245,17 @@ func (d *webData) deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fn, _ := strconv.Atoi(r.FormValue("users"))
 	data.DeleteUser(d.PDB, fn)
+}
+
+//getFormValuesUserInfo will get all the user data from form.
+func getFormValuesUserInfo(u *data.User, r *http.Request) {
+	u.FirstName = r.FormValue("firstName")
+	u.LastName = r.FormValue("lastName")
+	u.Mail = r.FormValue("mail")
+	u.Address = r.FormValue("address")
+	u.PostNrAndPlace = r.FormValue("poAddr")
+	u.PhoneNr = r.FormValue("phone")
+	u.OrgNr = r.FormValue("orgNr")
+	u.CountryID = "0"
+	u.BankAccount = r.FormValue("bankAccount")
 }
