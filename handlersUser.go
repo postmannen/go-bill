@@ -85,6 +85,9 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	//TODO: should work with singleUser as input below, but it doesn't. Have to investigate more about this later.
 	changed := checkUserFormChanged(uForm, &uAllUsers[d.IndexUser])
 
+	fmt.Printf("---single user %v, type = %T\n", singleUser, singleUser)
+	fmt.Printf("---uallUsers %v, type %T\n", uAllUsers[d.IndexUser], uAllUsers[d.IndexUser])
+
 	//if any of the values was changed....update information into database
 	if changed {
 		data.UpdateUser(d.PDB, uAllUsers[d.IndexUser])
@@ -136,6 +139,8 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 
 //takes user info taken from form, and compares it with the original values
 func checkUserFormChanged(uForm data.User, originalUser *data.User) (changed bool) {
+	fmt.Printf("---originalUser = %v, type = %T\n", originalUser.FirstName, originalUser.FirstName)
+	fmt.Printf("---user in form = %v, type = %T\n", uForm.FirstName, uForm.FirstName)
 	changed = false
 	if uForm.FirstName != originalUser.FirstName && uForm.FirstName != "" {
 		originalUser.FirstName = uForm.FirstName
