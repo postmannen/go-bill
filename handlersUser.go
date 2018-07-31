@@ -45,17 +45,17 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	ip := r.RemoteAddr
 	//query the userDB for all users and put the returning slice with result in p
-	uAllUsers := data.QueryAllUserInfo(d.PDB)
-	fmt.Println("---ALL USERS FROM DATABASE = ", uAllUsers)
+	allUsers := data.QueryAllUserInfo(d.PDB)
+	fmt.Println("---ALL USERS FROM DATABASE = ", allUsers)
 
 	//Execute the web for modify users, range over allUsers to make the select user drop down menu
-	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", uAllUsers)
+	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", allUsers)
 	if err != nil {
 		fmt.Fprint(w, "template execution error = ", err)
 	}
 
 	//Execute the modifyUserSelection drop down menu template
-	err = d.tpl.ExecuteTemplate(w, "modifyUserSelection", uAllUsers)
+	err = d.tpl.ExecuteTemplate(w, "modifyUserSelection", allUsers)
 	if err != nil {
 		fmt.Fprint(w, "template execution error = ", err)
 	}
@@ -65,11 +65,11 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	var singleUser data.User
 
 	//Find the selected single user chosen in dropdown in the slice of all users
-	for i := range uAllUsers {
+	for i := range allUsers {
 		//Iterate over the complete struct of users until the chosen user is found
-		if uAllUsers[i].Number == num {
+		if allUsers[i].Number == num {
 			//Store the index nr in slice of the chosen user
-			singleUser = uAllUsers[i]
+			singleUser = allUsers[i]
 			d.IndexUser = i
 		}
 	}
@@ -83,14 +83,14 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	getFormValuesUserInfo(&uForm, r)
 
 	changed := false
-	changed, uAllUsers[d.IndexUser] = checkUserFormChanged(uForm, uAllUsers[d.IndexUser])
+	changed, allUsers[d.IndexUser] = checkUserFormChanged(uForm, allUsers[d.IndexUser])
 
 	fmt.Printf("---single user %v, type = %T\n", singleUser, singleUser)
-	fmt.Printf("---uallUsers %v, type %T\n", uAllUsers[d.IndexUser], uAllUsers[d.IndexUser])
+	fmt.Printf("---uallUsers %v, type %T\n", allUsers[d.IndexUser], allUsers[d.IndexUser])
 
 	//if any of the values was changed....update information into database
 	if changed {
-		data.UpdateUser(d.PDB, uAllUsers[d.IndexUser])
+		data.UpdateUser(d.PDB, allUsers[d.IndexUser])
 	}
 }
 
