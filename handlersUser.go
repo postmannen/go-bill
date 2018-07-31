@@ -82,8 +82,8 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	//get all the values from the user info fileds of the the
 	getFormValuesUserInfo(&uForm, r)
 
-	//TODO: should work with singleUser as input below, but it doesn't. Have to investigate more about this later.
-	changed := checkUserFormChanged(uForm, &uAllUsers[d.IndexUser])
+	changed := false
+	changed, uAllUsers[d.IndexUser] = checkUserFormChanged(uForm, uAllUsers[d.IndexUser])
 
 	fmt.Printf("---single user %v, type = %T\n", singleUser, singleUser)
 	fmt.Printf("---uallUsers %v, type %T\n", uAllUsers[d.IndexUser], uAllUsers[d.IndexUser])
@@ -120,8 +120,8 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	uForm := data.User{}
 	//get all the values like name etc. from the form, and put them in u
 	getFormValuesUserInfo(&uForm, r)
-
-	changed := checkUserFormChanged(uForm, &u)
+	changed := false
+	changed, u = checkUserFormChanged(uForm, u)
 
 	//Check what values that are changed
 
@@ -138,10 +138,11 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 }
 
 //takes user info taken from form, and compares it with the original values
-func checkUserFormChanged(uForm data.User, originalUser *data.User) (changed bool) {
+func checkUserFormChanged(uForm data.User, originalUser data.User) (bool, data.User) {
 	fmt.Printf("---originalUser = %v, type = %T\n", originalUser.FirstName, originalUser.FirstName)
 	fmt.Printf("---user in form = %v, type = %T\n", uForm.FirstName, uForm.FirstName)
-	changed = false
+
+	changed := false
 	if uForm.FirstName != originalUser.FirstName && uForm.FirstName != "" {
 		originalUser.FirstName = uForm.FirstName
 		changed = true
@@ -178,7 +179,7 @@ func checkUserFormChanged(uForm data.User, originalUser *data.User) (changed boo
 		originalUser.BankAccount = uForm.BankAccount
 		changed = true
 	}
-	return changed
+	return changed, originalUser
 }
 
 //The web handler to show and print out all registered users in the database
