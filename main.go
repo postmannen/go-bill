@@ -55,7 +55,6 @@ func (s *server) handlers() {
 	http.HandleFunc("/deleteUser", s.wData.deleteUserWeb)
 	http.HandleFunc("/createBillSelectUser", s.wData.webBillSelectUser)
 	http.HandleFunc("/editBill", s.wData.webBillLines)
-	http.HandleFunc("/eBill", s.wData.editBill)
 	http.HandleFunc("/printBill", s.wData.printBill)
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 }
