@@ -87,15 +87,6 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		//create a new bill and return the new billID to use later
 		d.CurrentBillID = data.AddBill(d.PDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", d.CurrentBillID)
-
-		/*	Add a default nr. 1 bill line on new bills have been moved to billLines handler
-			billLine := data.BillLines{}
-			billLine.BillID = d.CurrentBillID
-			billLine.LineID = 1
-			billLine.Description = "noe tekst"
-
-			data.AddBillLine(d.PDB, billLine)
-		*/
 	}
 }
 
