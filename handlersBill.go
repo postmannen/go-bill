@@ -200,7 +200,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		if changed {
 			data.UpdateBill(d.PDB, CurrentBill)
 
-			//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
+			//doing a redirect so it redraws the page with the new line.
 			err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 			if err != nil {
 				log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
@@ -208,16 +208,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//if r.FormValue("billPrintView") == "print view" {
-	//	err = d.tpl.ExecuteTemplate(w,)
-	//}
-
 	updateLineExVatTotal(storedBillLines)
 	//store all the bill lines in bill_lines db, to get ex vat total written to db
 	data.UpdateBillLine(d.PDB, storedBillLines)
 
 	d.CurrentBillLines = storedBillLines
-	//create all the billLines on the screen
 	err = d.tpl.ExecuteTemplate(w, "createBillLines", d)
 	if err != nil {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
@@ -225,13 +220,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 
-	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters from the map of r.Form
-	//to get the ID of which LineID the button belonged to
+	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters
+	//from the elements in the map of r.Form, to get the ID of which LineID the button belonged to
 	buttonValue, buttonNumbers := separateStrNumForButton(r)
 
-	//using the buttonValue instead of r.FormValue since r.FormValue initiates a new parseform and
-	//replaces the values from the last r.ParseForm
-	//add a new billLine to db, and redraw window
+	//Add a new billLine to db, and redraw window.
 	if buttonValue == "add" {
 		billLine := data.BillLines{}
 		billLine.BillID = d.CurrentBillID
@@ -241,7 +234,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		billLine.LineID = rand.Intn(10000)
 		billLine.Description = "noe tekst"
 		data.AddBillLine(d.PDB, billLine)
-		//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
+		//doing a redirect so it redraws the page with the new line.
 		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
