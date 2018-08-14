@@ -147,33 +147,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//check all the data in r.Form,
 	//create tmpBill of type data.Bill to hold all the bill data in r.Form
-	var tmpBill data.Bill
-	for k, v := range r.Form {
-		reNumOnly := regexp.MustCompile("^[0-9]+$")
-
-		//convert the string read from the r.Form into v to v1 of int which is used in struct
-		var v1 int
-		//check if the string only contains numbers
-		if reNumOnly.Match([]byte(v[0])) {
-			v1, err = strconv.Atoi(v[0])
-			if err != nil {
-				log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
-			}
-			log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n\n", v1, v1, v[0], v[0])
-		}
-		if k == "CreatedDate" {
-			tmpBill.CreatedDate = v[0]
-		}
-		if k == "DueDate" {
-			tmpBill.DueDate = v[0]
-		}
-		if k == "Comment" {
-			tmpBill.Comment = v[0]
-		}
-		if k == "Paid" {
-			tmpBill.Paid = v1
-		}
-	}
+	tmpBill := d.readBillMainFormData(r)
 
 	//compare the values of the bill struct from DB and the tmp struct from r.Form
 	//to decide if to update DB with new values from the form
@@ -277,6 +251,40 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 	}
+}
+
+//WORKING HERE!!!!
+func (d *webData) readBillMainFormData(r *http.Request) (tmpBill data.Bill) {
+	//check all the data in r.Form,
+	//create tmpBill of type data.Bill to hold all the bill data in r.Form
+	var err error
+	for k, v := range r.Form {
+		reNumOnly := regexp.MustCompile("^[0-9]+$")
+
+		//convert the string read from the r.Form into v to v1 of int which is used in struct
+		var v1 int
+		//check if the string only contains numbers
+		if reNumOnly.Match([]byte(v[0])) {
+			v1, err = strconv.Atoi(v[0])
+			if err != nil {
+				log.Printf("ERROR: strconv.Atoi for v[0] failed : %v", err)
+			}
+			log.Printf("\n---Conversion v1=%v %T and v[0]=%v %T \n\n", v1, v1, v[0], v[0])
+		}
+		if k == "CreatedDate" {
+			tmpBill.CreatedDate = v[0]
+		}
+		if k == "DueDate" {
+			tmpBill.DueDate = v[0]
+		}
+		if k == "Comment" {
+			tmpBill.Comment = v[0]
+		}
+		if k == "Paid" {
+			tmpBill.Paid = v1
+		}
+	}
+	return tmpBill
 }
 
 //printBill
