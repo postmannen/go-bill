@@ -137,7 +137,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//compare the values of the bill struct from DB and the tmp struct from r.Form
 	//to decide if to update DB with new values from the form
-	changed := checkIfBillMainChanged(&CurrentBill, tmpBill)
+	changed := checkIfBillHeaderChanged(&CurrentBill, tmpBill)
 
 	if r.FormValue("billModifyButton") == "modify" {
 		if changed {
@@ -234,7 +234,7 @@ func (d *webData) getBillDetails(billsForUser []data.Bill) (currentBill data.Bil
 	return currentBill
 }
 
-func checkIfBillMainChanged(currentBill *data.Bill, tmpBill data.Bill) (changed bool) {
+func checkIfBillHeaderChanged(currentBill *data.Bill, tmpBill data.Bill) (changed bool) {
 	//compare the values of the bill struct from DB and the tmp struct from r.Form
 	changed = false
 	if currentBill.Comment != tmpBill.Comment {
