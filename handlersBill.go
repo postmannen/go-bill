@@ -116,20 +116,18 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Find all the data on the current bill id
-	var CurrentBill data.Bill
-	for i, v := range BillsForUser {
-		if v.BillID == d.CurrentBillID {
-			CurrentBill = BillsForUser[i]
-		}
-	}
+	CurrentBill := d.getBillDetails(BillsForUser)
 
-	//update the total sums in main bill, and write it to db
+	//update the total sums in main bill
 	updateBillTotalExVat(&CurrentBill, d.CurrentBillID, storedBillLines)
 	updateBillTotalIncVat(&CurrentBill, storedBillLines)
+	//and write it to db
 	data.UpdateBill(d.PDB, CurrentBill)
 	//TESTING
 	d.CurrentBill = CurrentBill
 
+	//Now we have all the main info for the bill,
+	//so we can execute the template to draw the bill header
 	err = d.tpl.ExecuteTemplate(w, "showBillInfo", d.CurrentBill)
 	if err != nil {
 		log.Println("webBillLines: template execution error = ", err)
@@ -224,6 +222,16 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 	}
+}
+
+//Get all the main details for the current BillID
+func (d *webData) getBillDetails(billsForUser []data.Bill) (currentBill data.Bill) {
+	for i, v := range billsForUser {
+		if v.BillID == d.CurrentBillID {
+			currentBill = billsForUser[i]
+		}
+	}
+	return currentBill
 }
 
 func checkIfBillMainChanged(currentBill *data.Bill, tmpBill data.Bill) (changed bool) {
