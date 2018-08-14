@@ -15,7 +15,6 @@ import (
 //The web handler to the user selection in create bills
 func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	d.Users = data.QueryAllUserInfo(d.PDB)
-	ip := r.RemoteAddr
 
 	//creates the header and the select box from templates
 	err := d.tpl.ExecuteTemplate(w, "createBillCompletePage", d)
@@ -35,8 +34,6 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		d.CurrentBillID = 0
 	}
 
-	log.Println("billCreateWeb: The numberPart chosen in the user select box:data.activeUserID = ", d.ActiveUserID)
-
 	//check all the users and find the correct one
 	d.findselectedUser()
 
@@ -47,7 +44,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 
 	//Get the last used bill_id from DB
 	highestBillNR, totalLineCount := data.QueryLastBillID(d.PDB)
-	log.Println(ip, "billCreateWeb: highestBillNR = ", highestBillNR, ", and totaltLineCount = ", totalLineCount)
+	log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", and totaltLineCount = ", totalLineCount)
 
 	//Check which of the two input buttons where pushed. They both have name=userActionButton,
 	//and the value can be read with r.FormValue("userActionButton")
@@ -104,8 +101,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.ParseForm()
-	fmt.Println("r.Form = ", r.Form)
-
 	if r.FormValue("userActionButton") == "choose bill" {
 		d.CurrentBillID, _ = strconv.Atoi(r.FormValue("billID"))
 	}
@@ -121,7 +116,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			LineID: 1,
 		}
 		data.AddBillLine(d.PDB, billLine)
-		//rerun gathering av bill line data for selected bill to get new data
+		//rerun gathering of bill line data for selected bill to get new data
 		storedBillLines = data.QueryBillLines(d.PDB, d.CurrentBillID)
 	}
 
@@ -145,29 +140,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		log.Println("webBillLines: template execution error = ", err)
 	}
 
-	//check all the data in r.Form,
-	//create tmpBill of type data.Bill to hold all the bill data in r.Form
 	tmpBill := d.readBillMainFormData(r)
 
 	//compare the values of the bill struct from DB and the tmp struct from r.Form
 	//to decide if to update DB with new values from the form
-	changed := false
-	if CurrentBill.Comment != tmpBill.Comment {
-		changed = true
-		CurrentBill.Comment = tmpBill.Comment
-	}
-	if CurrentBill.CreatedDate != tmpBill.CreatedDate {
-		changed = true
-		CurrentBill.CreatedDate = tmpBill.CreatedDate
-	}
-	if CurrentBill.DueDate != tmpBill.DueDate {
-		changed = true
-		CurrentBill.DueDate = tmpBill.DueDate
-	}
-	if CurrentBill.Paid != tmpBill.Paid {
-		changed = true
-		CurrentBill.Paid = tmpBill.Paid
-	}
+	changed := checkIfBillMainChanged(&CurrentBill, tmpBill)
 
 	if r.FormValue("billModifyButton") == "modify" {
 		if changed {
@@ -251,6 +228,28 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
 	}
+}
+
+func checkIfBillMainChanged(currentBill *data.Bill, tmpBill data.Bill) (changed bool) {
+	//compare the values of the bill struct from DB and the tmp struct from r.Form
+	changed = false
+	if currentBill.Comment != tmpBill.Comment {
+		changed = true
+		currentBill.Comment = tmpBill.Comment
+	}
+	if currentBill.CreatedDate != tmpBill.CreatedDate {
+		changed = true
+		currentBill.CreatedDate = tmpBill.CreatedDate
+	}
+	if currentBill.DueDate != tmpBill.DueDate {
+		changed = true
+		currentBill.DueDate = tmpBill.DueDate
+	}
+	if currentBill.Paid != tmpBill.Paid {
+		changed = true
+		currentBill.Paid = tmpBill.Paid
+	}
+	return changed
 }
 
 //WORKING HERE!!!!
