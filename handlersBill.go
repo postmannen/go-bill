@@ -241,22 +241,14 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//delete a billLine and redraw window
 	if buttonValue == "delete" {
-		//num, err := strconv.Atoi(buttonNumbers)
-		if err != nil {
-			fmt.Printf("ERROR strconv.Atoi : %v\n", err)
-		}
+		//Delete bill line info in DB
 		data.DeleteBillLine(d.PDB, d.CurrentBillID, buttonNumbers)
 
-		//doing a redirect so it redraws the page with the new line. Not sure if this is the best way....
+		//Doing a redirect so it redraws the page with the new line.
 		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
 			log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 		}
-	}
-
-	modifyButtonPushed := false
-	if buttonValue == "modify" {
-		modifyButtonPushed = true
 	}
 
 	//find the all the unique billLine numbers in the form, and store them in []int
@@ -271,6 +263,11 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//then range StoredBillLines, and range formBillLines to compare if any values are changed.
 	changed = false
 	changed = checkIfBillLineChanged(lineNumbers, storedBillLines, formBillLines)
+
+	modifyButtonPushed := false
+	if buttonValue == "modify" {
+		modifyButtonPushed = true
+	}
 
 	if changed && modifyButtonPushed {
 		data.UpdateBillLine(d.PDB, formBillLines)
