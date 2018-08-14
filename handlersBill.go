@@ -42,13 +42,8 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		log.Println("modifyUsersWeb: error = ", err)
 	}
 
-	//Get the last used bill_id from DB
-	highestBillNR, totalLineCount := data.QueryLastBillID(d.PDB)
-	log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", and totaltLineCount = ", totalLineCount)
-
 	//Check which of the two input buttons where pushed. They both have name=userActionButton,
 	//and the value can be read with r.FormValue("userActionButton")
-	log.Println("r.Form shows = ", r.Form)
 	buttonAction := r.FormValue("userActionButton")
 
 	//if the manage bills button were pushed
@@ -176,12 +171,13 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	if buttonValue == "add" {
 		billLine := data.BillLines{}
 		billLine.BillID = d.CurrentBillID
-		fmt.Println("#######billid some benyttes er =", d.CurrentBillID)
+
 		//create a random numberPart for the bill line....for now....
 		rand.Seed(time.Now().UnixNano())
 		billLine.LineID = rand.Intn(10000)
-		billLine.Description = "noe tekst"
+		billLine.Description = "Description here"
 		data.AddBillLine(d.PDB, billLine)
+
 		//doing a redirect so it redraws the page with the new line.
 		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
@@ -252,7 +248,6 @@ func checkIfBillMainChanged(currentBill *data.Bill, tmpBill data.Bill) (changed 
 	return changed
 }
 
-//WORKING HERE!!!!
 func (d *webData) readBillMainFormData(r *http.Request) (tmpBill data.Bill) {
 	//check all the data in r.Form,
 	//create tmpBill of type data.Bill to hold all the bill data in r.Form
@@ -297,13 +292,14 @@ func (d *webData) printBill(w http.ResponseWriter, r *http.Request) {
 }
 
 //separateStrNumForButton , takes *http.Request as input, and returns string and int
+//The name of the buttons are postfixed with LineID. Separate the numbers and the letters
+//from the elements in the map of r.Form, to get the ID of which LineID the button belonged to
 func separateStrNumForButton(r *http.Request) (string, int) {
 	var buttonNumbers string
 	var buttonValue string
 	var num int
 	var err error
 	for k, v := range r.Form {
-		//fmt.Println("---VERDIER ---- ", k, " : ", v)
 		re := regexp.MustCompile("[a-zA-Z]+")
 		buttonLetters := re.FindString(k)
 		re = regexp.MustCompile("[0-9]+")
@@ -368,7 +364,6 @@ func findBillLineNumbersInForm(r *http.Request) (numbers []int) {
 			//fmt.Printf("***trying to compare vv=%v and numberPart=%v \n", vv, numberPart)
 			if numberPart == vv {
 				found = true
-				fmt.Println("The numbers are equal")
 			}
 		}
 		if !found {
@@ -419,7 +414,6 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 	var tempLines data.BillLines
 
 	for _, num := range lineNumbers {
-		fmt.Println("-$- Outerloop, num of lineNumbers = ", num)
 		//iterate all the data in form
 		for k, v := range r.Form {
 
