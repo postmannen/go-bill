@@ -58,7 +58,6 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 
 	//Check which of the two input buttons where pushed. They both have name=userActionButton,
 	//and the value can be read with r.FormValue("userActionButton")
-	r.ParseForm()
 	log.Println("r.Form shows = ", r.Form)
 	buttonAction := r.FormValue("userActionButton")
 	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
@@ -144,8 +143,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		log.Println("webBillLines: template execution error = ", err)
 	}
 
-	r.ParseForm()
-
 	//check all the data in r.Form,
 	//create tmpBill of type data.Bill to hold all the bill data in r.Form
 	var tmpBill data.Bill
@@ -218,8 +215,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 		log.Println("createBillUserSelection: createBillLines: template execution error = ", err)
 	}
 
-	r.ParseForm()
-
 	//The name of the buttons are postfixed with LineID. Separate the numbers and the letters
 	//from the elements in the map of r.Form, to get the ID of which LineID the button belonged to
 	buttonValue, buttonNumbers := separateStrNumForButton(r)
@@ -261,8 +256,6 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	if buttonValue == "modify" {
 		modifyButtonPushed = true
 	}
-
-	r.ParseForm()
 
 	//find the all the unique billLine numbers in the form, and store them in []int
 	lineNumbers := findBillLineNumbersInForm(r) //slice of all linenumbers in bill
