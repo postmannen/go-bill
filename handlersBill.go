@@ -37,19 +37,12 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("billCreateWeb: The numberPart chosen in the user select box:data.activeUserID = ", d.ActiveUserID)
 
-	//Iterate the slice of struct for all the users found in db to find the data for the user selected
-	for i := range d.Users {
-		if d.Users[i].Number == d.ActiveUserID && d.Users[i].Number != 0 {
-			log.Println(ip, "modifyUsersWeb: p[i].FirstName, p[i].LastName, found = ", d.Users[i].FirstName, d.Users[i].LastName)
-			//Store the index nr in slice of the chosen user
-			d.IndexUser = i
-			//store all the info of the current user in the struct for feeding variables to the templates
-			d.CurrentUser = d.Users[i]
-			err := d.tpl.ExecuteTemplate(w, "billShowUser", d)
-			if err != nil {
-				log.Println(ip, "modifyUsersWeb: error = ", err)
-			}
-		}
+	//check all the users and find the correct one
+	d.findselectedUser()
+
+	err = d.tpl.ExecuteTemplate(w, "billShowUser", d)
+	if err != nil {
+		log.Println("modifyUsersWeb: error = ", err)
 	}
 
 	//Get the last used bill_id from DB
@@ -60,7 +53,6 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	//and the value can be read with r.FormValue("userActionButton")
 	log.Println("r.Form shows = ", r.Form)
 	buttonAction := r.FormValue("userActionButton")
-	log.Println(ip, "billCreateWeb: userActionButton = ", buttonAction)
 
 	//if the manage bills button were pushed
 	if buttonAction == "manage bills" {
@@ -71,8 +63,6 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if buttonAction == "add new bill" {
-		fmt.Println(buttonAction, "pressed")
-
 		//get the last used bill id
 		highestBillNR, totalLineCount := data.QueryLastBillID(d.PDB)
 		log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", totaltLineCount = ", totalLineCount)
@@ -86,6 +76,18 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 		//create a new bill and return the new billID to use later
 		d.CurrentBillID = data.AddBill(d.PDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", d.CurrentBillID)
+	}
+}
+
+func (d *webData) findselectedUser() {
+	for i := range d.Users {
+		if d.Users[i].Number == d.ActiveUserID && d.Users[i].Number != 0 {
+			log.Println("modifyUsersWeb: p[i].FirstName, p[i].LastName, found = ", d.Users[i].FirstName, d.Users[i].LastName)
+			//Store the index nr in slice of the chosen user
+			d.IndexUser = i
+			//store all the info of the current user in the struct for feeding variables to the templates
+			d.CurrentUser = d.Users[i]
+		}
 	}
 }
 
