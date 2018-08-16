@@ -28,6 +28,9 @@ type webData struct {
 	IndexUser        int    //to store the index nr. in slice where the chosen user is stored
 	Currency         string //TODO: Make this linked to chosen language for admin user
 	tpl              *template.Template
+	//msgToTemplate is a reference to know what html template to
+	//be used based on which msg comming in from the client browser.
+	msgToTemplate map[string]string
 }
 
 func newServer() *server {
@@ -47,6 +50,7 @@ func newServer() *server {
 }
 
 func (s *server) handlers() {
+	http.HandleFunc("/echo", s.wData.socketHandler())
 	http.HandleFunc("/showUser", s.wData.showUsersWeb)
 	http.HandleFunc("/addUser", s.wData.addUsersWeb)
 	http.HandleFunc("/modifyUser", s.wData.modifyUsersWeb)
@@ -61,6 +65,7 @@ func (s *server) handlers() {
 
 func main() {
 	s := newServer()
+	s.wData.msgToTemplate = make(map[string]string)
 
 	//create DB and store pointer in pDB
 	s.wData.PDB = data.Create()

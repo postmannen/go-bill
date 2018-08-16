@@ -1,0 +1,27 @@
+<!--
+This file contains all the templates to process and send over the
+websocket to the client browser.
+-->
+
+{{define "socketTemplate1"}}
+    <div id="{{.}}">
+        <h1>The header from the template !</h1>
+        <p>Printed from the data taken from template</p>
+        <a href="javascript:deleteElement({{.}})">Delete elements</a>
+    </div>
+{{end}}
+<!---->
+{{define "buttonTemplate1"}}
+<div id="{{.}}">
+    <button>Button {{.}}</button>
+    <a href="javascript:deleteElement({{.}})">Delete elements</a>
+</div>
+{{end}}
+<!---->
+{{define "paragraphTemplate1"}}
+<div id="{{.}}">
+    <p>Paragraph {{.}}</p>
+    <a href="javascript:deleteElement({{.}})">Delete elements</a>
+</div>
+{{end}}
+<!---->
