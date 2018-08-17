@@ -17,7 +17,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	d.Users = data.QueryAllUserInfo(d.PDB)
 
 	//creates the header and the select box from templates
-	err := d.tpl.ExecuteTemplate(w, "createBillCompletePage", d)
+	err := d.tpl.ExecuteTemplate(w, "selectUserComplete", d)
 	if err != nil {
 		log.Println("createBillUserSelection: template execution error = ", err)
 	}
