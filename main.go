@@ -66,6 +66,11 @@ func (s *server) handlers() {
 func main() {
 	s := newServer()
 	s.wData.msgToTemplate = make(map[string]string)
+	s.wData.msgToTemplate = map[string]string{
+		"addButton":    "buttonTemplate1",
+		"addTemplate":  "socketTemplate1",
+		"addParagraph": "paragraphTemplate1",
+	}
 
 	//create DB and store pointer in pDB
 	s.wData.PDB = data.Create()
