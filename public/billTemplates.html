@@ -8,25 +8,38 @@
 
     </html>
 </head>
-{{end}} {{define "createBillCompletePage"}}
-<!DOCTYPE html>
+{{end}} 
 
-<body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "head" .}} {{template "topMenu"}} {{template "createBillUserSelection" .}}
-</body>
-{{end}} {{define "billSelectBox"}}
+{{define "createBillCompletePage"}}
 <!DOCTYPE html>
-
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "head" .}} {{template "topMenu"}} {{template "editBillSelectBox" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    {{template "head" .}} 
+    {{template "topMenu"}} 
+    {{template "createBillUserSelection" .}}
 </body>
-{{end}} {{define "printBillComplete"}}
+{{end}} 
+
+{{define "billSelectBox"}}
 <!DOCTYPE html>
-
 <body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {{template "head" .}} {{template "printBill" .}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    {{template "head" .}} 
+    {{template "topMenu"}} 
+    {{template "editBillSelectBox" .}}
 </body>
-{{end}} {{define "createBillLines"}}
+{{end}} 
+
+{{define "printBillComplete"}}
+<!DOCTYPE html>
+<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    {{template "head" .}} 
+    {{template "printBill" .}}
+</body>
+{{end}} 
+
+{{define "createBillLines"}}
 <div class="container">
     <form>
         <div class="createBillLineContainer">
@@ -79,7 +92,9 @@
         </div>
     </form>
 </div>
-{{end}} {{define "createBillUserSelection"}}
+{{end}} 
+
+{{define "createBillUserSelection"}}
 <!--Use the same css as for modify User, TODO: Rewrite the naming to something more generic -->
 <div class="container">
     <div class="modifyUserSelectionContainer">
@@ -96,7 +111,9 @@
         </form>
     </div>
 </div>
-{{end}} {{define "billShowUser"}}
+{{end}} 
+
+{{define "billShowUser"}}
 <div class="container">
     <form>
         <div class="ShowUserSingleContainer">
@@ -143,7 +160,9 @@
         </div>
     </form>
 </div>
-{{end}} {{define "showBillInfo"}}
+{{end}} 
+
+{{define "showBillInfo"}}
 <div class="container">
     <form>
         <div class="showBillInfoContainer">
@@ -194,8 +213,13 @@
         <input class="infoBox2" type="submit" name="billPrintView" value="print view">
     </form>
 </div>
-{{end}} {{define "redirectToEditBill"}}
-<meta http-equiv="refresh" content="0; URL=/editBill"> {{end}} {{define "editBillSelectBox"}}
+{{end}} 
+
+{{define "redirectToEditBill"}}
+<meta http-equiv="refresh" content="0; URL=/editBill"> 
+{{end}} 
+
+{{define "editBillSelectBox"}}
 <div class="editBillSelectBox">
     <form>
         <select name="billID">
@@ -206,8 +230,9 @@
         <input type="submit" name="userActionButton" value="choose bill">
     </form>
 </div>
-{{end}} {{define "topMenu"}}
+{{end}} 
 
+{{define "topMenu"}}
 <div class="topMenuContainer">
     <ul class="nav">
         <li>
@@ -243,8 +268,9 @@
         </li>
     </ul>
 </div>
+{{end}} 
 
-{{end}} {{define "printBill"}}
+{{define "printBill"}}
 <div class="container">
     <form>
         <div class="showPrintBillInfoContainer">
