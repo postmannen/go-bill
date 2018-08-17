@@ -1,5 +1,9 @@
 # Create Bill's using Go
 
+Go Bill is a training project of mine for creating a Bill/Invoice program in Go.
+The first version have all the logic in the backend.
+For the second version the plan is to move some of the logic for rendering over to the client with JS.
+
 Data is stored in local sqlite3 DB.
 Access to the DB is done via the data package.
 
