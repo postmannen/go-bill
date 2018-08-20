@@ -38,3 +38,4 @@ be buildt up and calling all the other templates to draw the complete page.
 * Keep the number 0 in the deleted user row, increase the last user is deleted then a new used added will get that number
 * Change the user pages to 1 page with add modify and delete
 * Make the primary keys uid and bill ID random numbers, so you can sync the database between different devices without getting a conflict.
+* Look at ajstarks svgo for charts etc
