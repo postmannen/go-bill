@@ -12,6 +12,10 @@ import (
 	"github.com/postmannen/go-bill/data"
 )
 
+func (d *webData) newBill(w http.ResponseWriter, r *http.Request) {
+
+}
+
 //The web handler to the user selection in create bills
 func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	d.Users = data.QueryAllUserInfo(d.PDB)

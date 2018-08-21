@@ -60,6 +60,7 @@ func (s *server) handlers() {
 	http.HandleFunc("/createBillSelectUser", s.wData.webBillSelectUser)
 	http.HandleFunc("/editBill", s.wData.webBillLines)
 	http.HandleFunc("/printBill", s.wData.printBill)
+	http.HandleFunc("/newBill", s.wData.newBill)
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 }
 
