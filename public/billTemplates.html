@@ -11,6 +11,8 @@
 {{end}} 
 
 {{define "webSocket"}}
+{{template "head" .}} 
+{{template "topMenu"}}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <input type="text" id="input" />
 <button onclick="send()">send</button>

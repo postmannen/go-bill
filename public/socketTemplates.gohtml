@@ -4,24 +4,24 @@ websocket to the client browser.
 -->
 
 {{define "socketTemplate1"}}
-    <div id="{{.}}">
+    <div id="{{.DivID}}">
         <h1>The header from the template !</h1>
         <p>Printed from the data taken from template</p>
-        <a href="javascript:deleteElement({{.}})">Delete elements</a>
+        <a href="javascript:deleteElement({{.DivID}})">Delete elements</a>
     </div>
 {{end}}
 <!---->
 {{define "buttonTemplate1"}}
-<div id="{{.}}">
-    <button>Button {{.}}</button>
-    <a href="javascript:deleteElement({{.}})">Delete elements</a>
+<div id="{{.DivID}}">
+    <button>Button {{.DivID}}</button>
+    <a href="javascript:deleteElement({{.DivID}})">Delete elements</a>
 </div>
 {{end}}
 <!---->
 {{define "paragraphTemplate1"}}
-<div id="{{.}}">
-    <p>Paragraph {{.}}</p>
-    <a href="javascript:deleteElement({{.}})">Delete elements</a>
+<div id="{{.DivID}}">
+    <p>Paragraph {{.DivID}}</p>
+    <a href="javascript:deleteElement({{.DivID}})">Delete elements</a>
 </div>
 {{end}}
 <!---->

@@ -31,6 +31,7 @@ type webData struct {
 	//msgToTemplate is a reference to know what html template to
 	//be used based on which msg comming in from the client browser.
 	msgToTemplate map[string]string
+	DivID         int
 }
 
 func newServer() *server {
@@ -44,7 +45,8 @@ func newServer() *server {
 	return &server{
 		address: "localhost:8080",
 		wData: &webData{
-			tpl: t,
+			tpl:   t,
+			DivID: 0,
 		},
 	}
 }
@@ -68,9 +70,10 @@ func main() {
 	s := newServer()
 	s.wData.msgToTemplate = make(map[string]string)
 	s.wData.msgToTemplate = map[string]string{
-		"addButton":    "buttonTemplate1",
-		"addTemplate":  "socketTemplate1",
-		"addParagraph": "paragraphTemplate1",
+		"addButton":     "buttonTemplate1",
+		"addTemplate":   "socketTemplate1",
+		"addParagraph":  "paragraphTemplate1",
+		"userSelection": "createBillUserSelection",
 	}
 
 	//create DB and store pointer in pDB

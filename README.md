@@ -39,3 +39,4 @@ be buildt up and calling all the other templates to draw the complete page.
 * Change the user pages to 1 page with add modify and delete
 * Make the primary keys uid and bill ID random numbers, so you can sync the database between different devices without getting a conflict.
 * Look at ajstarks svgo for charts etc
+* In the webData create a session type that stores things like DivID and things that are unique for each session.

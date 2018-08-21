@@ -28,7 +28,9 @@ func (d *webData) socketHandler() http.HandlerFunc {
 	var err error
 
 	init.Do(func() {
-		tpl, err = template.ParseFiles("public/socketTemplates.gohtml")
+		tpl, err = template.ParseFiles("public/userTemplates.html",
+			"public/billTemplates.html",
+			"public/socketTemplates.gohtml")
 		if err != nil {
 			log.Printf("error: ParseFiles : %v\n", err)
 		}
@@ -43,7 +45,7 @@ func (d *webData) socketHandler() http.HandlerFunc {
 
 		//divID is to keep track of the sections sendt to the
 		//socket to be shown in the browser.
-		divID := 0
+		//divID := 0
 
 		for {
 			//read the message from browser
@@ -69,7 +71,7 @@ func (d *webData) socketHandler() http.HandlerFunc {
 					//tplData is a bytes.Buffer, which is a type io.Writer. Here we choose
 					//execute the template, but passing the output into tplData insted of
 					//'w'. Then we can take the data in tplData and send them over the socket.
-					tpl.ExecuteTemplate(&tplData, tplName, divID)
+					tpl.ExecuteTemplate(&tplData, tplName, d)
 					d := tplData.String()
 					//New-lines between the html tags in the template source code
 					//is shown in the browser. Trimming awat the new-lines in each line
@@ -77,7 +79,7 @@ func (d *webData) socketHandler() http.HandlerFunc {
 					d = strings.TrimSpace(d)
 					msg = []byte(d)
 				}
-				divID++
+				d.DivID++
 			}
 
 			//write message back on the socket to the browser

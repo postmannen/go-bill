@@ -13,7 +13,12 @@ import (
 )
 
 func (d *webData) newBill(w http.ResponseWriter, r *http.Request) {
+	d.Users = data.QueryAllUserInfo(d.PDB)
 
+	err := d.tpl.ExecuteTemplate(w, "webSocket", d)
+	if err != nil {
+		log.Println("newBill: template execution error = ", err)
+	}
 }
 
 //The web handler to the user selection in create bills
