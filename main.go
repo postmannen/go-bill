@@ -37,7 +37,7 @@ type webData struct {
 func newServer() *server {
 	//Load the template files
 	t, err := template.ParseFiles("public/userTemplates.html",
-		"public/billTemplates.html")
+		"public/billTemplates.html", "public/socketTemplates.gohtml")
 	if err != nil {
 		fmt.Println("error: Parsing templates: ", err)
 	}

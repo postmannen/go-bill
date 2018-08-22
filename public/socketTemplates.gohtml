@@ -1,3 +1,73 @@
+{{define "initialPageForWebSocket"}}
+    {{template "head" .}} 
+    {{template "topMenu"}}
+    {{template "webSocket"}}
+{{end}}
+<!-- -->
+{{define "webSocket"}}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <input type="text" id="input" />
+    <button onclick="send()">send</button>
+    <button onclick="addButton()">add button</button>
+    <p>Commands to use in the input field :</p>
+    <ul>
+        <li>addButton</li>
+        <li>addInput</li>
+        <li>addTemplate</li>
+        <li>addParagraph</li>
+    </ul>
+    <pre id="output"></pre>
+
+    <script>
+        var input = document.getElementById("input");
+        var output = document.getElementById("output");
+        var socket = new WebSocket("ws://localhost:8080/echo");
+
+        //-----------------------Control of the socket-----------------------
+        socket.onopen = function () {
+            output.innerHTML += "status: connected\n";
+        };
+
+        //here we are receiving messages from the server
+        //the event is delivered to onmessage, and used in function as "serverEvent"
+        socket.onmessage = function (serverEvent) {
+            m = serverEvent.data
+            for (var i = 0; i < m.length; i++) {
+                console.log(m.charCodeAt(i));
+            }
+            //console.log(serverEvent.data)
+            output.innerHTML += m;
+        };
+
+        socket.onclose = function () {
+            output.innerHTML += "The socket is no longer open"
+        }
+
+        //--------Functions called based on the actions in the form----------
+
+        //this is the function that is being called when clicking the 'send' button
+        //for the text input field.
+        function send() {
+            socket.send(input.value);
+            //set the input.value variable to null when done sending.
+            input.value = "";
+        }
+
+        //This is for when the used pressed the add button on top
+        function addButton() {
+            socket.send("<button>new button</button>")
+            socket.send("addButton")
+        }
+
+        //The function called from the "delete element" buttons
+        function deleteElement(v) {
+            alert("deleting element with id = " + v)
+            var e = document.getElementById(v)
+            e.parentElement.removeChild(e)
+        }
+    </script>
+{{end}}
+<!-- --------------------------------------------------------------- -->
 <!--
 This file contains all the templates to process and send over the
 websocket to the client browser.

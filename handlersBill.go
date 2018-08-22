@@ -15,7 +15,7 @@ import (
 func (d *webData) newBill(w http.ResponseWriter, r *http.Request) {
 	d.Users = data.QueryAllUserInfo(d.PDB)
 
-	err := d.tpl.ExecuteTemplate(w, "webSocket", d)
+	err := d.tpl.ExecuteTemplate(w, "initialPageForWebSocket", d)
 	if err != nil {
 		log.Println("newBill: template execution error = ", err)
 	}
