@@ -433,10 +433,10 @@ func UpdateBillLine(db *sql.DB, b []BillLines) {
 }
 
 //Create , **************************  creates the database  ********************************
-func Create() *sql.DB {
+func Create(fileName string) *sql.DB {
 	//1. Open connection
 
-	db, err := sql.Open("sqlite3", "./pkg/storage/fakt.db") //return types = *DB, error
+	db, err := sql.Open("sqlite3", fileName) //return types = *DB, error
 	checkErr(err)
 	//2. fail-fast if can't connect to DB
 	checkErr(db.Ping())

@@ -66,6 +66,8 @@ func (s *server) handlers() {
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 }
 
+const databaseFileName = "fakt.db"
+
 func main() {
 	s := newServer()
 	s.wData.msgToTemplate = make(map[string]string)
@@ -77,7 +79,7 @@ func main() {
 	}
 
 	//create DB and store pointer in pDB
-	s.wData.PDB = storage.Create()
+	s.wData.PDB = storage.Create(databaseFileName)
 	defer s.wData.PDB.Close()
 	s.wData.Currency = "$"
 
