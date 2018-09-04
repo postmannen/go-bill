@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/postmannen/go-bill/data"
+	"github.com/postmannen/go-bill/pkg/storage"
 )
 
 type server struct {
@@ -17,13 +17,13 @@ type server struct {
 
 //webData struct, used to feed data to the web templates
 type webData struct {
-	Users            []data.User
+	Users            []storage.User
 	ActiveUserID     int //to store the active user beeing worked on in the different web pages
 	CurrentBillID    int //to store the active bill id beeing worked on in different web pages
-	CurrentAdmin     data.User
-	CurrentUser      data.User
-	CurrentBill      data.Bill
-	CurrentBillLines []data.BillLines
+	CurrentAdmin     storage.User
+	CurrentUser      storage.User
+	CurrentBill      storage.Bill
+	CurrentBillLines []storage.BillLines
 	PDB              *sql.DB
 	IndexUser        int    //to store the index nr. in slice where the chosen user is stored
 	Currency         string //TODO: Make this linked to chosen language for admin user
@@ -77,7 +77,7 @@ func main() {
 	}
 
 	//create DB and store pointer in pDB
-	s.wData.PDB = data.Create()
+	s.wData.PDB = storage.Create()
 	defer s.wData.PDB.Close()
 	s.wData.Currency = "$"
 

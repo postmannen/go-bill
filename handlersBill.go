@@ -9,11 +9,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/postmannen/go-bill/data"
+	"github.com/postmannen/go-bill/pkg/storage"
 )
 
 func (d *webData) newBill(w http.ResponseWriter, r *http.Request) {
-	d.Users = data.QueryAllUserInfo(d.PDB)
+	d.Users = storage.QueryAllUserInfo(d.PDB)
 
 	err := d.tpl.ExecuteTemplate(w, "initialPageForWebSocket", d)
 	if err != nil {
@@ -23,7 +23,7 @@ func (d *webData) newBill(w http.ResponseWriter, r *http.Request) {
 
 //The web handler to the user selection in create bills
 func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
-	d.Users = data.QueryAllUserInfo(d.PDB)
+	d.Users = storage.QueryAllUserInfo(d.PDB)
 
 	//creates the header and the select box from templates
 	err := d.tpl.ExecuteTemplate(w, "selectUserComplete", d)
@@ -39,7 +39,7 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 	if r.FormValue("chooseUserButton") == "choose" {
 		//Get the value (numberPart) of the chosen user from form dropdown menu <select name="users">
 		d.ActiveUserID, _ = strconv.Atoi(r.FormValue("users"))
-		//reset data.CurrentBillID so a new user dont inherit the last bill used for another user.
+		//reset storage.CurrentBillID so a new user dont inherit the last bill used for another user.
 		d.CurrentBillID = 0
 	}
 
@@ -65,17 +65,17 @@ func (d *webData) webBillSelectUser(w http.ResponseWriter, r *http.Request) {
 
 	if buttonAction == "add new bill" {
 		//get the last used bill id
-		highestBillNR, totalLineCount := data.QueryLastBillID(d.PDB)
+		highestBillNR, totalLineCount := storage.QueryLastBillID(d.PDB)
 		log.Println("billCreateWeb: highestBillNR = ", highestBillNR, ", totaltLineCount = ", totalLineCount)
 
-		newBill := data.Bill{}
+		newBill := storage.Bill{}
 		newBill.BillID = highestBillNR + 1
 		newBill.UserID = d.ActiveUserID
 		t := time.Now()
 		//										   yyyy-mm-dd
 		newBill.CreatedDate = fmt.Sprint(t.Format("2006-01-02"))
 		//create a new bill and return the new billID to use later
-		d.CurrentBillID = data.AddBill(d.PDB, newBill)
+		d.CurrentBillID = storage.AddBill(d.PDB, newBill)
 		log.Println("billCreateWeb: newBillID = ", d.CurrentBillID)
 	}
 }
@@ -93,7 +93,7 @@ func (d *webData) findselectedUser() {
 }
 
 func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
-	BillsForUser := data.QueryBillsForUser(d.PDB, d.ActiveUserID)
+	BillsForUser := storage.QueryBillsForUser(d.PDB, d.ActiveUserID)
 
 	//Sort the bills so the last bill_id is first in the slice, and then shown on top of the listing
 	BillsForUser = sortBills(BillsForUser)
@@ -110,18 +110,18 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get all the billLines for current billID from db
-	storedBillLines := data.QueryBillLines(d.PDB, d.CurrentBillID)
+	storedBillLines := storage.QueryBillLines(d.PDB, d.CurrentBillID)
 
 	//add a default nr.1 bill line if none exist
 	if len(storedBillLines) == 0 && d.CurrentBillID != 0 {
 		fmt.Fprintf(w, "Len was 0, value = %v\n", len(storedBillLines))
-		billLine := data.BillLines{
+		billLine := storage.BillLines{
 			BillID: d.CurrentBillID,
 			LineID: 1,
 		}
-		data.AddBillLine(d.PDB, billLine)
+		storage.AddBillLine(d.PDB, billLine)
 		//rerun gathering of bill line data for selected bill to get new data
-		storedBillLines = data.QueryBillLines(d.PDB, d.CurrentBillID)
+		storedBillLines = storage.QueryBillLines(d.PDB, d.CurrentBillID)
 	}
 
 	//Find all the data on the current bill id
@@ -131,7 +131,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	updateBillTotalExVat(&CurrentBill, d.CurrentBillID, storedBillLines)
 	updateBillTotalIncVat(&CurrentBill, storedBillLines)
 	//and write it to db
-	data.UpdateBill(d.PDB, CurrentBill)
+	storage.UpdateBill(d.PDB, CurrentBill)
 	//TESTING
 	d.CurrentBill = CurrentBill
 
@@ -150,7 +150,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	if r.FormValue("billModifyButton") == "modify" {
 		if changed {
-			data.UpdateBill(d.PDB, CurrentBill)
+			storage.UpdateBill(d.PDB, CurrentBill)
 
 			//doing a redirect so it redraws the page with the new line.
 			err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
@@ -162,7 +162,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	updateLineExVatTotal(storedBillLines)
 	//store all the bill lines in bill_lines db, to get ex vat total written to db
-	data.UpdateBillLine(d.PDB, storedBillLines)
+	storage.UpdateBillLine(d.PDB, storedBillLines)
 
 	d.CurrentBillLines = storedBillLines
 	err = d.tpl.ExecuteTemplate(w, "createBillLines", d)
@@ -176,14 +176,14 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 
 	//Add a new billLine to db, and redraw window.
 	if buttonValue == "add" {
-		billLine := data.BillLines{}
+		billLine := storage.BillLines{}
 		billLine.BillID = d.CurrentBillID
 
 		//create a random numberPart for the bill line....for now....
 		rand.Seed(time.Now().UnixNano())
 		billLine.LineID = rand.Intn(10000)
 		billLine.Description = "Description here"
-		data.AddBillLine(d.PDB, billLine)
+		storage.AddBillLine(d.PDB, billLine)
 
 		//doing a redirect so it redraws the page with the new line.
 		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
@@ -196,7 +196,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	//delete a billLine and redraw window
 	if buttonValue == "delete" {
 		//Delete bill line info in DB
-		data.DeleteBillLine(d.PDB, d.CurrentBillID, buttonNumbers)
+		storage.DeleteBillLine(d.PDB, d.CurrentBillID, buttonNumbers)
 
 		//Doing a redirect so it redraws the page with the new line.
 		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
@@ -224,7 +224,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if changed && modifyButtonPushed {
-		data.UpdateBillLine(d.PDB, formBillLines)
+		storage.UpdateBillLine(d.PDB, formBillLines)
 
 		err = d.tpl.ExecuteTemplate(w, "redirectToEditBill", "some data")
 		if err != nil {
@@ -234,7 +234,7 @@ func (d *webData) webBillLines(w http.ResponseWriter, r *http.Request) {
 }
 
 //Get all the main details for the current BillID
-func (d *webData) getBillDetails(billsForUser []data.Bill) (currentBill data.Bill) {
+func (d *webData) getBillDetails(billsForUser []storage.Bill) (currentBill storage.Bill) {
 	for i, v := range billsForUser {
 		if v.BillID == d.CurrentBillID {
 			currentBill = billsForUser[i]
@@ -243,7 +243,7 @@ func (d *webData) getBillDetails(billsForUser []data.Bill) (currentBill data.Bil
 	return currentBill
 }
 
-func checkIfBillHeaderChanged(currentBill *data.Bill, tmpBill data.Bill) (changed bool) {
+func checkIfBillHeaderChanged(currentBill *storage.Bill, tmpBill storage.Bill) (changed bool) {
 	//compare the values of the bill struct from DB and the tmp struct from r.Form
 	changed = false
 	if currentBill.Comment != tmpBill.Comment {
@@ -265,9 +265,9 @@ func checkIfBillHeaderChanged(currentBill *data.Bill, tmpBill data.Bill) (change
 	return changed
 }
 
-func (d *webData) readBillMainFormData(r *http.Request) (tmpBill data.Bill) {
+func (d *webData) readBillMainFormData(r *http.Request) (tmpBill storage.Bill) {
 	//check all the data in r.Form,
-	//create tmpBill of type data.Bill to hold all the bill data in r.Form
+	//create tmpBill of type storage.Bill to hold all the bill data in r.Form
 	var err error
 	for k, v := range r.Form {
 		reNumOnly := regexp.MustCompile("^[0-9]+$")
@@ -300,7 +300,7 @@ func (d *webData) readBillMainFormData(r *http.Request) (tmpBill data.Bill) {
 
 //printBill
 func (d *webData) printBill(w http.ResponseWriter, r *http.Request) {
-	d.CurrentAdmin = data.QuerySingleUserInfo(d.PDB, 0)
+	d.CurrentAdmin = storage.QuerySingleUserInfo(d.PDB, 0)
 	d.CurrentBill.TotalVat = d.CurrentBill.TotalIncVat - d.CurrentBill.TotalExVat
 	err := d.tpl.ExecuteTemplate(w, "printBillComplete", d)
 	if err != nil {
@@ -350,7 +350,7 @@ func separateStrNumForButton(r *http.Request) (string, int) {
 }
 
 //sortBills sorts the bills so the last bill_id is first in the slice
-func sortBills(bills []data.Bill) []data.Bill {
+func sortBills(bills []storage.Bill) []storage.Bill {
 	for i := 0; i < len(bills); i++ {
 		for ii := 0; ii < len(bills); ii++ {
 			if bills[i].BillID > bills[ii].BillID {
@@ -391,7 +391,7 @@ func findBillLineNumbersInForm(r *http.Request) (numbers []int) {
 }
 
 //range billLines to compare storedLines.X with formBillLines.X to see if any values have changed. Return changed = true if changed
-func checkIfBillLineChanged(lineNRs []int, storedLines []data.BillLines, formLines []data.BillLines) (changed bool) {
+func checkIfBillLineChanged(lineNRs []int, storedLines []storage.BillLines, formLines []storage.BillLines) (changed bool) {
 	for _, num := range lineNRs {
 		for _, line := range storedLines {
 			if line.LineID == num {
@@ -427,8 +427,8 @@ func checkIfBillLineChanged(lineNRs []int, storedLines []data.BillLines, formLin
 //a slice with all the values entered in the form.
 //all fields and buttons in the form have name values postfixed with the {{.LineID}}, so this function
 //separates the first part of the name and the {{.LineID}} to know what fields to update
-func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (formBillLines []data.BillLines) {
-	var tempLines data.BillLines
+func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (formBillLines []storage.BillLines) {
+	var tempLines storage.BillLines
 
 	for _, num := range lineNumbers {
 		//iterate all the data in form
@@ -496,7 +496,7 @@ func getBillLineFormValues(lineNumbers []int, r *http.Request, billID int) (form
 
 //updateBillTotalExVat updates the bill field total price ex vat,
 //also writes the update info to correct field in db
-func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLines) {
+func updateBillTotalExVat(bill *storage.Bill, billID int, billLines []storage.BillLines) {
 	//TODO: Fix so the total values are made from line total to avoid doing the same calculations in several functions
 	bill.TotalExVat = 0
 	for _, v := range billLines {
@@ -508,14 +508,14 @@ func updateBillTotalExVat(bill *data.Bill, billID int, billLines []data.BillLine
 	/* NOTE : Removing db db write, will put in a write for all fields when all data is processed
 	//add the TotalExVat to db here
 	if bill.TotalExVat != 0 {
-		data.UpdateBillPriceExVat(pDB, bill.TotalExVat, bill.BillID)
+		storage.UpdateBillPriceExVat(pDB, bill.TotalExVat, bill.BillID)
 	}
 	*/
 }
 
 //updateBillTotalIncVat updates the bill field total price ex vat,
 //also writes the update info to correct field in db
-func updateBillTotalIncVat(bill *data.Bill, billLines []data.BillLines) {
+func updateBillTotalIncVat(bill *storage.Bill, billLines []storage.BillLines) {
 	//TODO: Fix so the total values are made from line total to avoid doing the same calculations in several functions
 	var lineIncVat float64
 	bill.TotalIncVat = 0
@@ -534,7 +534,7 @@ func updateBillTotalIncVat(bill *data.Bill, billLines []data.BillLines) {
 }
 
 //updateLineExVatTotal updates the struct data for the total ex vat pr. line
-func updateLineExVatTotal(b []data.BillLines) {
+func updateLineExVatTotal(b []storage.BillLines) {
 	for i := 0; i < len(b); i++ {
 		sum := b[i].PriceExVat * float64(b[i].Quantity)
 		sum = sum - (sum / 100 * float64(b[i].DiscountPercentage))

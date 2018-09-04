@@ -1,4 +1,4 @@
-package data
+package storage
 
 import (
 	"database/sql"
@@ -436,7 +436,7 @@ func UpdateBillLine(db *sql.DB, b []BillLines) {
 func Create() *sql.DB {
 	//1. Open connection
 
-	db, err := sql.Open("sqlite3", "./data/fakt.db") //return types = *DB, error
+	db, err := sql.Open("sqlite3", "./pkg/storage/fakt.db") //return types = *DB, error
 	checkErr(err)
 	//2. fail-fast if can't connect to DB
 	checkErr(db.Ping())

@@ -1,4 +1,4 @@
-package data
+package storage
 
 //User is used for all customers and users
 type User struct { //some
