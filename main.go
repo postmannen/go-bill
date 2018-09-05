@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"net/http"
 
+	_ "net/http/pprof"
+
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/postmannen/go-bill/pkg/storage"
 )
