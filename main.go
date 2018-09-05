@@ -8,6 +8,8 @@ import (
 
 	_ "net/http/pprof"
 
+	"github.com/pkg/profile"
+
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/postmannen/go-bill/pkg/storage"
 )
@@ -71,6 +73,7 @@ func (s *server) handlers() {
 const databaseFileName = "fakt.db"
 
 func main() {
+	defer profile.Start().Stop()
 	s := newServer()
 	s.wData.msgToTemplate = make(map[string]string)
 	s.wData.msgToTemplate = map[string]string{
