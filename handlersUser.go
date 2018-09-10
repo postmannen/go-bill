@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
-	"github.com/postmannen/go-bill/pkg/storage"
 )
 
 //The default handler for the / main page
@@ -26,17 +24,17 @@ func (d *webData) addUsersWeb(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.ParseForm()
-	u := storage.User{}
+	u := User{}
 	getFormValuesUserInfo(&u, r)
 
 	if u.FirstName != "" {
-		pid, _ := storage.QueryForLastUID(d.PDB)
+		pid, _ := QueryForLastUID(d.PDB)
 		//increment the user index nr by one for the new used to add
 		pid++
 		fmt.Println("------pid ---------- = ", pid)
 		println("addUsersWeb: UID = ", pid)
 		u.Number = pid
-		storage.AddUser(d.PDB, u)
+		AddUser(d.PDB, u)
 	}
 }
 
@@ -45,7 +43,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	ip := r.RemoteAddr
 	//query the userDB for all users and put the returning slice with result in p
-	allUsers := storage.QueryAllUserInfo(d.PDB)
+	allUsers := QueryAllUserInfo(d.PDB)
 	fmt.Println("---ALL USERS FROM DATABASE = ", allUsers)
 
 	//Execute the web for modify users, range over allUsers to make the select user drop down menu
@@ -62,7 +60,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//Get the value (number) of the chosen user from form dropdown menu <select name="users">
 	num, _ := strconv.Atoi(r.FormValue("users"))
-	var singleUser storage.User
+	var singleUser User
 
 	//Find the selected single user chosen in dropdown in the slice of all users
 	for i := range allUsers {
@@ -78,7 +76,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 		log.Println(ip, "modifyUsersWeb: error = ", err)
 	}
 
-	uForm := storage.User{}
+	uForm := User{}
 	//get all the values from the user info fileds of the the
 	getFormValuesUserInfo(&uForm, r)
 
@@ -90,7 +88,7 @@ func (d *webData) modifyUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 	//if any of the values was changed....update information into database
 	if changed {
-		storage.UpdateUser(d.PDB, allUsers[d.IndexUser])
+		UpdateUser(d.PDB, allUsers[d.IndexUser])
 	}
 }
 
@@ -99,7 +97,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	ip := r.RemoteAddr
 	adminID := 0
 	//query the userDB for all users and put the returning slice with result in p
-	u := storage.QuerySingleUserInfo(d.PDB, adminID)
+	u := QuerySingleUserInfo(d.PDB, adminID)
 
 	//Execute the web for modify users, range over p to make the select user drop down menu
 	err := d.tpl.ExecuteTemplate(w, "modifyUserCompletePage", u)
@@ -117,7 +115,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	//create a variable based on user to hold the values parsed from the modify web
-	uForm := storage.User{}
+	uForm := User{}
 	//get all the values like name etc. from the form, and put them in u
 	getFormValuesUserInfo(&uForm, r)
 	changed := false
@@ -127,7 +125,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 
 	//if any of the values was changed....update information into database
 	if changed {
-		storage.UpdateUser(d.PDB, u)
+		UpdateUser(d.PDB, u)
 
 		//Execute the redirect to modifyAdmin to refresh page
 		err := d.tpl.ExecuteTemplate(w, "redirectTomodifyAdmin", u)
@@ -138,7 +136,7 @@ func (d *webData) modifyAdminWeb(w http.ResponseWriter, r *http.Request) {
 }
 
 //takes user info taken from form, and compares it with the original values
-func checkUserFormChanged(uForm storage.User, originalUser storage.User) (bool, storage.User) {
+func checkUserFormChanged(uForm User, originalUser User) (bool, User) {
 	fmt.Printf("---originalUser = %v, type = %T\n", originalUser.FirstName, originalUser.FirstName)
 	fmt.Printf("---user in form = %v, type = %T\n", uForm.FirstName, uForm.FirstName)
 
@@ -184,7 +182,7 @@ func checkUserFormChanged(uForm storage.User, originalUser storage.User) (bool, 
 
 //The web handler to show and print out all registered users in the database
 func (d *webData) showUsersWeb(w http.ResponseWriter, r *http.Request) {
-	p := storage.QueryAllUserInfo(d.PDB)
+	p := QueryAllUserInfo(d.PDB)
 	err := d.tpl.ExecuteTemplate(w, "showUserCompletePage", p)
 	if err != nil {
 		log.Println("showUsersWeb: template execution error = ", err)
@@ -194,7 +192,7 @@ func (d *webData) showUsersWeb(w http.ResponseWriter, r *http.Request) {
 
 //The web handler to delete a person
 func (d *webData) deleteUserWeb(w http.ResponseWriter, r *http.Request) {
-	p := storage.QueryAllUserInfo(d.PDB)
+	p := QueryAllUserInfo(d.PDB)
 	err := d.tpl.ExecuteTemplate(w, "deleteUserCompletePage", p)
 	if err != nil {
 		log.Println("showUsersWeb: template execution error = ", err)
@@ -203,11 +201,11 @@ func (d *webData) deleteUserWeb(w http.ResponseWriter, r *http.Request) {
 	//parse the html form and get all the data
 	r.ParseForm()
 	fn, _ := strconv.Atoi(r.FormValue("users"))
-	storage.DeleteUser(d.PDB, fn)
+	DeleteUser(d.PDB, fn)
 }
 
 //getFormValuesUserInfo will get all the user data from form.
-func getFormValuesUserInfo(u *storage.User, r *http.Request) {
+func getFormValuesUserInfo(u *User, r *http.Request) {
 	u.FirstName = r.FormValue("firstName")
 	u.LastName = r.FormValue("lastName")
 	u.Mail = r.FormValue("mail")
